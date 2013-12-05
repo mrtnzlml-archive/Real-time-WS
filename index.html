@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <head>
+        <script src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
+        <script src='http://localhost:1234/socket.io/socket.io.js'></script>
+        <script>
+            var socket = io.connect('127.0.0.1:1234');
+
+            socket.on('connect', function(){
+                socket.emit('register', 'SERVER');
+            });
+
+            socket.on('devices', function(data) {
+            	//console.log(data);
+            	$('li').remove();
+                $.each(data, function(key, value) {
+					$('#devices').append('<li>' + key + ' (' + value + ')</li>');
+				});
+            });
+
+            socket.on('message', function(data) {
+                $('#message').html(data);
+            });
+
+            socket.on('error', function() { console.error(arguments) });
+        </script>
+    </head>
+    <body>
+    	<h2>Real-time server</h2>
+    	<pre id='welcome'></pre>
+        <pre id='message'>OFFLINE</pre>
+        <hr>
+        <h3>Connected devices:</h3>
+        <pre>
+        	<ul id="devices"></ul>
+        </pre>
+    </body>
+</html>
