@@ -1,3 +1,5 @@
+//http://www.slideshare.net/cjoudrey/going-realtime-with-socketio
+
 var http = require('http');
 var fs = require('fs');
 var redis = require('redis').createClient(); //https://github.com/mranney/node_redis
@@ -12,7 +14,7 @@ var devices = {};
 
 // Socket.io server listens to our app
 var io = require('socket.io').listen(app);
-io.set('log level', 2); // reduce logging
+//io.set('log level', 2); // reduce logging
 
 /*setInterval(function() {
 	var to = devices['SERVER'];
