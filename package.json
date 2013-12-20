@@ -1,0 +1,13 @@
+{
+	"name": "real-time",
+	"version": "0.0.0",
+	"author": "Martin Zlámal <mrtnzlml@gmail.com>",
+	"dependencies": {
+		"redis": "0.9.1",
+		"socket.io": "0.9.16",
+		"socket.io-client": "0.9.16"
+	},
+	"engines": {
+		"node": "0.10.24"
+	}
+}
