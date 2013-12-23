@@ -1,14 +1,24 @@
 var io = require("socket.io-client");
-client = io.connect("ws://127.0.0.1:3000/");
+var PORT = 3000;
+var uid = 'UID-0001';
 
-client.on('connect', function(){
-	client.emit('register', 'UID-0003');
+client = io.connect("ws://127.0.0.1:" + PORT + "/");
+
+client.on('connect', function () {
+    client.emit('register', uid);
 });
 
-client.on('message', function(data) {
-	console.log(data);
+client.on('message', function (data) {
+    console.log(data);
 });
 
-client.on('error', function() {
-	console.error(arguments)
+setInterval(function () {
+    client.emit('data', {
+        uid: uid,
+        data: Math.random()
+    });
+}, 100);
+
+client.on('error', function () {
+    console.error(arguments)
 });

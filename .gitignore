@@ -4,5 +4,8 @@ concentrator/node_modules/*
 server/node_modules/*
 
 *.aux
+*.lof
+*.lot
 *.synctex.gz
+*.toc
 *.zip

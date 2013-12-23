@@ -32,14 +32,16 @@ var tmp = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-/////
+///// SOCKET.IO /////
 
 var io = require('socket.io').listen(tmp);
 io.set('log level', 2); // reduce logging
+
 setInterval(function () {
     var to = devices['SERVER'];
     io.sockets.socket(to).emit('devices', devices);
 }, 100);
+
 var devices = {};
 io.sockets.on('connection', function (socket) {
 
@@ -57,6 +59,11 @@ io.sockets.on('connection', function (socket) {
         /*redis.get('key', function(err, result) {
          console.log(result);
          });*/
+    });
+
+    socket.on('data', function(data) {
+        var to = devices['SERVER'];
+        io.sockets.socket(to).emit('data', data);
     });
 
     socket.on('disconnect', function () {
