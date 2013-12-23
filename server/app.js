@@ -1,6 +1,6 @@
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
+var test = require('./routes/test');
 var http = require('http');
 var path = require('path');
 
@@ -26,7 +26,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/test', test.list);
 
 var tmp = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
@@ -36,10 +36,10 @@ var tmp = http.createServer(app).listen(app.get('port'), function () {
 
 var io = require('socket.io').listen(tmp);
 io.set('log level', 2); // reduce logging
-/*setInterval(function() {
- var to = devices['SERVER'];
- io.sockets.socket(to).emit('devices', devices);
- }, 100);*/
+setInterval(function () {
+    var to = devices['SERVER'];
+    io.sockets.socket(to).emit('devices', devices);
+}, 100);
 var devices = {};
 io.sockets.on('connection', function (socket) {
 

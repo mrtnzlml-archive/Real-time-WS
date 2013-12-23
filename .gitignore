@@ -5,3 +5,4 @@ server/node_modules/*
 
 *.aux
 *.synctex.gz
+*.zip
