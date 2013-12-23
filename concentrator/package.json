@@ -1,8 +1,11 @@
 {
-	"name": "real-time",
+	"name": "concentrator",
 	"version": "0.0.0",
 	"author": "Martin Zlámal <mrtnzlml@gmail.com>",
 	"private": true,
+    "scripts": {
+        "start": "node client.js"
+    },
 	"dependencies": {
 		"socket.io-client": "0.9.16"
 	},

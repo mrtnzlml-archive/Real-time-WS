@@ -1,14 +1,18 @@
 {
-    "name": "application-name",
-    "version": "0.0.1",
+    "name": "server",
+    "version": "0.0.0",
+    "author": "Martin Zlámal <mrtnzlml@gmail.com>",
     "private": true,
     "scripts": {
         "start": "node app.js"
     },
     "dependencies": {
         "express": "3.4.7",
-        "jade": "*",
+        "jade": "1.0.0",
         "redis": "0.9.1",
         "socket.io": "0.9.16"
+    },
+    "engines": {
+        "node": "0.10.24"
     }
 }
