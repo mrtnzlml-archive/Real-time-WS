@@ -1,2 +1,7 @@
-node_modules/*
 .idea/*
+
+node_modules/*
+client/node_modules/*
+
+*.aux
+*.synctex.gz
