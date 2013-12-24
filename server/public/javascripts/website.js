@@ -8,7 +8,6 @@ socket.on('connect', function () {
 });
 
 socket.on('devices', function (data) {
-    //console.log(data);
     $('li.dev').remove();
     $.each(data, function (key, value) {
         $('#devices').append('<li class=dev>' + key + ' (' + value + ')</li>');

@@ -6,13 +6,14 @@ block script
     script(src='/javascripts/website.js')
 
 block content
+    a.click PING
     pre#message OFFLINE
     hr
     h3 Connected devices
-        pre
-            ul#devices
+    pre
+        ul#devices
     h3 Data from concentrator <span class='concentrator'></span>
-        pre#data CONCENTRATOR OFFLINE
+    pre#data CONCENTRATOR OFFLINE
 
     style.
         svg {
@@ -33,6 +34,10 @@ block content
         }
     script(src="http://d3js.org/d3.v3.min.js")
     script(type='text/javascript').
+        $('.click').click(function() {
+            socket.emit('ping', 'ping');
+        });
+
         var n = 500,
             //random = d3.random.normal(0, .2),
             //data = d3.range(n).map(random);
@@ -47,7 +52,7 @@ block content
             .domain([-1, 1])
             .range([height, 0]);
         var line = d3.svg.line()
-            .interpolate("basis")
+            //.interpolate("basis")
             .x(function (d, i) {
                 return x(i);
             })
