@@ -12,11 +12,16 @@ client.on('message', function (data) {
     console.log(data);
 });
 
+var x = 0;
 setInterval(function () {
     client.emit('data', {
         uid: uid,
-        data: Math.random()
+        data: Math.random()*2-1
+        //data: Math.sin(x)
+        //data: Math.cos(x)
+        //data: Math.tan(x)
     });
+    x += 0.1;
 }, 100);
 
 client.on('error', function () {

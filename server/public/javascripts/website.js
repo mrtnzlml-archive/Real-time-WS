@@ -1,7 +1,5 @@
 var socket = io.connect('ws://127.0.0.1:3000/');
-var ext = {
-    data: 0
-};
+var ext;
 
 socket.on('connect', function () {
     socket.emit('register', 'SERVER');

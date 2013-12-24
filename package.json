@@ -1,0 +1,15 @@
+{
+	"name": "concentrator",
+	"version": "0.0.0",
+	"author": "Martin Zlámal <mrtnzlml@gmail.com>",
+	"private": true,
+    "scripts": {
+        "start": "node server/app.js"
+    },
+	"dependencies": {
+		"socket.io-client": "0.9.16"
+	},
+	"engines": {
+		"node": "0.10.24"
+	}
+}
