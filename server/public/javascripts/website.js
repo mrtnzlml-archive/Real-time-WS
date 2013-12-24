@@ -1,4 +1,4 @@
-var socket = io.connect('ws://127.0.0.1:3000/');
+var socket = io.connect('ws://127.0.0.1/');
 var ext;
 
 socket.on('connect', function () {
