@@ -16,8 +16,8 @@ var x = 0;
 setInterval(function () {
     client.emit('data', {
         uid: uid,
-        //data: Math.random()*2-1
-        data: Math.sin(x)
+        data: Math.random()*2-1
+        //data: Math.sin(x)
         //data: Math.cos(x)
         //data: Math.tan(x)
     });

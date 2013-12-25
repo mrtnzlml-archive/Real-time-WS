@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
+// MIDDLEWARES HERE
 app.use(app.router);
 
 // development only
@@ -33,17 +34,23 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 
 var io = require('socket.io').listen(server);
 io.set('log level', 2); // reduce logging
+io.set('close timeout', 30);
 
 var devices = {};
 
 io.sockets.on('connection', function (socket) {
 
     socket.on('register', function (uid) {
+        redis.zadd('devices', Date.now(), socket.id);
+        redis.zrevrangebyscore('devices', '+inf', '-inf', function(err, reply) {
+            io.sockets.emit('devices', reply);
+        });
+
         socket.uid = uid; //FIXME: via redis - takto to nefunguje dobře (proč?)
         devices[uid] = socket.id;
         socket.emit('message', 'Registration OK, welcome ' + uid + ' (' + socket.id + ')');
         var to = devices['SERVER'];
-        io.sockets.socket(to).emit('devices', devices);
+        //io.sockets.socket(to).emit('devices', devices);
     });
 
     socket.on('data', function (data) {
@@ -56,14 +63,20 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
+        redis.zrem('devices', socket.id);
         delete devices[socket.uid];
     });
+
+    //redis.del('devices');
 
 });
 
 setInterval(function () {
+    redis.zrevrangebyscore('devices', '+inf', '-inf', function(err, reply) {
+        io.sockets.emit('devices', reply);
+    });
     var to = devices['SERVER'];
-    io.sockets.socket(to).emit('devices', devices);
+    //io.sockets.socket(to).emit('devices', devices);
 }, 100);
 
 redis.on("error", function (err) {
