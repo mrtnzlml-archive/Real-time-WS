@@ -1,8 +1,8 @@
 var io = require("socket.io-client");
 var PORT = 3000;
-var uid = 'UID-0001';
+var uid = 'uid=UID-0001';
 
-client = io.connect("ws://127.0.0.1:" + PORT + "/");
+client = io.connect("ws://127.0.0.1:" + PORT + "/", { query: uid });
 
 client.on('connect', function () {
     client.emit('register', uid);

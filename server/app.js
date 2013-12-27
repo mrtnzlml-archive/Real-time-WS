@@ -34,6 +34,16 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 var io = require('socket.io').listen(server);
 io.set('log level', 2); // reduce logging
 io.set('close timeout', 30);
+io.set('authorization', function (handshakeData, callback) {
+    var uid = /^UID-[0-9]{4}/i;
+    var localhost = /^localhost$|^127.0.0.1/i;
+    //TODO: kontrola přes query se mi nelíbí, vymyslet lepší autorizaci koncentrátorů
+    if (uid.test(handshakeData.query.uid) || localhost.test(handshakeData.headers.host)) {
+        callback(null, true);
+    } else {
+        callback(null, false); // 403 - handshake unauthorized
+    }
+});
 
 io.sockets.on('connection', function (socket) {
 
