@@ -4,14 +4,6 @@ var uid = 'uid=UID-0001';
 
 client = io.connect("ws://127.0.0.1:" + PORT + "/", { query: uid });
 
-client.on('connect', function () {
-    client.emit('register', uid);
-});
-
-client.on('message', function (data) {
-    console.log(data);
-});
-
 var x = 0;
 setInterval(function () {
     client.emit('data', {

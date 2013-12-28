@@ -46,42 +46,24 @@ io.set('authorization', function (handshakeData, callback) {
 });
 
 io.sockets.on('connection', function (socket) {
-
-    socket.on('register', function (uid) {
-        var device = {};
-        device[uid] = socket.id;
-        redis.zadd('devices', Date.now(), JSON.stringify(device)); //FIXME: unique UID
-        redis.zrevrangebyscore('devices', '+inf', '-inf', function (err, reply) {
-            io.sockets.emit('devices', reply);
-        });
-        socket.uid = uid;
-        socket.emit('message', 'Registration OK, welcome ' + uid + ' (' + socket.id + ')');
-    });
+    //TODO: rooms ( socket.join('room')/io.sockets.in('room').emit('message', {foo:bar}); )
+    socket.emit('news', 'Welcome ' + socket.id);
+    socket.broadcast.emit('news', 'Opening connection ' + socket.id);
 
     socket.on('data', function (data) {
-        //var to = devices['SERVER'];
-        //io.sockets.socket(to).emit('data', data);
         io.sockets.emit('data', data);
     });
 
-    socket.on('ping', function (data) {
-        console.log('PONG');
-    });
-
     socket.on('disconnect', function () {
-        var device = {};
-        device[socket.uid] = socket.id;
-        redis.zrem('devices', JSON.stringify(device));
+        socket.broadcast.emit('news', 'Closing connection ' + socket.id);
     });
 
 });
 
 setInterval(function () {
-    redis.zrevrangebyscore('devices', '+inf', '-inf', function (err, reply) {
-        io.sockets.emit('devices', reply);
-    });
+    // NOP
 }, 100);
 
 redis.on("error", function (err) {
-    console.log("error event - " + client.host + ":" + client.port + " - " + err);
+    console.error("error event - " + client.host + ":" + client.port + " - " + err);
 });

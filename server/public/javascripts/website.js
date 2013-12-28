@@ -3,25 +3,14 @@ var ext = {
     data: 0
 };
 
-socket.on('connect', function () {
-    socket.emit('register', 'SERVER');
-});
-
-socket.on('devices', function (data) {
-    $('li.dev').remove();
-    $.each(data, function (key, value) {
-        $('#devices').append('<li class=dev>' + key + ' (' + value + ')</li>');
-    });
+socket.on('news', function (string) {
+    $("#news").append(string + '<br>');
 });
 
 socket.on('data', function (data) {
     ext = data;
     $('#data').html(data.data);
     $('.concentrator').html(data.uid);
-});
-
-socket.on('message', function (data) {
-    $('#message').html(data);
 });
 
 socket.on('error', function () {
