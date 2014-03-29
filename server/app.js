@@ -5,6 +5,8 @@ var redis = require('redis').createClient(); //https://github.com/mranney/node_r
 var fs = require('fs');
 var app = express();
 
+//TODO: http://howtonode.org/socket-io-auth
+
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
