@@ -3,22 +3,25 @@ html(lang='cs', dir='ltr')
     head
         meta(charset="utf-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
         title= title
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
         block script
 
     body
-        .container
-            .header
-                ul.nav.nav-pills.pull-right
-                    li.active
-                        a(href="/") Home
-                    li
-                        a(href="/test/index") Test1
-                    li
-                        a(href="/test/index2") Test2
-                h2 Real-time websocket server
-                p Welcome to real-time websocket server!
-            block content
+        div.site-wrapper
+            div.site-wrapper-inner
+                div.cover-container
+                    div.inner.cover
+                        div.nav
+                            ul
+                                li
+                                    a(href="/test").nav-el
+                                        span.icon-bulb
+                                    a(href="#").nav-el
+                                        span.icon-mail
+                                    a(href="#").nav-el
+                                        span.icon-data
+                                    a(href="#").nav-el
+                                        span.icon-phone
