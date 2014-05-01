@@ -2,6 +2,7 @@
 
 concentrator/node_modules/*
 server/node_modules/*
+server-deprecated/node_modules/*
 
 *.aux
 *.lof

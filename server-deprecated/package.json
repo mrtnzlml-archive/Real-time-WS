@@ -1,0 +1,23 @@
+{
+    "name": "server",
+    "version": "0.0.0",
+    "author": "Martin Zlámal <mrtnzlml@gmail.com>",
+    "private": true,
+    "scripts": {
+        "start": "node app.js",
+        "test": "mocha -R list tests"
+    },
+    "dependencies": {
+        "express": "4.1.1",
+        "jade": "1.0.0",
+        "redis": "0.9.1",
+        "socket.io": "0.9.16"
+    },
+    "devDependencies": {
+        "should": "2.1.1",
+        "socket.io-client": "0.9.16"
+    },
+    "engines": {
+        "node": "0.10.24"
+    }
+}
