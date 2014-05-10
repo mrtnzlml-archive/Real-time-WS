@@ -8,11 +8,11 @@ var count = 0;
 
 socket.on('data', function (data) {
 	count++;
-	$('#message').append('Data input: ' + data.data + '<br>');
+	$('#message').append('Data input (' + data.uid + '): ' + data.data + '<br>');
 	$('#message').scrollTop($("#message")[0].scrollHeight);
 });
 
 setInterval(function() {
-	$('#message').append('Zpracováno ' + count + ' požadavků za sekundu<br>');
+	//$('#message').append('Zpracováno ' + count + ' požadavků za sekundu<br>');
 	count = 0;
 }, 1000);
