@@ -1,0 +1,10 @@
+Project names
+=============
+Beacon
+Caliban
+Mercury
+Jabba
+Calypso
+Spectre
+Nimbus
+Abyss

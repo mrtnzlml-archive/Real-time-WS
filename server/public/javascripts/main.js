@@ -1,4 +1,5 @@
-var socket = io.connect('ws://127.0.0.1:3000/');
+//var host = location.origin.replace(/^http/, 'ws');
+var socket = io.connect('/');
 
 socket.on('message', function (string) {
 	$("#message").append(string + '<br>');

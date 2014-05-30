@@ -1,0 +1,25 @@
+chrome://net-internals/#events ; filter: sleepy-badlands sec-websocket
+
+657073: SOCKET_STREAM
+ws://sleepy-badlands-5547.herokuapp.com/socket.io/1/websocket/fvrOVhUehM5LsfOMlPub
+Start Time: 2014-05-30 12:25:06.102
+
+t=193961 [st=   124]    WEB_SOCKET_SEND_REQUEST_HEADERS
+                        --> GET /socket.io/1/websocket/fvrOVhUehM5LsfOMlPub HTTP/1.1
+                            Upgrade: websocket
+                            Connection: Upgrade
+                            Host: sleepy-badlands-5547.herokuapp.com
+                            Origin: http://sleepy-badlands-5547.herokuapp.com
+                            Pragma: no-cache
+                            Cache-Control: no-cache
+                            Sec-WebSocket-Key: JggXXu0dX+26uuWwHNvtvw==
+                            Sec-WebSocket-Version: 13
+                            Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits, x-webkit-deflate-frame
+                            User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36
+                            
+t=194101 [st=   264]    WEB_SOCKET_READ_RESPONSE_HEADERS
+                        --> HTTP/1.1 101 Switching Protocols
+                            connection: Upgrade
+                            sec-websocket-accept: PeZby07NJ56a6l+4Rv6/RFd5Nog=
+                            upgrade: websocket
+                            via: 1.1 vegur
