@@ -1,6 +1,7 @@
 exports.listen = function(server) {
 	var io = require('socket.io').listen(server);
 	//FIXME: doesn't work on remote Heroku Cedar server
+	//see http://socket.io/docs/migrating-from-0-9/
 	/*io.set('authorization', function (handshakeData, callback) {
 		var uid = /^[a-z]-[0-9]{10}/i;
 		var localhost = /^localhost$|^127.0.0.1/i;
@@ -14,9 +15,13 @@ exports.listen = function(server) {
 		socket.emit('message', 'Welcome ' + socket.id);
 		socket.broadcast.emit('message', 'Opening connection ' + socket.id);
 
-		socket.on('data', function (data) {
-			io.sockets.emit('data', data);
-			socket.emit('response', 1);
+		setInterval(function() {
+			socket.emit('ping', new Date().getTime());
+		}, 1000);
+
+		socket.on('pong', function (data) {
+			var latency = new Date().getTime() - data;
+			io.emit('data', 'Latency: ' + latency + 'ms');
 		});
 
 		socket.on('disconnect', function () {
