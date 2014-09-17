@@ -1,0 +1,10 @@
+stm324xg-eval\k_modules_res.o: ..\Core\Src\k_modules_res.c
+stm324xg-eval\k_modules_res.o: ..\Core\inc\k_modules_res.h
+stm324xg-eval\k_modules_res.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h
+stm324xg-eval\k_modules_res.o: ..\..\..\..\Middlewares\ST\STemWin\inc\GUI.h
+stm324xg-eval\k_modules_res.o: ..\..\..\..\Middlewares\ST\STemWin\inc\GUI_ConfDefaults.h
+stm324xg-eval\k_modules_res.o: ..\Config\GUIConf.h
+stm324xg-eval\k_modules_res.o: ..\..\..\..\Middlewares\ST\STemWin\inc\GUI_Type.h
+stm324xg-eval\k_modules_res.o: ..\..\..\..\Middlewares\ST\STemWin\inc\LCD.h
+stm324xg-eval\k_modules_res.o: ..\..\..\..\Middlewares\ST\STemWin\inc\Global.h
+stm324xg-eval\k_modules_res.o: ..\..\..\..\Middlewares\ST\STemWin\inc\GUI_Version.h

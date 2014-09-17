@@ -17,10 +17,11 @@ exports.listen = function(server) {
 
 		setInterval(function() {
 			socket.emit('ping', new Date().getTime());
-		}, 1000);
+		}, 100);
 
 		socket.on('pong', function (data) {
 			var latency = new Date().getTime() - data;
+			console.log('Latency: ' + latency + 'ms');
 			io.emit('data', 'Latency: ' + latency + 'ms');
 		});
 
