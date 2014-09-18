@@ -5,64 +5,48 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-
-__IO uint32_t uhCCR1_Val = 4000;
-__IO uint32_t uhCCR2_Val = 9000;
-__IO uint32_t uhCCR3_Val = 14000;
-__IO uint32_t uhCCR4_Val = 19000;
-uint32_t uhCapture = 0;
-uint32_t counter = 0;
-
-/* Timer handler declaration */
-TIM_HandleTypeDef TimHandle;
-
-/* Timer Output Compare Configuration Structure declaration */
-TIM_OC_InitTypeDef sConfig;
+TIM_HandleTypeDef TimHandle; // Timer handler declaration
+TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
+__IO uint32_t uhCCR1_Val = 1000;
+__IO uint32_t uhCCR2_Val = 1100;
 
 /* Private function prototypes -----------------------------------------------*/
-static void SystemClock_Config(void);
 static void Error_Handler(void);
+static void SystemClock_Config(void);
+static void BSP_Config(void);
+static void ETH_Config(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
-int main(void)
-{
+int main(void) {
 
   /* STM32F4xx HAL library initialization:
-       - Configure the Flash prefetch, Flash preread and Buffer caches
-       - Systick timer is configured by default as source of time base, but user 
-             can eventually implement his proper time base source (a general purpose 
-             timer for example or other time source), keeping in mind that Time base 
-             duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and 
-             handled in milliseconds basis.
-       - Low Level Initialization
-     */
+		 - Configure the Flash prefetch, instruction and Data caches
+		 - Configure the Systick to generate an interrupt each 1 msec
+		 - Set NVIC Group Priority to 4
+		 - Global MSP (MCU Support Package) initialization
+   */
   HAL_Init();
 
   /* Configure the System clock to have a frequency of 168 MHz */
   SystemClock_Config();
-
-  BSP_LED_Init(LED1);
-	BSP_LED_Init(LED2);
-	BSP_LED_Init(LED3);
-	BSP_LED_Init(LED4);
+	
+	/* Configure the BSP (Board Support Package) */
+  BSP_Config();
+	
+	/* Configurates the network interface */
+	ETH_Config();
 
 	/*##-1- Configure the TIM peripheral #######################################*/
 	TimHandle.Instance = TIMx;
-	TimHandle.Init.Period = 20000;
-	//TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock /2) / 21000000) - 1);
-	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock /2) / 1000000) - 1);
+	TimHandle.Init.Period = 8000;
+	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock /2) / 1000) - 1); //1kHz
   TimHandle.Init.ClockDivision = 0;
-  TimHandle.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED3;
+  TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   if(HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
     Error_Handler();
   }
-		
+
 	/*##-2- Configure the Output Compare channels #########################################*/
 	sConfig.OCMode = TIM_OCMODE_TOGGLE;
 	sConfig.Pulse = uhCCR1_Val;
@@ -74,14 +58,6 @@ int main(void)
 	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_2) != HAL_OK) {
     Error_Handler();
   }
-	sConfig.Pulse = uhCCR3_Val;
-	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_3) != HAL_OK) {
-    Error_Handler();
-  }
-	sConfig.Pulse = uhCCR4_Val;
-	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_4) != HAL_OK) {
-    Error_Handler();
-  }
 	
 	/*##-3- Start signals generation #######################################*/
 	/* Start channel 1 in Output compare mode */
@@ -91,15 +67,11 @@ int main(void)
 	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_2) != HAL_OK) {
     Error_Handler();
   }
-	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_3) != HAL_OK) {
-    Error_Handler();
-  }
-	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_4) != HAL_OK) {
-    Error_Handler();
-  }
 
   while (1) {
-  }
+		/* EMPTY LOOP */
+	}
+
 }
 
 /**
@@ -109,51 +81,14 @@ int main(void)
   */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
-		__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_1, (uhCCR1_Val));
-		switch(counter) {
-			case 0:
-				BSP_LED_On(LED1);
-				counter++;
-				break;
-			case 1:
-				BSP_LED_Toggle(LED1);
-				BSP_LED_Toggle(LED2);
-				counter++;
-				break;
-			case 2:
-				BSP_LED_Toggle(LED2);
-				BSP_LED_Toggle(LED3);
-				counter++;
-				break;
-			case 3:
-				counter++;
-				break;
-			case 4:
-				BSP_LED_Toggle(LED3);
-				BSP_LED_On(LED4);
-				counter++;
-				break;
-			case 5:
-				BSP_LED_Toggle(LED4);
-				BSP_LED_Toggle(LED3);
-				counter++;
-				break;
-			case 6:
-				BSP_LED_Toggle(LED3);
-				BSP_LED_Toggle(LED2);
-				counter++;
-				break;
-			case 7:
-				BSP_LED_Toggle(LED2);
-				BSP_LED_Toggle(LED1);
-				counter = 0;
-			default:
-				break;
-		}
+		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_1, (uhCCR1_Val));
+		BSP_LED_On(LED4);
   }
-
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
+		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_2, (uhCCR2_Val));
+		BSP_LED_Off(LED4);
+  }
 }
-
 
 /**
   * @brief  This function is executed in case of error occurrence.
@@ -161,11 +96,28 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
   * @retval None
   */
 static void Error_Handler(void) {
-	BSP_LED_On(LED1);
-	BSP_LED_On(LED2);
-	BSP_LED_On(LED3);
 	BSP_LED_On(LED4);
   while(1) {}
+}
+
+static void BSP_Config(void) {
+	BSP_LED_Init(LED1);
+	BSP_LED_Init(LED2);
+	BSP_LED_Init(LED3);
+	BSP_LED_Init(LED4);
+	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
+}
+
+static void ETH_Config(void) {
+	/*
+	struct ip_addr ipaddr;
+  struct ip_addr netmask;
+  struct ip_addr gw;
+	
+	IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
+  IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
+  IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+	*/
 }
 
 /**
@@ -188,8 +140,7 @@ static void Error_Handler(void) {
   * @param  None
   * @retval None
   */
-static void SystemClock_Config(void)
-{
+static void SystemClock_Config(void) {
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;
 
@@ -227,7 +178,6 @@ static void SystemClock_Config(void)
 }
 
 #ifdef  USE_FULL_ASSERT
-
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
@@ -239,10 +189,6 @@ void assert_failed(uint8_t* file, uint32_t line)
 { 
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-  /* Infinite loop */
-  while (1)
-  {
-  }
+  while (1) {}
 }
 #endif

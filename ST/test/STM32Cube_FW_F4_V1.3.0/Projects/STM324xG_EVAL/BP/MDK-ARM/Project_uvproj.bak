@@ -1355,6 +1355,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\stm32f4xx_it.c</FilePath>
             </File>
+            <File>
+              <FileName>lcd_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lcd_log.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -2535,6 +2540,11 @@
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\stm32f4xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lcd_log.c</FilePath>
             </File>
           </Files>
         </Group>
