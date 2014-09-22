@@ -1,5 +1,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "lwip/netif.h"
+
+#include "lwip/opt.h"
+#include "lwip/init.h"
+#include "lwip/netif.h"
+#include "lwip/lwip_timers.h"
+#include "netif/etharp.h"
+#include "ethernetif.h"
+
+#include "app_ethernet.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -9,6 +19,7 @@ TIM_HandleTypeDef TimHandle; // Timer handler declaration
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
 __IO uint32_t uhCCR1_Val = 1000;
 __IO uint32_t uhCCR2_Val = 1100;
+struct netif gnetif;
 
 /* Private function prototypes -----------------------------------------------*/
 static void Error_Handler(void);
@@ -34,9 +45,12 @@ int main(void) {
 	/* Configure the BSP (Board Support Package) */
   BSP_Config();
 	
+	/* Initilaize the LwIP stack */
+  lwip_init();
+	
 	/* Configurates the network interface */
 	ETH_Config();
-
+	
 	/*##-1- Configure the TIM peripheral #######################################*/
 	TimHandle.Instance = TIMx;
 	TimHandle.Init.Period = 8000;
@@ -67,9 +81,16 @@ int main(void) {
 	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_2) != HAL_OK) {
     Error_Handler();
   }
+	
+	User_notification(&gnetif);
 
-  while (1) {
-		/* EMPTY LOOP */
+  while (1) {		
+		/* Read a received packet from the Ethernet buffers and send it 
+       to the lwIP for handling */
+    ethernetif_input(&gnetif);
+
+    /* Handle timeouts */
+    sys_check_timeouts();
 	}
 
 }
@@ -101,15 +122,29 @@ static void Error_Handler(void) {
 }
 
 static void BSP_Config(void) {
-	BSP_LED_Init(LED1);
-	BSP_LED_Init(LED2);
-	BSP_LED_Init(LED3);
-	BSP_LED_Init(LED4);
-	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
+	GPIO_InitTypeDef GPIO_InitStructure;
+   
+   __GPIOB_CLK_ENABLE();
+   
+  GPIO_InitStructure.Pin = GPIO_PIN_14;
+  GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull = GPIO_NOPULL ;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0xf, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn); 
+  
+  /* Initialize STM324xG-EVAL's LEDs */
+  BSP_LED_Init(LED1);
+  BSP_LED_Init(LED2);
+  BSP_LED_Init(LED3);
+  BSP_LED_Init(LED4);
+  
+  /* Set Systick Interrupt to the highest priority */
+  HAL_NVIC_SetPriority(SysTick_IRQn, 0x0, 0x0);
 }
 
 static void ETH_Config(void) {
-	/*
 	struct ip_addr ipaddr;
   struct ip_addr netmask;
   struct ip_addr gw;
@@ -117,7 +152,23 @@ static void ETH_Config(void) {
 	IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
   IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
   IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
-	*/
+	
+	/* Add the network interface */
+	netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
+	
+	/* Registers the default network interface */
+  netif_set_default(&gnetif);
+  
+  if (netif_is_link_up(&gnetif)) {
+    /* When the netif is fully configured this function must be called */
+    netif_set_up(&gnetif);
+  } else {
+    /* When the netif link is down this function must be called */
+    netif_set_down(&gnetif);
+  }
+  
+  /* Set the link callback function, this function is called on change of link status*/
+  netif_set_link_callback(&gnetif, ethernetif_update_config);
 }
 
 /**

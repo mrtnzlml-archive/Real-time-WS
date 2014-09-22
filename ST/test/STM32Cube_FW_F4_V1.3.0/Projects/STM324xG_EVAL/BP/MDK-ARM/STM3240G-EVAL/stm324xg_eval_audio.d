@@ -10,10 +10,10 @@ stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\STM32F4xx_HAL_Driver\In
 stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h
 stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
 stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h
-stm3240g-eval\stm324xg_eval_audio.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cm4.h
-stm3240g-eval\stm324xg_eval_audio.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cmInstr.h
-stm3240g-eval\stm324xg_eval_audio.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cmFunc.h
-stm3240g-eval\stm324xg_eval_audio.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include\core_cm4_simd.h
+stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Include\core_cm4.h
+stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Include\core_cmInstr.h
+stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Include\core_cmFunc.h
+stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Include\core_cm4_simd.h
 stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h
 stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
 stm3240g-eval\stm324xg_eval_audio.o: ..\..\..\..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h
