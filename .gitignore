@@ -10,3 +10,11 @@ server-deprecated/node_modules/*
 *.synctex.gz
 *.toc
 *.zip
+
+*.s
+*.lst
+*.bak
+*.dep
+*.crf
+*.d
+*.o
