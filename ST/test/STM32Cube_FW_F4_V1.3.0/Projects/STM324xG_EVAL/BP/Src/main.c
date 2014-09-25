@@ -10,6 +10,7 @@
 #include "ethernetif.h"
 
 #include "app_ethernet.h"
+#include "concentrator.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -17,8 +18,8 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef TimHandle; // Timer handler declaration
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
-__IO uint32_t uhCCR1_Val = 1000;
-__IO uint32_t uhCCR2_Val = 1100;
+__IO uint32_t uhCCR1_Val = 10;
+__IO uint32_t uhCCR2_Val = 20;
 struct netif gnetif;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -51,9 +52,11 @@ int main(void) {
 	/* Configurates the network interface */
 	ETH_Config();
 	
+	concentrator_init();
+	
 	/*##-1- Configure the TIM peripheral #######################################*/
 	TimHandle.Instance = TIMx;
-	TimHandle.Init.Period = 8000;
+	TimHandle.Init.Period = 50; //8000
 	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock /2) / 1000) - 1); //1kHz
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -102,6 +105,8 @@ int main(void) {
   */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
+		udp_echoclient_send();
+		
 		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_1, (uhCCR1_Val));
 		BSP_LED_On(LED4);
   }
@@ -117,6 +122,9 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
   * @retval None
   */
 static void Error_Handler(void) {
+	BSP_LED_On(LED1);
+	BSP_LED_On(LED2);
+	BSP_LED_On(LED3);
 	BSP_LED_On(LED4);
   while(1) {}
 }
@@ -139,6 +147,9 @@ static void BSP_Config(void) {
   BSP_LED_Init(LED2);
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
+	
+	/* Initialize Key button */
+  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
   
   /* Set Systick Interrupt to the highest priority */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0x0, 0x0);
@@ -169,6 +180,20 @@ static void ETH_Config(void) {
   
   /* Set the link callback function, this function is called on change of link status*/
   netif_set_link_callback(&gnetif, ethernetif_update_config);
+}
+
+/**
+  * @brief  EXTI line detection callbacks
+  * @param  GPIO_Pin: Specifies the pins connected EXTI line
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+  if (GPIO_Pin == GPIO_PIN_14) {
+    ethernetif_set_link(&gnetif);
+  } else if(GPIO_Pin == GPIO_PIN_15) {
+    udp_echoclient_send();
+		BSP_LED_Toggle(LED3);
+	}
 }
 
 /**

@@ -61,6 +61,7 @@
 "stm3240g-eval\stm32f4xx_it.o"
 "stm3240g-eval\ethernetif.o"
 "stm3240g-eval\app_ethernet.o"
+"stm3240g-eval\concentrator.o"
 "stm3240g-eval\api_lib.o"
 "stm3240g-eval\api_msg.o"
 "stm3240g-eval\err.o"

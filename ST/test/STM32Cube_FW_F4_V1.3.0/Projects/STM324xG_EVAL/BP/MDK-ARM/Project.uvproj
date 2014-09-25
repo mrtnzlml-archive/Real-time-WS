@@ -1323,6 +1323,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\app_ethernet.c</FilePath>
             </File>
+            <File>
+              <FileName>concentrator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\concentrator.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2678,6 +2683,11 @@
               <FileName>app_ethernet.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_ethernet.c</FilePath>
+            </File>
+            <File>
+              <FileName>concentrator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\concentrator.c</FilePath>
             </File>
           </Files>
         </Group>

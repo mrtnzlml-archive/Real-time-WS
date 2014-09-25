@@ -186,6 +186,17 @@ void TIM3_IRQHandler(void)
   HAL_TIM_IRQHandler(&TimHandle);
 }
 
+/**
+  * @brief  This function handles EXTI15_10
+  * @param  None
+  * @retval None
+  */
+void EXTI15_10_IRQHandler(void) 
+{
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14); //ETH
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15); //Button
+}
+
 
 /**
   * @}
