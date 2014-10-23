@@ -18,8 +18,8 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef TimHandle; // Timer handler declaration
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
-__IO uint32_t uhCCR1_Val = 10;
-__IO uint32_t uhCCR2_Val = 20;
+__IO uint32_t uhCCR1_Val = 100;
+__IO uint32_t uhCCR2_Val = 200;
 struct netif gnetif;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,8 +56,10 @@ int main(void) {
 	
 	/*##-1- Configure the TIM peripheral #######################################*/
 	TimHandle.Instance = TIMx;
-	TimHandle.Init.Period = 50; //8000
-	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock /2) / 1000) - 1); //1kHz
+	TimHandle.Init.Period = 10000;
+	//Prescaler max value is 65535!
+	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
+	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
   if(HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
@@ -87,7 +89,7 @@ int main(void) {
 	
 	User_notification(&gnetif);
 
-  while (1) {		
+  while (1) {
 		/* Read a received packet from the Ethernet buffers and send it 
        to the lwIP for handling */
     ethernetif_input(&gnetif);
