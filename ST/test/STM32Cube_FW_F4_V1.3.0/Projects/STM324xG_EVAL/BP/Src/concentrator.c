@@ -91,6 +91,7 @@ void udp_echoclient_send(void)
   * @retval None
   */
 void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr *addr, u16_t port) {
+	BSP_LED_Toggle(LED3);
   /* Free receive pbuf */
   pbuf_free(p);
 }
