@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Project version="2G - 1.7.7" name="test-coocox">
-  <Target name="test-coocox" isCurrent="1">
+<Project version="2G - 1.7.7" name="coocox">
+  <Target name="coocox" isCurrent="1">
     <Device manufacturerId="9" manufacturerName="ST" chipId="502" chipName="STM32F401VC" boardId="52" boardName="stm32f4-discovery"/>
     <BuildOption>
       <Compile>
@@ -35,7 +35,7 @@
       <Output>
         <Option name="OutputFileType" value="0"/>
         <Option name="Path" value="./"/>
-        <Option name="Name" value="test-coocox"/>
+        <Option name="Name" value="coocox"/>
         <Option name="HEX" value="1"/>
         <Option name="BIN" value="1"/>
       </Output>

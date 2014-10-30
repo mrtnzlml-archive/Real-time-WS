@@ -17,10 +17,10 @@
 #define GPIO_PIN_CHANNEL3              GPIO_PIN_8
 #define GPIO_PIN_CHANNEL4              GPIO_PIN_9
 
-#define DEST_IP_ADDR0   169
-#define DEST_IP_ADDR1   254
-#define DEST_IP_ADDR2   12
-#define DEST_IP_ADDR3   108
+#define DEST_IP_ADDR0   192
+#define DEST_IP_ADDR1   168
+#define DEST_IP_ADDR2   0
+#define DEST_IP_ADDR3   20
 #define DEST_PORT       50000
 
 #define IP_ADDR0   192
