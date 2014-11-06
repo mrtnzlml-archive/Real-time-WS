@@ -8,9 +8,10 @@ server.on("error", function (err) {
 
 server.on("message", function (msg, rinfo) {
 	console.log("server got: " + msg + " from " + rinfo.address + ":" + rinfo.port);
-	var message = new Buffer("Some bytes");
+	var random = Math.random();
+	var message = new Buffer(random);
 	server.send(message, 0, message.length, rinfo.port, rinfo.address, function() {
-		console.log("Response sent");
+		//console.log("Response: " + random);
 	});
 });
 

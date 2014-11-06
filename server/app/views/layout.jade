@@ -1,0 +1,23 @@
+//- http://getbootstrap.com/examples/blog/
+
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+	body
+		.blog-masthead
+			.container
+				nav.blog-nav
+					a.blog-nav-item.active(href='/') 		Home
+					a.blog-nav-item(href='/users')			Features
+		.container
+			.blog-header
+				h1.blog-title								Welcome to #{title}
+				p.lead.blog-description						The official example template of creating a blog with Bootstrap.
+			.row
+				.col-sm-8.blog-main
+					.blog-post
+						block content
