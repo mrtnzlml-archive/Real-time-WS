@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Project version="2G - 1.7.7" name="concentrator">
+  <Target name="concentrator" isCurrent="1">
+    <Device manufacturerId="9" manufacturerName="ST" chipId="343" chipName="STM32F407IG" boardId="" boardName=""/>
+    <BuildOption>
+      <Compile>
+        <Option name="OptimizationLevel" value="0"/>
+        <Option name="UseFPU" value="0"/>
+        <Option name="UserEditCompiler" value=""/>
+        <Option name="SupportCPlusplus" value="0"/>
+        <Includepaths>
+          <Includepath path="."/>
+        </Includepaths>
+        <DefinedSymbols>
+          <Define name="USE_HAL_DRIVER"/>
+          <Define name="STM32F407xx"/>
+          <Define name="USE_STM324xG_EVAL,"/>
+          <Define name="STM32F427xx"/>
+        </DefinedSymbols>
+      </Compile>
+      <Link useDefault="0">
+        <Option name="DiscardUnusedSection" value="0"/>
+        <Option name="UserEditLinkder" value=""/>
+        <Option name="UseMemoryLayout" value="1"/>
+        <Option name="nostartfiles" value="1"/>
+        <Option name="LTO" value="0"/>
+        <Option name="IsNewStartupCode" value="1"/>
+        <Option name="Library" value="Not use C Library"/>
+        <LinkedLibraries/>
+        <MemoryAreas debugInFlashNotRAM="1">
+          <Memory name="IROM1" type="ReadOnly" size="0x00100000" startValue="0x08000000"/>
+          <Memory name="IRAM1" type="ReadWrite" size="0x00020000" startValue="0x20000000"/>
+          <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
+          <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
+        </MemoryAreas>
+        <LocateLinkFile path="../../../../../coocox/coide/configuration/programdata/concentrator/arm-gcc-link.ld" type="0"/>
+      </Link>
+      <Output>
+        <Option name="OutputFileType" value="0"/>
+        <Option name="Path" value="./"/>
+        <Option name="Name" value="concentrator"/>
+        <Option name="HEX" value="1"/>
+        <Option name="BIN" value="1"/>
+      </Output>
+      <User>
+        <UserRun name="Run#1" type="Before" checked="0" value=""/>
+        <UserRun name="Run#1" type="After" checked="0" value=""/>
+      </User>
+    </BuildOption>
+    <DebugOption>
+      <Option name="org.coocox.codebugger.gdbjtag.core.adapter" value="ST-Link"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.debugMode" value="SWD"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.clockDiv" value="1M"/>
+      <Option name="org.coocox.codebugger.gdbjtag.corerunToMain" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkgdbserver" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.userDefineGDBScript" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.targetEndianess" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkResetMode" value="Type 0: Normal"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.resetMode" value="SYSRESETREQ"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifSemihost" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifCacheRom" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ipAddress" value="127.0.0.1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.portNumber" value="2009"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F4xx_1024.elf"/>
+    </DebugOption>
+    <ExcludeFile/>
+  </Target>
+  <Components path="./">
+    <Component id="54" name="M4 CMSIS Core" path="" type="2"/>
+    <Component id="500" name="CMSIS BOOT" path="" type="2"/>
+  </Components>
+  <Files>
+    <File name="headers/ipv4/lwip/igmp.h" path="headers/ipv4/lwip/igmp.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_adc_ex.h" path="headers/HAL/stm32f4xx_hal_adc_ex.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_tim.h" path="headers/HAL/stm32f4xx_hal_tim.h" type="1"/>
+    <File name="headers/ipv4/lwip" path="" type="2"/>
+    <File name="headers/main.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Projects/STM324xG_EVAL/BP/Inc/main.h" type="1"/>
+    <File name="cmsis/core_cm4_simd.h" path="cmsis/core_cm4_simd.h" type="1"/>
+    <File name="cmsis_boot/stm32f4xx.h" path="cmsis_boot/stm32f4xx.h" type="1"/>
+    <File name="headers/lwip/pbuf.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/pbuf.h" type="1"/>
+    <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
+    <File name="headers/netif/slipif.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/netif/slipif.h" type="1"/>
+    <File name="headers" path="" type="2"/>
+    <File name="headers/HAL/stm32f4xx_hal_cortex.h" path="headers/HAL/stm32f4xx_hal_cortex.h" type="1"/>
+    <File name="headers/lwip/netif.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/netif.h" type="1"/>
+    <File name="headers/ipv4" path="" type="2"/>
+    <File name="headers/lwip/memp_std.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/memp_std.h" type="1"/>
+    <File name="ipv4/ip_addr.c" path="ipv4/ip_addr.c" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_spi.h" path="headers/HAL/stm32f4xx_hal_spi.h" type="1"/>
+    <File name="headers/concentrator.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Projects/STM324xG_EVAL/BP/Inc/concentrator.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_def.h" path="headers/HAL/stm32f4xx_hal_def.h" type="1"/>
+    <File name="headers/lwip/tcpip.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_rcc.h" path="headers/HAL/stm32f4xx_hal_rcc.h" type="1"/>
+    <File name="cmsis_boot/startup/startup_stm32f4xx.c" path="cmsis_boot/startup/startup_stm32f4xx.c" type="1"/>
+    <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
+    <File name="headers/lwip/err.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/err.h" type="1"/>
+    <File name="headers/lwip/udp.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/udp.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_i2s_ex.h" path="headers/HAL/stm32f4xx_hal_i2s_ex.h" type="1"/>
+    <File name="headers/lwip/snmp_structs.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/snmp_structs.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_i2c.h" path="headers/HAL/stm32f4xx_hal_i2c.h" type="1"/>
+    <File name="cmsis_boot/system_stm32f4xx.c" path="cmsis_boot/system_stm32f4xx.c" type="1"/>
+    <File name="headers/lwip/dns.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/dns.h" type="1"/>
+    <File name="headers/lwip/sys.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/sys.h" type="1"/>
+    <File name="cmsis" path="" type="2"/>
+    <File name="headers/lwip" path="" type="2"/>
+    <File name="headers/HAL/stm32f4xx_hal_adc.h" path="headers/HAL/stm32f4xx_hal_adc.h" type="1"/>
+    <File name="headers/ipv4/lwip/icmp.h" path="headers/ipv4/lwip/icmp.h" type="1"/>
+    <File name="headers/lwip/snmp_msg.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/snmp_msg.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_conf.h" path="headers/HAL/stm32f4xx_hal_conf.h" type="1"/>
+    <File name="headers/lwip/def.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/def.h" type="1"/>
+    <File name="headers/lwip/api.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/api.h" type="1"/>
+    <File name="ipv4/inet.c" path="ipv4/inet.c" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_i2s.h" path="headers/HAL/stm32f4xx_hal_i2s.h" type="1"/>
+    <File name="headers/ipv4/lwip/ip_frag.h" path="headers/ipv4/lwip/ip_frag.h" type="1"/>
+    <File name="headers/netif/ppp_oe.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/netif/ppp_oe.h" type="1"/>
+    <File name="ipv4/icmp.c" path="ipv4/icmp.c" type="1"/>
+    <File name="ipv4/ip_frag.c" path="ipv4/ip_frag.c" type="1"/>
+    <File name="main.c" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Projects/STM324xG_EVAL/BP/Src/main.c" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_tim_ex.h" path="headers/HAL/stm32f4xx_hal_tim_ex.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_gpio.h" path="headers/HAL/stm32f4xx_hal_gpio.h" type="1"/>
+    <File name="headers/lwip/opt.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/opt.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_rcc_ex.h" path="headers/HAL/stm32f4xx_hal_rcc_ex.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_iwdg.h" path="headers/HAL/stm32f4xx_hal_iwdg.h" type="1"/>
+    <File name="cmsis_boot" path="" type="2"/>
+    <File name="headers/lwip/snmp.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/snmp.h" type="1"/>
+    <File name="headers/lwip/snmp_asn1.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/snmp_asn1.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_uart.h" path="headers/HAL/stm32f4xx_hal_uart.h" type="1"/>
+    <File name="headers/ipv4/lwip/ip_addr.h" path="headers/ipv4/lwip/ip_addr.h" type="1"/>
+    <File name="cmsis_boot/startup" path="" type="2"/>
+    <File name="headers/HAL/stm32f4xx_hal.h" path="headers/HAL/stm32f4xx_hal.h" type="1"/>
+    <File name="cmsis/core_cm4.h" path="cmsis/core_cm4.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_rng.h" path="headers/HAL/stm32f4xx_hal_rng.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_pwr.h" path="headers/HAL/stm32f4xx_hal_pwr.h" type="1"/>
+    <File name="headers/ipv4/lwip/autoip.h" path="headers/ipv4/lwip/autoip.h" type="1"/>
+    <File name="headers/lwip/netifapi.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/netifapi.h" type="1"/>
+    <File name="headers/netif" path="" type="2"/>
+    <File name="headers/HAL/stm32f4xx_hal_dma.h" path="headers/HAL/stm32f4xx_hal_dma.h" type="1"/>
+    <File name="headers/lwip/api_msg.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/api_msg.h" type="1"/>
+    <File name="headers/lwip/debug.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/debug.h" type="1"/>
+    <File name="headers/lwip/stats.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/stats.h" type="1"/>
+    <File name="headers/ethernetif.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Projects/STM324xG_EVAL/BP/Inc/ethernetif.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_i2c_ex.h" path="headers/HAL/stm32f4xx_hal_i2c_ex.h" type="1"/>
+    <File name="headers/ipv4/lwip/ip.h" path="headers/ipv4/lwip/ip.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_dma_ex.h" path="headers/HAL/stm32f4xx_hal_dma_ex.h" type="1"/>
+    <File name="headers/netif/etharp.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/netif/etharp.h" type="1"/>
+    <File name="headers/lwip/sio.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/sio.h" type="1"/>
+    <File name="cmsis_boot/stm32f4xx_conf.h" path="cmsis_boot/stm32f4xx_conf.h" type="1"/>
+    <File name="cmsis_boot/system_stm32f4xx.h" path="cmsis_boot/system_stm32f4xx.h" type="1"/>
+    <File name="headers/lwip/netbuf.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/netbuf.h" type="1"/>
+    <File name="headers/lwip/lwip_timers.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/lwip_timers.h" type="1"/>
+    <File name="headers/app_ethernet.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Projects/STM324xG_EVAL/BP/Inc/app_ethernet.h" type="1"/>
+    <File name="headers/lwip/netdb.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/netdb.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_sd.h" path="headers/HAL/stm32f4xx_hal_sd.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_wwdg.h" path="headers/HAL/stm32f4xx_hal_wwdg.h" type="1"/>
+    <File name="headers/HAL" path="" type="2"/>
+    <File name="headers/ipv4/lwip/inet.h" path="headers/ipv4/lwip/inet.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_usart.h" path="headers/HAL/stm32f4xx_hal_usart.h" type="1"/>
+    <File name="headers/lwip/init.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/init.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_rtc_ex.h" path="headers/HAL/stm32f4xx_hal_rtc_ex.h" type="1"/>
+    <File name="ipv4/inet_chksum.c" path="ipv4/inet_chksum.c" type="1"/>
+    <File name="ipv4/autoip.c" path="ipv4/autoip.c" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_pwr_ex.h" path="headers/HAL/stm32f4xx_hal_pwr_ex.h" type="1"/>
+    <File name="ipv4/ip.c" path="ipv4/ip.c" type="1"/>
+    <File name="ipv4" path="" type="2"/>
+    <File name="headers/lwip/mem.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/mem.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_irda.h" path="headers/HAL/stm32f4xx_hal_irda.h" type="1"/>
+    <File name="headers/lwip/tcp_impl.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/tcp_impl.h" type="1"/>
+    <File name="ipv4/igmp.c" path="ipv4/igmp.c" type="1"/>
+    <File name="headers/lwip/tcp.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h" type="1"/>
+    <File name="headers/lwip/memp.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/memp.h" type="1"/>
+    <File name="headers/ipv4/lwip/inet_chksum.h" path="headers/ipv4/lwip/inet_chksum.h" type="1"/>
+    <File name="headers/lwip/sockets.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h" type="1"/>
+    <File name="headers/lwip/dhcp.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/dhcp.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_gpio_ex.h" path="headers/HAL/stm32f4xx_hal_gpio_ex.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_eth.h" path="headers/HAL/stm32f4xx_hal_eth.h" type="1"/>
+    <File name="headers/lwip/raw.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/raw.h" type="1"/>
+    <File name="headers/lwip/arch.h" path="../ST/test/STM32Cube_FW_F4_V1.3.0/Middlewares/Third_Party/LwIP/src/include/lwip/arch.h" type="1"/>
+    <File name="headers/HAL/stm32f4xx_hal_rtc.h" path="headers/HAL/stm32f4xx_hal_rtc.h" type="1"/>
+  </Files>
+</Project>

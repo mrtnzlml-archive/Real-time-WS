@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m4 -mthumb -Wall -ffunction-sections -g -O0 -c -DSTM32F401VC -DSTM32F4XX -I..\..\..\..\..\Users\Martin\Desktop\real-time-ws\ST\test">
+      <target file="main.o" lastModified="149719687e2">
+         <source file="..\..\..\main.c" lastModified="14971958250"/>
+      </target>
+   </processor>
+</history>

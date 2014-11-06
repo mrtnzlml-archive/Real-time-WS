@@ -58,7 +58,7 @@ int main(void) {
 	TimHandle.Instance = TIMx;
 	TimHandle.Init.Period = 10000;
 	//Prescaler max value is 65535!
-	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
+	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //10kHz
 	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -90,6 +90,8 @@ int main(void) {
 	User_notification(&gnetif);
 
   while (1) {
+		udp_echoclient_send();
+		
 		/* Read a received packet from the Ethernet buffers and send it 
        to the lwIP for handling */
     ethernetif_input(&gnetif);
