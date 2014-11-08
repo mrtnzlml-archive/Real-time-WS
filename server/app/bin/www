@@ -1,9 +1,65 @@
 #!/usr/bin/env node
+
+var PORT = 50000;
+
+//var cluster = require('cluster');
+//var numCPUs = require('os').cpus().length;
 var debug = require('debug')('app');
 var app = require('../app');
+var dgram = require("dgram");
+var udpSocket = dgram.createSocket("udp4");
+var redis = require("redis");
+var redisClient = redis.createClient();
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || PORT);
 
 var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+	debug('Express server listening on port ' + server.address().port);
 });
+
+var io = require('socket.io')(server);
+io.on('connection', function (socket) {
+	socket.emit('news', { hello: 'world' });
+	socket.on('my other event', function (data) {
+		console.log(data);
+	});
+});
+
+udpSocket.on('listening', function() {
+	console.log('listening');
+});
+udpSocket.on("message", function (msg, rinfo) {
+	debug("udpSocket got: " + escape(msg) + " from " + rinfo.address + ":" + rinfo.port);
+	//dataObj = JSON.parse(msg);
+	io.sockets.emit('data', escape(msg));
+	redisClient.lpush('concentrator-list', msg);
+	redisClient.ltrim('concentrator-list', 0, 999);
+	var random = Math.random();
+	var message = new Buffer(random);
+	udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address, function() {
+		//console.log("Response: " + random);
+	});
+});
+udpSocket.bind(PORT);
+
+escape = function (str) {
+  return String(str)
+    .replace(/[\\]/g, '\\\\')
+    .replace(/[\"]/g, '\\\"')
+    .replace(/[\/]/g, '\\/')
+    .replace(/[\b]/g, '\\b')
+    .replace(/[\f]/g, '\\f')
+    .replace(/[\n]/g, '\\n')
+    .replace(/[\r]/g, '\\r')
+    .replace(/[\t]/g, '\\t');
+};
+
+/*
+
+{
+	"r": true,				required
+	"t": "time",			time
+	"d": []					data
+}
+
+*/

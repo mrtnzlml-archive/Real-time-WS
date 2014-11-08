@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -14,10 +15,12 @@
 /* Private function prototypes -----------------------------------------------*/
 void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr *addr, u16_t port);
 
+char *respString(char *string);
+char *respInt(int integer);
+
 u8_t   data[100];
 __IO uint32_t message_count = 0;
 struct udp_pcb *upcb;
-
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -62,8 +65,12 @@ void concentrator_init(void) //udp_echoclient_connect
 void udp_echoclient_send(void)
 {
   struct pbuf *p;
+	time_t epoch = 0;//time(NULL);
   
-  sprintf((char*)data, "(%d) - %d", message_count++, (int)rand());
+	//sprintf((char*)data, "{\"r\":true,\"t\":%d,\"d\":[%d,%d]}", (int)epoch, message_count++, (int)rand());
+	char *s = respString("OK");
+	sprintf((char*)data, "%s", s);
+	free(s);
   
   /* allocate pbuf from pool*/
   p = pbuf_alloc(PBUF_TRANSPORT,strlen((char*)data), PBUF_POOL);

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<history>
-   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -g -nostartfiles -Map=coocox.map -O0 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\coocox -TC:\CooCox\CoIDE\configuration\ProgramData\coocox/arm-gcc-link.ld -g">
-      <target file="coocox.elf" lastModified="14962e6b8d9">
-         <source file="..\obj\main.o" lastModified="14962e6b673"/>
-      </target>
-   </processor>
-</history>

@@ -83,3 +83,4 @@ stm3240g-eval\concentrator.o: ..\..\..\..\Middlewares\Third_Party\LwIP\src\inclu
 stm3240g-eval\concentrator.o: ..\..\..\..\Middlewares\Third_Party\LwIP\src\include\ipv4\lwip/icmp.h
 stm3240g-eval\concentrator.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 stm3240g-eval\concentrator.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+stm3240g-eval\concentrator.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
