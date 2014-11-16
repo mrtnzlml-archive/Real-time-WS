@@ -1,5 +1,5 @@
 var IP = '127.0.0.1';
-var PORT = 50000;
+var PORT = 80;
 
 var socket = io.connect('http://' + IP + ':' + PORT);
 socket.on('news', function (data) {
@@ -9,4 +9,10 @@ socket.on('news', function (data) {
 
 socket.on('data', function (data) {
 	document.getElementById('data').innerHTML = "" + data;
+});
+
+socket.on('devices', function (data) {
+	data.forEach(function(device) {
+		document.body.appendChild(document.createElement('pre'));
+	});
 });
