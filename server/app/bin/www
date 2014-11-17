@@ -21,18 +21,16 @@ var webServer = app.listen(app.get('port'), function () {
 
 var io = require('socket.io')(webServer);
 io.on('connection', function (socket) {
-	socket.emit('news', {hello: 'world'});
-	socket.on('my other event', function (data) {
-		console.log(data);
-	});
 	redisClient.smembers('devices', function (err, result) {
 		socket.emit('devices', result);
-	});
-	setInterval(function () {
-		redisClient.lindex('concentrator-list', 0, function (err, reply) {
-			io.sockets.emit('data', reply);
+		result.forEach(function (device) {
+			setInterval(function () {
+				redisClient.lindex(device + ':data', -1, function (err, reply) {
+					socket.emit('data', reply);
+				});
+			}, 100);
 		});
-	}, 100);
+	});
 });
 
 udpSocket.on('listening', function () {
@@ -40,23 +38,32 @@ udpSocket.on('listening', function () {
 });
 udpSocket.on("message", function (msg, rinfo) {
 	if (result = String(msg).match(/\+PING:([a-z]{4}_[0-9]{6})/i)) {
-		console.log("Device " + result[1] + " connected");
+		console.log("Device " + result[1] + " ping");
 		redisClient.sadd('devices', result[1]);
 		redisClient.hmset(result[1], 'ip', rinfo.address, 'port', rinfo.port);
 	}
-	debug("udpSocket got: " + escape(msg) + " from " + rinfo.address + ":" + rinfo.port);
-	redisClient.lpush('concentrator-list', msg);
-	redisClient.ltrim('concentrator-list', 0, 999);
-	var random = Math.random();
-	var message = new Buffer(random);
-	udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address, function () {
-		//console.log("Response: " + random);
-	});
+	if (result = String(msg).match(/\+([a-z]{4}_[0-9]{6}):(.*)/i)) {
+		redisClient.lpush(result[1] + ':data', msg);
+		redisClient.ltrim(result[1] + ':data', 0, 999);
+	}
+	//debug("udpSocket got: " + escape(msg) + " from " + rinfo.address + ":" + rinfo.port);
+	//var random = Math.random();
+	//var message = new Buffer(random);
+	//udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address, function () {
+	//	console.log("Response: " + random);
+	//});
 });
-setInterval(function () { //nesmí být v on:message, jinak dojde k zahlcení
-	var epoch = new Date().getTime();
-	var message = new Buffer('+PING:' + epoch + '\r\n'); //TODO číslo požadavku
-	udpSocket.send(message, 0, message.length, 49153, '192.168.0.10'); //TODO:IP
+setInterval(function() {
+	redisClient.smembers('devices', function (err, result) {
+		result.forEach(function (device) {
+			redisClient.hmget(device, 'ip', 'port', function (err, reply) {
+				console.log('PING to: ' + reply[0]);
+				var epoch = new Date().getTime();
+				var message = new Buffer('+PING:' + epoch + '\r\n'); //TODO číslo požadavku
+				udpSocket.send(message, 0, message.length, reply[1], reply[0]);
+			});
+		});
+	});
 }, 1000);
 udpSocket.bind(PORT);
 
@@ -71,13 +78,3 @@ escape = function (str) {
 		.replace(/[\r]/g, '\\r')
 		.replace(/[\t]/g, '\\t');
 };
-
-/*
-
- {
- "r": true,				required
- "t": "time",			time
- "d": []					data
- }
-
- */

@@ -67,7 +67,8 @@ void concentrator_send(void) {
   struct pbuf *p;
 	time_t epoch = 0;//time(NULL);
   
-	sprintf((char*)data, "{\"r\":true,\"t\":%d,\"d\":[%d,%d]}", (int)epoch, message_count++, (int)rand());
+	//sprintf((char*)data, "{\"r\":true,\"t\":%d,\"d\":[%d,%d]}", (int)epoch, message_count++, (int)rand());
+	sprintf((char*)data, "+%s:%d\r\n", DEVICE_UID, (int)rand());
 	//char *s = respString("OK");
 	//sprintf((char*)data, "%s", s);
 	//free(s);
@@ -106,6 +107,7 @@ void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struc
 			data[ptr+i] = pc[i];
 		}
 	}*/
+	char *pc = (char *)p->payload;
 	BSP_LED_Toggle(LED3);
 	pbuf_free(p); //Free receive pbuf
 }

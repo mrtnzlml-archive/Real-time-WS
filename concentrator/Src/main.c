@@ -112,6 +112,7 @@ int main(void) {
   */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
+		concentrator_ping();
 		concentrator_send();
 		
 		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_1, (uhCCR1_Val));

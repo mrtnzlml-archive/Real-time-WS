@@ -6,6 +6,6 @@
 void concentrator_init(void);
 void udp_echoclient_send(void);
 
-#define DEVICE_UID "TEMP_000002"
+#define DEVICE_UID "TEMP_000001"
 
 #endif /* __CONCENTRATOR_H */
