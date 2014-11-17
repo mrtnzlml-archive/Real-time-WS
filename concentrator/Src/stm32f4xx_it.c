@@ -53,7 +53,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern TIM_HandleTypeDef TimHandle;
+extern ADC_HandleTypeDef    AdcHandle;
+extern TIM_HandleTypeDef		TimHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -162,19 +163,20 @@ void SysTick_Handler(void)
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
-/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+/*  Add here the Interrupt Handler for the used peripheral(s), for the        */
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
 
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  This function handles ADC interrupt request.
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
+void ADC_IRQHandler(void)
 {
-}*/
+  HAL_ADC_IRQHandler(&AdcHandle);
+}
 
 /**
   * @brief  This function handles TIM3 Interrupt.

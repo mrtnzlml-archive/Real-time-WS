@@ -27,14 +27,12 @@ Project File Date:  11/16/2014
 <h2>Output:</h2>
 Build target 'STM3240G-EVAL'
 compiling concentrator.c...
-..\Src\concentrator.c(68): warning:  #177-D: variable "epoch" was declared but never referenced
-        time_t epoch = 0;//time(NULL);
-..\Src\concentrator.c(110): warning:  #177-D: variable "pc" was declared but never referenced
+..\Src\concentrator.c(111): warning:  #177-D: variable "pc" was declared but never referenced
         char *pc = (char *)p->payload;
-..\Src\concentrator.c: 2 warnings, 0 errors
+..\Src\concentrator.c: 1 warning, 0 errors
 linking...
-Program Size: Code=35996 RO-data=728 RW-data=236 ZI-data=33748  
-"STM3240G-EVAL\STM3240G-EVAL.axf" - 0 Error(s), 2 Warning(s).
+Program Size: Code=36928 RO-data=728 RW-data=236 ZI-data=33812  
+"STM3240G-EVAL\STM3240G-EVAL.axf" - 0 Error(s), 1 Warning(s).
 Load "STM3240G-EVAL\\STM3240G-EVAL.axf" 
 Erase Done.
 Programming Done.
@@ -42,5 +40,25 @@ Verify OK.
 </pre>
 </body>
 </html>
-g Done.
-Verify OK.
+ referenced
+        char *pc = (char *)p->payload;
+..\Src\concentrator.c: 1 warning, 1 error
+"STM3240G-EVAL\STM3240G-EVAL.axf" - 1 Error(s), 2 Warning(s).
+Target not created.
+240G-EVAL\STM3240G-EVAL.axf" - 1 Error(s), 2 Warning(s).
+Target not created.
+VAL.axf" - 1 Error(s), 3 Warning(s).
+Target not created.
+M8_RELEASE_RESET (referred from stm32f4xx_hal_msp.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 3 error messages.
+"STM3240G-EVAL\STM3240G-EVAL.axf" - 3 Error(s), 3 Warning(s).
+Target not created.
+Load "STM3240G-EVAL\\STM3240G-EVAL.axf" 
+_____^
+*** error 56: cannot open file
+Error: Flash Download failed  -  Could not load file 'STM3240G-EVAL\STM3240G-EVAL.axf'
+Load "STM3240G-EVAL\\STM3240G-EVAL.axf" 
+_____^
+*** error 56: cannot open file
+Error: Flash Download failed  -  Could not load file 'STM3240G-EVAL\STM3240G-EVAL.axf'

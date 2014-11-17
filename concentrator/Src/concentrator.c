@@ -13,6 +13,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+extern __IO uint16_t uhADCxConvertedValue;
+
 /* Private function prototypes -----------------------------------------------*/
 void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr *addr, u16_t port);
 
@@ -63,12 +65,11 @@ void concentrator_init(void) {
 	concentrator_ping();
 }
 
-void concentrator_send(void) {
+void concentrator_send() {
   struct pbuf *p;
-	time_t epoch = 0;//time(NULL);
   
 	//sprintf((char*)data, "{\"r\":true,\"t\":%d,\"d\":[%d,%d]}", (int)epoch, message_count++, (int)rand());
-	sprintf((char*)data, "+%s:%d\r\n", DEVICE_UID, (int)rand());
+	sprintf((char*)data, "+%s:%d\r\n", DEVICE_UID, uhADCxConvertedValue);
 	//char *s = respString("OK");
 	//sprintf((char*)data, "%s", s);
 	//free(s);

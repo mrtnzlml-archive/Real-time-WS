@@ -22,6 +22,8 @@ __IO uint32_t uhCCR1_Val = 100;
 __IO uint32_t uhCCR2_Val = 200;
 struct netif gnetif;
 ADC_HandleTypeDef    AdcHandle; // ADC handler declaration
+__IO uint16_t uhADCxConvertedValue = 0; // Variable used to get converted value
+static TIM_HandleTypeDef  htim; // TIM handler declaration
 
 /* Private function prototypes -----------------------------------------------*/
 static void Error_Handler(void);
@@ -30,6 +32,7 @@ static void BSP_Config(void);
 static void ETH_Config(void);
 void concentrator_send(void);
 static void ADC_Config(void);
+static void TIM_Config(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -90,11 +93,27 @@ int main(void) {
     Error_Handler();
   }
 	
+	/*##-1- TIM8 Peripheral Configuration ######################################*/
+  TIM_Config();
+  
+  /*##-2- Configure the ADC3 peripheral ######################################*/
 	ADC_Config();
+	
+	/*##-3- Start the conversion process and enable interrupt ##################*/  
+  if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK) {
+    /* Start Conversation Error */
+    Error_Handler();
+  }
+  
+  /*##-4- TIM8 counter enable ################################################*/ 
+  if(HAL_TIM_Base_Start(&htim) != HAL_OK) {
+    /* Counter Enable Error */
+    Error_Handler();
+  }
 	
 	User_notification(&gnetif);
 	
-  while (1) {		
+  while (1) {
 		/* Read a received packet from the Ethernet buffers and send it 
        to the lwIP for handling */
     ethernetif_input(&gnetif);
@@ -262,6 +281,41 @@ static void SystemClock_Config(void) {
 }
 
 /**
+  * @brief  TIM configuration
+  * @param  None
+  * @retval None
+  */
+static void TIM_Config(void)
+{
+  TIM_MasterConfigTypeDef sMasterConfig;
+  
+  /* Time Base configuration */
+  htim.Instance = TIM8;
+  
+  htim.Init.Period = 0x3C;          
+  htim.Init.Prescaler = 0;       
+  htim.Init.ClockDivision = 0;    
+  htim.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim.Init.RepetitionCounter = 0x0;
+  
+  if(HAL_TIM_Base_Init(&htim) != HAL_OK)
+  {
+    /* TIM8 Initialization Error */
+    Error_Handler();
+  }
+  
+  /* TIM8 TRGO selection */
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  
+  if(HAL_TIMEx_MasterConfigSynchronization(&htim, &sMasterConfig) != HAL_OK)
+  {
+    /* TIM8 TRGO selection Error */
+    Error_Handler();
+  }
+}
+
+/**
   * @brief  ADC configuration
   * @param  None
   * @retval None
@@ -301,6 +355,19 @@ static void ADC_Config(void) {
     /* Channel Configuration Error */
     Error_Handler();
   }
+}
+
+/**
+  * @brief  Conversion complete callback in non blocking mode 
+  * @param  AdcHandle : ADC handle
+  * @note   This example shows a simple way to report end of conversion, and 
+  *         you can add your own implementation.    
+  * @retval None
+  */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
+{
+  /* Get the converted value of regular channel */
+  uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
 }
 
 #ifdef  USE_FULL_ASSERT
