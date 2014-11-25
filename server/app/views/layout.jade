@@ -6,18 +6,25 @@ html
 		title= title
 		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(src='/javascripts/jquery.js')
+		script(src='/javascripts/bootstrap.min.js')
 		script(src='/socket.io/socket.io.js')
 		block scripts
 
 	body
-		.blog-masthead
+		.header
 			.container
-				nav.blog-nav
-					a.blog-nav-item(class=path=='/'?'active':undefined, href='/') Home
-					a.blog-nav-item(class=path=='/api'?'active':undefined, href='/api') API
-		.container
-			.row
-				.col-sm-8.blog-main
-					.blog-post
-						br
-						block content
+				.title
+					a.brand(href='/')
+						span.bracket {
+						span.project  PROJECT
+						span.colon :
+						span.pluto SPEEDY
+						span.bracket  }
+					a.pull-right.login(href='/admin') Login
+		block content
+		//-.blog-masthead
+		//-	.container
+		//-		nav.blog-nav
+		//-			a.blog-nav-item(class=path=='/'?'active':undefined, href='/') Home
+		//-			a.blog-nav-item(class=path=='/api'?'active':undefined, href='/api') API
