@@ -13,7 +13,7 @@ var redis = require("redis");
 var redisClient = redis.createClient();
 
 //app.set('port', process.env.PORT || PORT);
-app.set('port', 80);
+app.set('port', 88);
 
 var webServer = app.listen(app.get('port'), function () {
 	debug('Express server listening on port ' + webServer.address().port);
