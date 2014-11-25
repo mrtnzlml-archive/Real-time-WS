@@ -8,8 +8,6 @@ server/node_modules/*
 *.toc
 *.zip
 
-*.crf
-*.d
-*.htm
-*.__i
-*.o
+STM3240G-EVAL
+
+!.keep
