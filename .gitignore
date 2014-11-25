@@ -1,5 +1,4 @@
-.idea/*
-
+server/.idea/*
 server/node_modules/*
 
 *.aux
@@ -8,3 +7,9 @@ server/node_modules/*
 *.synctex.gz
 *.toc
 *.zip
+
+*.crf
+*.d
+*.htm
+*.__i
+*.o
