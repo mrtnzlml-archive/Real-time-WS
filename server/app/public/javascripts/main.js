@@ -1,5 +1,5 @@
 var IP = '127.0.0.1';
-var PORT = 80;
+var PORT = 88;
 
 var socket = io.connect('http://' + IP + ':' + PORT);
 
