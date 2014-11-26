@@ -8,4 +8,10 @@ router.get('/', function (req, res) {
 	});
 });
 
+router.get('/map', function (req, res) {
+	res.render('map', {
+		path: '/admin/map'
+	});
+});
+
 module.exports = router;
