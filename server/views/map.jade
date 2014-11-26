@@ -1,0 +1,23 @@
+extends layout
+
+block links
+    link(rel='stylesheet', href='/stylesheets/map.css')
+
+block scripts
+    script(src='/javascripts/jquery.jsPlumb-1.7.2-min.js')
+    script(src='/javascripts/dom.jsPlumb-1.7.2-min.js')
+    script(src='/javascripts/map.js')
+
+block content
+    .container
+        .demo.statemachine-demo#statemachine-demo
+            .w#temp1 TEMP1
+                .ep
+            .w#temp2 TEMP2
+                .ep
+            .w#temp3 TEMP3
+                .ep
+            .w#temp4 TEMP4
+                .ep
+            .w#temp5 TEMP5
+                .ep
