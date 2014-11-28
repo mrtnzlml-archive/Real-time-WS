@@ -31,6 +31,7 @@ static void SystemClock_Config(void);
 static void BSP_Config(void);
 static void ETH_Config(void);
 void concentrator_send(void);
+void concentrator_ping(void);
 static void ADC_Config(void);
 static void TIM_Config(void);
 
@@ -135,11 +136,11 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 		concentrator_send();
 		
 		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_1, (uhCCR1_Val));
-		BSP_LED_On(LED4);
+		//BSP_LED_On(LED4);
   }
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
 		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_2, (uhCCR2_Val));
-		BSP_LED_Off(LED4);
+		//BSP_LED_Off(LED4);
   }
 }
 

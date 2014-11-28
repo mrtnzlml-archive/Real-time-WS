@@ -99,16 +99,17 @@ void concentrator_send() {
   * @retval None
   */
 void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr *addr, u16_t port) {
-	/*char data[1024];
-	long ptr = 0;
-	if(p != NULL) {
-		char *pc = (char *)p->payload; //pointer to the payload
-		int len = p->tot_len;
-		for (int i = 0; i < len; i++) {
-			data[ptr+i] = pc[i];
-		}
-	}*/
+	int len = p->tot_len;
 	char *pc = (char *)p->payload;
-	BSP_LED_Toggle(LED3);
+	char *delimiter = "+:\r\n";
+	char *token = strtok(pc, delimiter);
+	while(token != NULL) {
+		if (strcmp(token, "PING") == 0) {
+			BSP_LED_Toggle(LED4);
+		} else {
+			//...
+		}
+		token = strtok(NULL, delimiter);
+	}
 	pbuf_free(p); //Free receive pbuf
 }
