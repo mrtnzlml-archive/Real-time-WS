@@ -1,7 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700&subset=latin-ext);
+
 html{ min-height: 100%; position: relative; }
-body{ height: 100%; }
+body{ height: 100%; font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 300; }
 
 a.brand:hover { text-decoration: none; }
+h1, h2 { font-weight: 300; }
 pre { border-radius: 0; }
 
 .brand .bracket, .brand .pluto { font-weight: normal; color: #c3c3c3; }
@@ -10,9 +13,12 @@ pre { border-radius: 0; }
 
 #devices > pre { font-size: 100px; font-weight: bold; text-align: center; }
 
+.footer { background: #333; color: #fff; min-height: 400px; padding: 50px; margin: 50px auto 0; }
+.footer a { text-decoration: none; color: #fff; }
+
 .header { width: 100%; padding-top: 0; padding-bottom: 0; height: 80px; background: #233240; color: white; }
 
-.jumbotron { position: absolute; top: 80px; left: 0; right: 0; height: 200px; overflow: hidden; background: #486683; }
+.jumbotron { height: 200px; overflow: hidden; background: #486683; }
 .jumbotron .title { color: #fff; }
 .jumbotron .title .slogan { font-size: 3em; }
 .jumbotron .title .doit { font-size: 1.5em; }
@@ -22,3 +28,21 @@ pre { border-radius: 0; }
 .title > a { color: #fff; }
 .title .login { font-size: 21px; padding: 26px 28px 24px 0; font-weight: 100; }
 .title > .brand { font-size: 25px; padding: 19px 28px 19px 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 800; float: left; }
+
+.world { margin-top: -40px; }
+
+
+
+
+
+.line {
+	fill: none;
+	stroke: #000;
+	stroke-width: 1px;
+}
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
