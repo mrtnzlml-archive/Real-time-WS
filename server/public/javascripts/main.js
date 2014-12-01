@@ -17,8 +17,12 @@ socket.on('data', function (data) {
 socket.on('devices', function (data) {
 	document.getElementById('devices').innerHTML = "";
 	data.forEach(function (device) {
+		var h4 = document.createElement('h4');
+		var h4_text = document.createTextNode(device + ":");
+		h4.appendChild(h4_text);
 		var pre = document.createElement('pre');
 		pre.id = device;
+		document.getElementById('devices').appendChild(h4);
 		document.getElementById('devices').appendChild(pre);
 	});
 });
