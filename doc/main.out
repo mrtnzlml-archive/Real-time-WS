@@ -3,21 +3,24 @@
 \BOOKMARK [0][-]{chapter.2}{Real-time komunikace}{}% 3
 \BOOKMARK [1][-]{section.2.1}{Hardwarov\351 prostredky senzorick\351 s\355te}{chapter.2}% 4
 \BOOKMARK [1][-]{section.2.2}{Real-time ve webov\375ch aplikac\355ch}{chapter.2}% 5
-\BOOKMARK [0][-]{chapter.3}{Volba vhodn\351 technologie}{}% 6
-\BOOKMARK [1][-]{section.3.1}{Prvky senzorick\351 s\355te}{chapter.3}% 7
-\BOOKMARK [1][-]{section.3.2}{Real-time server}{chapter.3}% 8
-\BOOKMARK [1][-]{section.3.3}{Datab\341zov\375 server}{chapter.3}% 9
-\BOOKMARK [1][-]{section.3.4}{Webov\341 aplikace}{chapter.3}% 10
-\BOOKMARK [0][-]{chapter.4}{Struktura programov\351ho re\235en\355}{}% 11
-\BOOKMARK [0][-]{chapter.5}{Program obsluhuj\355c\355 koncentr\341tory}{}% 12
-\BOOKMARK [0][-]{chapter.6}{Komunikacn\355 protokol}{}% 13
-\BOOKMARK [0][-]{chapter.7}{Real-time server}{}% 14
-\BOOKMARK [0][-]{chapter.8}{Datab\341zov\375 server}{}% 15
-\BOOKMARK [0][-]{chapter.9}{Webov\341 aplikace}{}% 16
-\BOOKMARK [0][-]{chapter.10}{Praktick\341 aplikace}{}% 17
-\BOOKMARK [0][-]{chapter.11}{Roz\235\355ren\355 st\341vaj\355c\355ho re\235en\355}{}% 18
-\BOOKMARK [1][-]{section.11.1}{IPv6}{chapter.11}% 19
-\BOOKMARK [1][-]{section.11.2}{Bezdr\341tov\341 komunikace}{chapter.11}% 20
-\BOOKMARK [1][-]{section.11.3}{Zabezpecen\355}{chapter.11}% 21
-\BOOKMARK [1][-]{section.11.4}{Dal\235\355 prvky s\355te}{chapter.11}% 22
-\BOOKMARK [0][-]{chapter.12}{Z\341ver}{}% 23
+\BOOKMARK [1][-]{section.2.3}{TCP}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.4}{UDP}{chapter.2}% 7
+\BOOKMARK [0][-]{chapter.3}{Volba vhodn\351 technologie}{}% 8
+\BOOKMARK [1][-]{section.3.1}{Prvky senzorick\351 s\355te}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.2}{Real-time server}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.3}{Datab\341zov\375 server}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.4}{Webov\341 aplikace}{chapter.3}% 12
+\BOOKMARK [0][-]{chapter.4}{Struktura programov\351ho re\235en\355}{}% 13
+\BOOKMARK [0][-]{chapter.5}{Program obsluhuj\355c\355 koncentr\341tory}{}% 14
+\BOOKMARK [0][-]{chapter.6}{Komunikacn\355 protokol}{}% 15
+\BOOKMARK [0][-]{chapter.7}{Real-time server}{}% 16
+\BOOKMARK [0][-]{chapter.8}{Datab\341zov\375 server}{}% 17
+\BOOKMARK [1][-]{section.8.1}{RESP protokol}{chapter.8}% 18
+\BOOKMARK [0][-]{chapter.9}{Webov\341 aplikace}{}% 19
+\BOOKMARK [0][-]{chapter.10}{Praktick\341 aplikace}{}% 20
+\BOOKMARK [0][-]{chapter.11}{Roz\235\355ren\355 st\341vaj\355c\355ho re\235en\355}{}% 21
+\BOOKMARK [1][-]{section.11.1}{IPv6}{chapter.11}% 22
+\BOOKMARK [1][-]{section.11.2}{Bezdr\341tov\341 komunikace}{chapter.11}% 23
+\BOOKMARK [1][-]{section.11.3}{Zabezpecen\355}{chapter.11}% 24
+\BOOKMARK [1][-]{section.11.4}{Dal\235\355 prvky s\355te}{chapter.11}% 25
+\BOOKMARK [0][-]{chapter.12}{Z\341ver}{}% 26
