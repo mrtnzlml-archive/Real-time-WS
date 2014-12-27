@@ -10,6 +10,8 @@ var dgram = require("dgram");
 var udpSocket = dgram.createSocket("udp4");
 var redis = require("redis");
 var redisClient = redis.createClient();
+var net = require('net');
+var resp = require('node-resp');
 
 //app.set('port', process.env.PORT || PORT);
 app.set('port', 88);
@@ -27,7 +29,7 @@ io.on('connection', function (socket) {
 		result.forEach(function (device) {
 			setInterval(function () {
 				redisClient.lindex(device + ':data', 0, function (err, reply) {
-					socket.emit('data', reply);
+					socket.emit('data', device + ':' + reply);
 				});
 			}, 100);
 		});
@@ -37,32 +39,68 @@ io.on('connection', function (socket) {
 ///// UDP /////
 
 udpSocket.on("message", function (msg, rinfo) {
-	if (result = String(msg).match(/\+PING:([a-z]{4}_[0-9]{6})/i)) {
-		redisClient.sadd('devices', result[1]);
-		redisClient.hmset(result[1],
-			'ip', rinfo.address,
-			'port', rinfo.port,
-			'active', true,
-			'latency', 0
-			//'last_ping', 0
-		);
+	//FIXME: not good!
+	if (result = msg.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1([0-9a-z]+)\1)+/i)) { //RESP
+		redisClient.lpush('TEMP_000001:data', result[3]);
+		redisClient.ltrim('TEMP_000001:data', 0, 999);
 	}
-	if (result = String(msg).match(/\+([a-z]{4}_[0-9]{6}):(.*)/i)) {
-		redisClient.lpush(result[1] + ':data', msg);
-		redisClient.ltrim(result[1] + ':data', 0, 999);
-	}
+	var message = new Buffer("test");
+	udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address);
 });
-setInterval(function() {
+udpSocket.bind(PORT);
+
+///// TCP /////
+
+var server = net.createServer(function (socket) { //'connection' listener
+	var responseParser = new resp.ResponseParser();
+	responseParser.on('response', function (response) {
+		if (response[0].toLowerCase() == 'ping') {
+			var device = response[1];
+			var epoch = new Date().getTime();
+			debug('PING from ' + device);
+			redisClient.sismember('devices', device, function (err, result) {
+				if (result) {
+					redisClient.hmset(device, 'last_ping', epoch);
+				} else {
+					redisClient.sadd('devices', device);
+					redisClient.hmset(device,
+						'ip', socket.remoteAddress,
+						'port', socket.remotePort,
+						'active', true,
+						'last_ping', epoch
+					);
+					debug('Added device ' + device);
+				}
+			});
+		}
+	});
+	socket.on('data', function (data) {
+		if (data.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1[0-9a-z]+\1)+/i)) { //RESP
+			responseParser.parse(data);
+		}
+		socket.end(); //IMPORTANT!
+	});
+	socket.on('error', function (err) {
+		console.error(err);
+	});
+}).listen(PORT, function () { //'listening' listener
+	debug('TCP server bound');
+});
+
+///// SERVER ROUTINE /////
+
+setInterval(function () {
 	redisClient.smembers('devices', function (err, result) {
 		result.forEach(function (device) {
-			redisClient.hmget(device, 'ip', 'port', function (err, reply) {
+			redisClient.hmget(device, 'last_ping', function (err, reply) {
+				var last_ping = reply[0];
 				var epoch = new Date().getTime();
-				console.log('PING to IP ' + reply[0] + ' (' + epoch + ')');
-				var message = new Buffer('+PING:' + epoch + '\r\n'); //TODO číslo požadavku
-				redisClient.hmset(device, 'last_ping', epoch); //FIXME
-				udpSocket.send(message, 0, message.length, reply[1], reply[0]);
+				if (epoch - last_ping < 1500) {
+					redisClient.hmset(device, 'active', true);
+				} else {
+					redisClient.hmset(device, 'active', false);
+				}
 			});
 		});
 	});
 }, 1000);
-udpSocket.bind(PORT);

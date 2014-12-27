@@ -6,7 +6,7 @@ var socket = io.connect('http://' + IP + ':' + PORT);
 var value;
 
 socket.on('data', function (data) {
-	var result = String(data).match(/\+([a-z]{4}_[0-9]{6}):(.*)/i);
+	var result = String(data).match(/([a-z]{4}_[0-9]{6}):(.*)/i);
 	if (result) {
 		//document.getElementById(result[1]).innerHTML = result[1] + " : " + result[2];
 		value = result[2];
