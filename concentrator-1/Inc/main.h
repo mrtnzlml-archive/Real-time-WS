@@ -2,10 +2,13 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+#define DEVICE_UID "TEMP_000001"
+
 /* Includes ------------------------------------------------------------------*/
 //#include "libwebsockets.h"
 #include "stm32f4xx_hal.h"
 #include "stm324xg_eval.h"
+#include "stm324xg_eval_ts.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

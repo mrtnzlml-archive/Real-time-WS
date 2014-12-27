@@ -10,7 +10,11 @@
 #include "ethernetif.h"
 
 #include "app_ethernet.h"
-#include "concentrator.h"
+#include "udp.h"
+#include "tcp.h"
+
+//#include "WM.h"
+//#include "GUI.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -19,108 +23,109 @@
 TIM_HandleTypeDef TimHandle; // Timer handler declaration
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
 __IO uint32_t uhCCR1_Val = 100;
-__IO uint32_t uhCCR2_Val = 200;
 struct netif gnetif;
 ADC_HandleTypeDef    AdcHandle; // ADC handler declaration
 __IO uint16_t uhADCxConvertedValue = 0; // Variable used to get converted value
 static TIM_HandleTypeDef  htim; // TIM handler declaration
+uint8_t GUI_Initialized = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void Error_Handler(void);
 static void SystemClock_Config(void);
 static void BSP_Config(void);
-static void ETH_Config(void);
-void concentrator_send(void);
-void concentrator_ping(void);
+static void Netif_Config(void);
 static void ADC_Config(void);
 static void TIM_Config(void);
+void concentrator_send(void);
+
+void BSP_Pointer_Update(void);
+void BSP_Background(void);
 
 /* Private functions ---------------------------------------------------------*/
 
 int main(void) {
 
-  /* STM32F4xx HAL library initialization:
+	/* STM32F4xx HAL library initialization:
 		 - Configure the Flash prefetch, instruction and Data caches
 		 - Configure the Systick to generate an interrupt each 1 msec
 		 - Set NVIC Group Priority to 4
 		 - Global MSP (MCU Support Package) initialization
-   */
-  HAL_Init();
+	*/
+	HAL_Init();
 
-  /* Configure the System clock to have a frequency of 168 MHz */
-  SystemClock_Config();
+	/* Configure the System clock to have a frequency of 168 MHz */
+	SystemClock_Config();
 	
 	/* Configure the BSP (Board Support Package) */
-  BSP_Config();
+	BSP_Config();
 	
 	/* Initilaize the LwIP stack */
-  lwip_init();
+	lwip_init();
 	
 	/* Configurates the network interface */
-	ETH_Config();
+	Netif_Config();
 	
 	concentrator_init();
+	
+	User_notification(&gnetif);
+	
+	/* Init the STemWin GUI Library */
+	//GUI_Init();
+	//GUI_Initialized = 1;
+	//WM_SetCreateFlags(WM_CF_MEMDEV);
+	//MainTask();
 	
 	/*##-1- Configure the TIM peripheral #######################################*/
 	TimHandle.Instance = TIMx;
 	TimHandle.Init.Period = 10000;
 	//Prescaler max value is 65535!
-	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //100kHz
-	// example: T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
-  TimHandle.Init.ClockDivision = 0;
-  TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  if(HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
-    Error_Handler();
-  }
+	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
+	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
+	TimHandle.Init.ClockDivision = 0;
+	TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	if(HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
+		Error_Handler();
+	}
 
 	/*##-2- Configure the Output Compare channels #########################################*/
 	sConfig.OCMode = TIM_OCMODE_TOGGLE;
 	sConfig.Pulse = uhCCR1_Val;
-  sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
+	sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
 	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1) != HAL_OK) {
-    Error_Handler();
-  }
-	sConfig.Pulse = uhCCR2_Val;
-	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_2) != HAL_OK) {
-    Error_Handler();
-  }
+		Error_Handler();
+	}
 	
 	/*##-3- Start signals generation #######################################*/
 	/* Start channel 1 in Output compare mode */
-  if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_1) != HAL_OK) {
-    Error_Handler();
-  }
-	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_2) != HAL_OK) {
-    Error_Handler();
-  }
+	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
 	
 	/*##-1- TIM8 Peripheral Configuration ######################################*/
-  TIM_Config();
+	TIM_Config();
   
-  /*##-2- Configure the ADC3 peripheral ######################################*/
+	/*##-2- Configure the ADC3 peripheral ######################################*/
 	ADC_Config();
 	
 	/*##-3- Start the conversion process and enable interrupt ##################*/  
-  if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK) {
-    /* Start Conversation Error */
-    Error_Handler();
-  }
+	if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK) {
+		/* Start Conversation Error */
+		Error_Handler();
+	}
   
-  /*##-4- TIM8 counter enable ################################################*/ 
-  if(HAL_TIM_Base_Start(&htim) != HAL_OK) {
-    /* Counter Enable Error */
-    Error_Handler();
-  }
+	/*##-4- TIM8 counter enable ################################################*/ 
+	if(HAL_TIM_Base_Start(&htim) != HAL_OK) {
+		/* Counter Enable Error */
+		Error_Handler();
+	}
 	
-	User_notification(&gnetif);
-	
-  while (1) {
+	while (1) {
 		/* Read a received packet from the Ethernet buffers and send it 
-       to the lwIP for handling */
-    ethernetif_input(&gnetif);
+		to the lwIP for handling */
+		ethernetif_input(&gnetif);
 
-    /* Handle timeouts */
-    sys_check_timeouts();
+		/* Handle timeouts */
+		sys_check_timeouts();
 	}
 
 }
@@ -132,16 +137,9 @@ int main(void) {
   */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
-		concentrator_ping();
-		concentrator_send();
-		
-		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_1, (uhCCR1_Val));
-		//BSP_LED_On(LED4);
-  }
-	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
-		//__HAL_TIM_SetCompare(&TimHandle, TIM_CHANNEL_2, (uhCCR2_Val));
-		//BSP_LED_Off(LED4);
-  }
+		tcp_echoclient_connect();
+		concentrator_send(); //FIXME: do rychlejaího kanálu
+	}
 }
 
 /**
@@ -154,43 +152,54 @@ static void Error_Handler(void) {
 	BSP_LED_On(LED2);
 	BSP_LED_On(LED3);
 	BSP_LED_On(LED4);
-  while(1) {}
+	while(1) {}
 }
 
 static void BSP_Config(void) {
 	GPIO_InitTypeDef GPIO_InitStructure;
-   
-   __GPIOB_CLK_ENABLE();
-   
-  GPIO_InitStructure.Pin = GPIO_PIN_14;
-  GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStructure.Pull = GPIO_NOPULL ;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
- 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0xf, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn); 
-  
-  /* Initialize STM324xG-EVAL's LEDs */
-  BSP_LED_Init(LED1);
-  BSP_LED_Init(LED2);
-  BSP_LED_Init(LED3);
-  BSP_LED_Init(LED4);
-	
+
+	__GPIOB_CLK_ENABLE();
+
+	GPIO_InitStructure.Pin = GPIO_PIN_14;
+	GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
+	GPIO_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0xf, 0);
+	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn); 
+
+	/* Initialize STM324xG-EVAL's LEDs */
+	BSP_LED_Init(LED1);
+	BSP_LED_Init(LED2);
+	BSP_LED_Init(LED3);
+	BSP_LED_Init(LED4);
+
+	/* Initialize the Touch screen */
+	BSP_TS_Init(240, 320);
+
 	/* Initialize Key button */
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
-  
-  /* Set Systick Interrupt to the highest priority */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0x0, 0x0);
+	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
+
+	/* Set Systick Interrupt to the highest priority */
+	HAL_NVIC_SetPriority(SysTick_IRQn, 0x0, 0x0);
+	
+	/* Enable the CRC Module */
+	//__CRC_CLK_ENABLE();
 }
 
-static void ETH_Config(void) {
+/**
+  * @brief  Configurates the network interface
+  * @param  None
+  * @retval None
+  */
+static void Netif_Config(void) {
 	struct ip_addr ipaddr;
-  struct ip_addr netmask;
-  struct ip_addr gw;
+	struct ip_addr netmask;
+	struct ip_addr gw;
 	
 	IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
-  IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
-  IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+	IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
+	IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 	
 	/* Add the network interface */
 	netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
@@ -216,10 +225,10 @@ static void ETH_Config(void) {
   * @retval None
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-  if (GPIO_Pin == GPIO_PIN_14) {
-    ethernetif_set_link(&gnetif);
-  } else if(GPIO_Pin == GPIO_PIN_15) {
-    concentrator_send();
+	if (GPIO_Pin == GPIO_PIN_14) {
+		ethernetif_set_link(&gnetif);
+	} else if(GPIO_Pin == GPIO_PIN_15) {
+		//tcp_echoclient_connect();
 		BSP_LED_Toggle(LED3);
 	}
 }
@@ -328,7 +337,7 @@ static void ADC_Config(void) {
   AdcHandle.Instance          = ADCx;
   
   AdcHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
-  AdcHandle.Init.Resolution = ADC_RESOLUTION12b;
+  AdcHandle.Init.Resolution = ADC_RESOLUTION10b;
   AdcHandle.Init.ScanConvMode = ENABLE;
   AdcHandle.Init.ContinuousConvMode = ENABLE;
   AdcHandle.Init.DiscontinuousConvMode = DISABLE;

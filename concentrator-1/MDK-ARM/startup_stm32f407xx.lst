@@ -869,10 +869,10 @@ ARM Macro Assembler    Page 14
               00000000 
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M4.fp --apcs=interwork --depend=stm32
-40g-eval\startup_stm32f407xx.d -ostm3240g-eval\startup_stm32f407xx.o -IC:\Keil_
-v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include --predefine="__MICROLIB SETA 1" 
---predefine="STM32F407xx SETA 1" --list=startup_stm32f407xx.lst startup_stm32f4
-07xx.s
+40g-eval\startup_stm32f407xx.d -ostm3240g-eval\startup_stm32f407xx.o -I..\Inc -
+IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include --predefine="__MICROLIB
+ SETA 1" --predefine="STM32F407xx SETA 1" --list=startup_stm32f407xx.lst startu
+p_stm32f407xx.s
 
 
 

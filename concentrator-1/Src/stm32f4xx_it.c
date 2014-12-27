@@ -40,6 +40,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_it.h"
+#include "stm32f4xx_hal.h"
+#include "GUI.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -55,6 +57,9 @@
 /* Private variables ---------------------------------------------------------*/
 extern ADC_HandleTypeDef    AdcHandle;
 extern TIM_HandleTypeDef		TimHandle;
+
+extern volatile GUI_TIMER_TIME OS_TimeMS;
+extern void BSP_Background(void);
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -193,9 +198,8 @@ void TIM3_IRQHandler(void)
   * @param  None
   * @retval None
   */
-void EXTI15_10_IRQHandler(void) 
-{
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14); //ETH
+void EXTI15_10_IRQHandler(void) {
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14); //ETH
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15); //Button
 }
 
