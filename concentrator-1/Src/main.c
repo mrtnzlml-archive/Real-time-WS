@@ -13,21 +13,19 @@
 #include "udp.h"
 #include "tcp.h"
 
-//#include "WM.h"
-//#include "GUI.h"
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef TimHandle; // Timer handler declaration
+TIM_HandleTypeDef TimHandle2;
+static TIM_HandleTypeDef htim;
+
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
 __IO uint32_t uhCCR1_Val = 100;
 struct netif gnetif;
 ADC_HandleTypeDef    AdcHandle; // ADC handler declaration
 __IO uint16_t uhADCxConvertedValue = 0; // Variable used to get converted value
-static TIM_HandleTypeDef  htim; // TIM handler declaration
-uint8_t GUI_Initialized = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void Error_Handler(void);
@@ -37,9 +35,6 @@ static void Netif_Config(void);
 static void ADC_Config(void);
 static void TIM_Config(void);
 void concentrator_send(void);
-
-void BSP_Pointer_Update(void);
-void BSP_Background(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -52,28 +47,14 @@ int main(void) {
 		 - Global MSP (MCU Support Package) initialization
 	*/
 	HAL_Init();
-
-	/* Configure the System clock to have a frequency of 168 MHz */
-	SystemClock_Config();
-	
-	/* Configure the BSP (Board Support Package) */
-	BSP_Config();
-	
-	/* Initilaize the LwIP stack */
-	lwip_init();
-	
-	/* Configurates the network interface */
-	Netif_Config();
+	SystemClock_Config(); //Configure the System clock to have a frequency of 168 MHz
+	BSP_Config(); //Configure the BSP (Board Support Package)
+	lwip_init(); //Initilaize the LwIP stack
+	Netif_Config(); //Configurates the network interface
 	
 	concentrator_init();
 	
-	User_notification(&gnetif);
-	
-	/* Init the STemWin GUI Library */
-	//GUI_Init();
-	//GUI_Initialized = 1;
-	//WM_SetCreateFlags(WM_CF_MEMDEV);
-	//MainTask();
+	User_notification(&gnetif); //Notify the User about the nework interface config status 
 	
 	/*##-1- Configure the TIM peripheral #######################################*/
 	TimHandle.Instance = TIMx;
@@ -86,6 +67,17 @@ int main(void) {
 	if(HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
 		Error_Handler();
 	}
+	
+	TimHandle2.Instance = TIM4;
+	TimHandle2.Init.Period = 10000;
+	//Prescaler max value is 65535!
+	TimHandle2.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //100kHz
+	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
+	TimHandle2.Init.ClockDivision = 0;
+	TimHandle2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	if(HAL_TIM_OC_Init(&TimHandle2) != HAL_OK) {
+		Error_Handler();
+	}
 
 	/*##-2- Configure the Output Compare channels #########################################*/
 	sConfig.OCMode = TIM_OCMODE_TOGGLE;
@@ -94,18 +86,21 @@ int main(void) {
 	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1) != HAL_OK) {
 		Error_Handler();
 	}
+	if(HAL_TIM_OC_ConfigChannel(&TimHandle2, &sConfig, TIM_CHANNEL_2) != HAL_OK) {
+		Error_Handler();
+	}
 	
 	/*##-3- Start signals generation #######################################*/
 	/* Start channel 1 in Output compare mode */
 	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_1) != HAL_OK) {
 		Error_Handler();
 	}
+	if(HAL_TIM_OC_Start_IT(&TimHandle2, TIM_CHANNEL_2) != HAL_OK) {
+		Error_Handler();
+	}
 	
-	/*##-1- TIM8 Peripheral Configuration ######################################*/
-	TIM_Config();
-  
-	/*##-2- Configure the ADC3 peripheral ######################################*/
-	ADC_Config();
+	TIM_Config(); //TIM8 Peripheral Configuration
+	ADC_Config(); //Configure the ADC3 peripheral
 	
 	/*##-3- Start the conversion process and enable interrupt ##################*/  
 	if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK) {
@@ -138,7 +133,10 @@ int main(void) {
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
 		tcp_echoclient_connect();
-		concentrator_send(); //FIXME: do rychlejaího kanálu
+		concentrator_send(); //FIXME: do rychlejsiho kanálu
+	}
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
+		BSP_LED_Toggle(LED3);
 	}
 }
 
@@ -174,17 +172,11 @@ static void BSP_Config(void) {
 	BSP_LED_Init(LED3);
 	BSP_LED_Init(LED4);
 
-	/* Initialize the Touch screen */
-	BSP_TS_Init(240, 320);
-
 	/* Initialize Key button */
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
 
 	/* Set Systick Interrupt to the highest priority */
 	HAL_NVIC_SetPriority(SysTick_IRQn, 0x0, 0x0);
-	
-	/* Enable the CRC Module */
-	//__CRC_CLK_ENABLE();
 }
 
 /**

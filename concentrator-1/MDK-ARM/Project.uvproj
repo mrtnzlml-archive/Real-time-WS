@@ -363,7 +363,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F217xx,USE_STM322xG_EVAL,</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\BSP\STM324xG_EVAL;..\Drivers\BSP\Components;..\Middlewares\Third_Party\LwIP\src\include;..\Middlewares\Third_Party\LwIP\system;..\Middlewares\Third_Party\LwIP\src\include\ipv4;..\Drivers\CMSIS\Include;..\Middlewares\STemWin\inc;..\Utilities;..\Utilities\Fonts;..\Drivers\BSP\Components\Common</IncludePath>
+              <IncludePath>..\Inc;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Drivers\BSP\STM324xG_EVAL;..\Drivers\BSP\Components;..\Middlewares\Third_Party\LwIP\src\include;..\Middlewares\Third_Party\LwIP\system;..\Middlewares\Third_Party\LwIP\src\include\ipv4;..\Drivers\CMSIS\Include;..\Drivers\BSP\Components\Common</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1332,21 +1332,6 @@
               <FileType>1</FileType>
               <FilePath>..\Src\tcp.c</FilePath>
             </File>
-            <File>
-              <FileName>GUIConf_stm322xg_eval.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\GUIConf_stm322xg_eval.c</FilePath>
-            </File>
-            <File>
-              <FileName>LCDConf_stm322xg_eval.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\LCDConf_stm322xg_eval.c</FilePath>
-            </File>
-            <File>
-              <FileName>BASIC_HelloWorld.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\BASIC_HelloWorld.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1516,26 +1501,6 @@
               <FileName>etharp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\Third_Party\LwIP\src\netif\etharp.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/STemWin/Lib</GroupName>
-          <Files>
-            <File>
-              <FileName>STemWin522_CM3_Keil.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Middlewares\STemWin\Lib\STemWin522_CM3_Keil.lib</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/STemWin/OS</GroupName>
-          <Files>
-            <File>
-              <FileName>GUI_X.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\OS\GUI_X.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2732,21 +2697,6 @@
               <FileType>1</FileType>
               <FilePath>..\Src\tcp.c</FilePath>
             </File>
-            <File>
-              <FileName>GUIConf_stm322xg_eval.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\GUIConf_stm322xg_eval.c</FilePath>
-            </File>
-            <File>
-              <FileName>LCDConf_stm322xg_eval.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\LCDConf_stm322xg_eval.c</FilePath>
-            </File>
-            <File>
-              <FileName>BASIC_HelloWorld.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\BASIC_HelloWorld.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -2916,26 +2866,6 @@
               <FileName>etharp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\Third_Party\LwIP\src\netif\etharp.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/STemWin/Lib</GroupName>
-          <Files>
-            <File>
-              <FileName>STemWin522_CM3_Keil.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Middlewares\STemWin\Lib\STemWin522_CM3_Keil.lib</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/STemWin/OS</GroupName>
-          <Files>
-            <File>
-              <FileName>GUI_X.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Middlewares\STemWin\OS\GUI_X.c</FilePath>
             </File>
           </Files>
         </Group>

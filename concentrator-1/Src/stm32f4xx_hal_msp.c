@@ -159,8 +159,10 @@ void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
   /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* TIMx Peripheral clock enable */
   TIMx_CLK_ENABLE();
+  //__TIM4_CLK_ENABLE();
     
   /* Enable GPIO Channels Clock */
+  //__GPIOB_CLK_ENABLE();
   TIMx_CHANNEL_GPIO_PORT();
   
   /*##-2- Configure I/Os #####################################################*/
@@ -176,10 +178,19 @@ void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
   /* Channel 1 configuration */
   GPIO_InitStruct.Pin = GPIO_PIN_CHANNEL1;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  
+  /* Channel 2 configuration */
+  //GPIO_InitStruct.Pin = GPIO_PIN_CHANNEL2;
+  //GPIO_InitStruct.Alternate = GPIO_AF2_TIM4;
+  //HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
-  /* Enable the TIM1 global Interrupt & set priority */
+  /* Enable the TIM3 global Interrupt & set priority */
   HAL_NVIC_SetPriority(TIM3_IRQn, 0, 1);
   HAL_NVIC_EnableIRQ(TIM3_IRQn);
+  
+  /* Enable the TIM4 global Interrupt & set priority */
+  //HAL_NVIC_SetPriority(TIM4_IRQn, 0, 1);
+  //HAL_NVIC_EnableIRQ(TIM4_IRQn);
 }
 
 /**

@@ -1,0 +1,18 @@
+block adminMenu
+    nav.navbar.navbar-default(role='navigation')
+        .container-fluid
+            .collapse.navbar-collapse
+                .navbar-header
+                    a.navbar-brand Dashboard
+                ul.nav.navbar-nav
+                    li(class=path == '/admin' ? 'active' : undefined)
+                        a(href='/admin') Devices
+                    li(class=path == '/admin/map' ? 'active' : undefined)
+                        a(href='/admin/map') Map
+                ul.nav.navbar-nav.navbar-right
+                    li.dropdown
+                        a.dropdown-toggle(data-toggle='dropdown', role='button' aria-expanded='false') Action
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li
+                                a Logout

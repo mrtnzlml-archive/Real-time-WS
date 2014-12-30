@@ -31,6 +31,9 @@ io.on('connection', function (socket) {
 				redisClient.lindex(device + ':data', 0, function (err, reply) {
 					socket.emit('data', device + ':' + reply);
 				});
+				redisClient.hmget(device, 'ip', 'port', 'active', function (err, reply) {
+					socket.emit('status', device + ':' + reply);
+				});
 			}, 100);
 		});
 	});
@@ -41,8 +44,11 @@ io.on('connection', function (socket) {
 udpSocket.on("message", function (msg, rinfo) {
 	//FIXME: not good!
 	if (result = msg.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1([0-9a-z]+)\1)+/i)) { //RESP
-		redisClient.lpush('TEMP_000001:data', result[3]);
-		redisClient.ltrim('TEMP_000001:data', 0, 999);
+		//redisClient.lpush('TEMP_000001:data', result[3]);
+		//redisClient.ltrim('TEMP_000001:data', 0, 999);
+
+		redisClient.lpush('TEMP_000002:data', result[3]);
+		redisClient.ltrim('TEMP_000002:data', 0, 999);
 	}
 	var message = new Buffer("test");
 	udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address);
@@ -74,6 +80,7 @@ var server = net.createServer(function (socket) { //'connection' listener
 			});
 		}
 	});
+	//TODO: prozkoumat socket a data (hledá se něco jako iRTT)
 	socket.on('data', function (data) {
 		if (data.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1[0-9a-z]+\1)+/i)) { //RESP
 			responseParser.parse(data);
@@ -95,7 +102,7 @@ setInterval(function () {
 			redisClient.hmget(device, 'last_ping', function (err, reply) {
 				var last_ping = reply[0];
 				var epoch = new Date().getTime();
-				if (epoch - last_ping < 1500) {
+				if (epoch - last_ping < 2000) {
 					redisClient.hmset(device, 'active', true);
 				} else {
 					redisClient.hmset(device, 'active', false);

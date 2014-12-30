@@ -41,7 +41,6 @@
 #include "main.h"
 #include "stm32f4xx_it.h"
 #include "stm32f4xx_hal.h"
-#include "GUI.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -57,9 +56,7 @@
 /* Private variables ---------------------------------------------------------*/
 extern ADC_HandleTypeDef    AdcHandle;
 extern TIM_HandleTypeDef		TimHandle;
-
-extern volatile GUI_TIMER_TIME OS_TimeMS;
-extern void BSP_Background(void);
+extern TIM_HandleTypeDef		TimHandle2;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -181,6 +178,16 @@ void SysTick_Handler(void)
 void ADC_IRQHandler(void)
 {
   HAL_ADC_IRQHandler(&AdcHandle);
+}
+
+/**
+  * @brief  This function handles TIM2 Interrupt.
+  * @param  None
+  * @retval None
+  */
+void TIM2_IRQHandler(void)
+{
+  HAL_TIM_IRQHandler(&TimHandle2);
 }
 
 /**

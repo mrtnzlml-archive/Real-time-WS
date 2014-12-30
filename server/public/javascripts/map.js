@@ -95,19 +95,19 @@ jsPlumb.ready(function () {
 	});
 
 	// and finally, make a couple of connections
-	instance.connect({source: "temp1", target: "temp2"});
-	instance.connect({source: "temp1", target: "temp3"});
-	instance.connect({source: "temp1", target: "temp4"});
-	instance.connect({source: "temp1", target: "temp5"});
-
-	instance.connect({source: "temp2", target: "temp3"});
-	instance.connect({source: "temp2", target: "temp4"});
-	instance.connect({source: "temp2", target: "temp5"});
-
-	instance.connect({source: "temp3", target: "temp4"});
-	instance.connect({source: "temp3", target: "temp5"});
-
-	instance.connect({source: "temp5", target: "temp4"});
+	//instance.connect({source: "temp1", target: "temp2"});
+	//instance.connect({source: "temp1", target: "temp3"});
+	//instance.connect({source: "temp1", target: "temp4"});
+	//instance.connect({source: "temp1", target: "temp5"});
+	//
+	//instance.connect({source: "temp2", target: "temp3"});
+	//instance.connect({source: "temp2", target: "temp4"});
+	//instance.connect({source: "temp2", target: "temp5"});
+	//
+	//instance.connect({source: "temp3", target: "temp4"});
+	//instance.connect({source: "temp3", target: "temp5"});
+	//
+	//instance.connect({source: "temp5", target: "temp4"});
 
 	jsPlumb.fire("jsPlumbDemoLoaded", instance);
 

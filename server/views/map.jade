@@ -7,17 +7,38 @@ block scripts
     script(src='/javascripts/jquery.jsPlumb-1.7.2-min.js')
     script(src='/javascripts/dom.jsPlumb-1.7.2-min.js')
     script(src='/javascripts/map.js')
+    script.
+        $.each(jsPlumb.getConnections(), function (idx, connection) {
+            connections.push({
+                connectionId: connection.id,
+                pageSourceId: connection.sourceId,
+                pageTargetId: connection.targetId,
+                anchors: $.map(connection.endpoints, function(endpoint) {
+                    return [[endpoint.anchor.x,
+                    endpoint.anchor.y,
+                    endpoint.anchor.orientation[0],
+                    endpoint.anchor.orientation[1],
+                    endpoint.anchor.offsets[0],
+                    endpoint.anchor.offsets[1]]];
+                })
+            });
+            console.log(connections);
+        });
 
 block content
     .container
+        include blocks/adminMenu
         .demo.statemachine-demo#statemachine-demo
-            .w#temp1 TEMP1
-                .ep
-            .w#temp2 TEMP2
-                .ep
-            .w#temp3 TEMP3
-                .ep
-            .w#temp4 TEMP4
-                .ep
-            .w#temp5 TEMP5
-                .ep
+            each device in devices
+                .w#temp1 device
+                    .ep
+            //.w#temp1 TEMP1
+            //    .ep
+            //.w#temp2 TEMP2
+            //    .ep
+            //.w#temp3 TEMP3
+            //    .ep
+            //.w#temp4 TEMP4
+            //    .ep
+            //.w#temp5 TEMP5
+            //    .ep
