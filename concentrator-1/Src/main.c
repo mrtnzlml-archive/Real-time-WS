@@ -57,7 +57,7 @@ int main(void) {
 	User_notification(&gnetif); //Notify the User about the nework interface config status 
 	
 	/*##-1- Configure the TIM peripheral #######################################*/
-	TimHandle.Instance = TIMx;
+	TimHandle.Instance = TIM3;
 	TimHandle.Init.Period = 10000;
 	//Prescaler max value is 65535!
 	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
@@ -325,7 +325,7 @@ static void ADC_Config(void) {
   ADC_ChannelConfTypeDef sConfig;
   
   /* ADC Initialization */
-  AdcHandle.Instance          = ADCx;
+  AdcHandle.Instance          = ADC3;
   
   AdcHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
   AdcHandle.Init.Resolution = ADC_RESOLUTION10b;
@@ -347,7 +347,7 @@ static void ADC_Config(void) {
   }
   
   /* Configure ADC3 regular channel */  
-  sConfig.Channel = ADCx_CHANNEL;
+  sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   sConfig.Offset = 0;

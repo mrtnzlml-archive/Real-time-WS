@@ -2,31 +2,14 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#define DEVICE_UID "TEMP_000002"
-
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "stm324xg_eval.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-#define ADCx                           ADC3
-#define ADCx_CHANNEL                   ADC_CHANNEL_7
-#define ADCx_CHANNEL_GPIO_CLK_ENABLE()  __GPIOF_CLK_ENABLE()
-#define ADCx_CLK_ENABLE()               __ADC3_CLK_ENABLE();
-#define ADCx_CHANNEL_PIN                GPIO_PIN_9
-#define ADCx_CHANNEL_GPIO_PORT          GPIOF 
-#define ADCx_IRQn                       ADC_IRQn
-#define ADCx_FORCE_RESET()              __ADC_FORCE_RESET()
-#define ADCx_RELEASE_RESET()            __ADC_RELEASE_RESET()
 
-#define TIMx                           TIM3
-//#define TIMx_CLK_ENABLE()              __TIM3_CLK_ENABLE()
-//#define TIMx_CHANNEL_GPIO_PORT()       __GPIOC_CLK_ENABLE()
-//#define GPIO_PIN_CHANNEL1              GPIO_PIN_6
-//#define GPIO_PIN_CHANNEL2              GPIO_PIN_7
-//#define GPIO_PIN_CHANNEL3              GPIO_PIN_8
-//#define GPIO_PIN_CHANNEL4              GPIO_PIN_9
+#define DEVICE_UID "TEMP_000002"
 
 #define DEST_IP_ADDR0   192
 #define DEST_IP_ADDR1   168
