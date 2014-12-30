@@ -21,12 +21,12 @@
 #define ADCx_RELEASE_RESET()            __ADC_RELEASE_RESET()
 
 #define TIMx                           TIM3
-#define TIMx_CLK_ENABLE()              __TIM3_CLK_ENABLE()
-#define TIMx_CHANNEL_GPIO_PORT()       __GPIOC_CLK_ENABLE()
-#define GPIO_PIN_CHANNEL1              GPIO_PIN_6
-#define GPIO_PIN_CHANNEL2              GPIO_PIN_7
-#define GPIO_PIN_CHANNEL3              GPIO_PIN_8
-#define GPIO_PIN_CHANNEL4              GPIO_PIN_9
+//#define TIMx_CLK_ENABLE()              __TIM3_CLK_ENABLE()
+//#define TIMx_CHANNEL_GPIO_PORT()       __GPIOC_CLK_ENABLE()
+//#define GPIO_PIN_CHANNEL1              GPIO_PIN_6
+//#define GPIO_PIN_CHANNEL2              GPIO_PIN_7
+//#define GPIO_PIN_CHANNEL3              GPIO_PIN_8
+//#define GPIO_PIN_CHANNEL4              GPIO_PIN_9
 
 #define DEST_IP_ADDR0   192
 #define DEST_IP_ADDR1   168

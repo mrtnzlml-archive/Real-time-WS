@@ -181,16 +181,6 @@ void ADC_IRQHandler(void)
 }
 
 /**
-  * @brief  This function handles TIM2 Interrupt.
-  * @param  None
-  * @retval None
-  */
-void TIM2_IRQHandler(void)
-{
-  HAL_TIM_IRQHandler(&TimHandle2);
-}
-
-/**
   * @brief  This function handles TIM3 Interrupt.
   * @param  None
   * @retval None
@@ -198,6 +188,16 @@ void TIM2_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   HAL_TIM_IRQHandler(&TimHandle);
+}
+
+/**
+  * @brief  This function handles TIM4 Interrupt.
+  * @param  None
+  * @retval None
+  */
+void TIM4_IRQHandler(void)
+{
+  HAL_TIM_IRQHandler(&TimHandle2);
 }
 
 /**

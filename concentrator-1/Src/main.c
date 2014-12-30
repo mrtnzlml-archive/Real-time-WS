@@ -131,12 +131,11 @@ int main(void) {
   * @retval None
   */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
-	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) { //1Hz
 		tcp_echoclient_connect();
-		concentrator_send(); //FIXME: do rychlejsiho kanálu
 	}
-	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
-		BSP_LED_Toggle(LED3);
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) { //10Hz
+		concentrator_send();
 	}
 }
 
