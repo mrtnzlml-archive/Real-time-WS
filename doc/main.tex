@@ -3,14 +3,23 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
 \usepackage{hyperref} % links in \tableofcontents
+\usepackage{minted} % syntax highlighter
 \hypersetup{
 	colorlinks,
-	citecolor=black,
+	citecolor=blue,
 	filecolor=black,
 	linkcolor=red,
-	urlcolor=black
+	urlcolor=blue
 }
 \addto\captionsczech{\renewcommand{\chaptername}{}} %remove "chapter" word
+
+\makeatletter
+\newcommand{\tocfill}{\cleaders\hbox{$\m@th \mkern\@dotsep mu . \mkern\@dotsep mu$}\hfill}
+\makeatother
+\newcommand{\abbrlabel}[1]{\makebox[\textwidth /2][l]{\textbf{#1}\ \tocfill}}
+\newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}%
+        \setlength{\labelwidth}{\textwidth /2}\setlength{\leftmargin}{\labelwidth+\labelsep}%
+                                              \setlength{\itemsep}{0pt}}}{\end{list}}
 
 \begin{document}
 
@@ -40,30 +49,48 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2014
 \input{abstract.tex}
 \input{prohlaseni.tex}
 %\input{podekovani.tex}
+
 \tableofcontents
 \cleardoublepage
-% \phantomsection
-%\addcontentsline{toc}{chapter}{\listfigurename}
-%\listoffigures
+\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
 %\cleardoublepage
 % \phantomsection
 %\addcontentsline{toc}{chapter}{\listtablename}
 %\listoftables
+
+
+
 \chapter*{Seznam symbolů a zkratek}
-xxx
+\noindent
+\begin{abbreviations}
+\item[AJAX]	Asynchronous JavaScript and XML
+\item[AJAJ]	Asynchronous JavaScript and JSON
+\item[HTTP]	Hypertext Transfer Protocol
+\item[IP]	Internet Protocol
+\item[RFC]	Request for Comments
+\item[TCP]	Transmission Control Protocol
+\item[UDP]	User Datagram Protocol
+\end{abbreviations}
 \addcontentsline{toc}{chapter}{Seznam symbolů a zkratek}
 
+
+
 \input{uvod.tex}
-%TODO napsat hned na začátku k čemu to vlastně celé je
 \input{chapter1.tex}
 \input{chapter2.tex}
 \input{chapter3.tex}
 \input{chapter4.tex}
 \input{zaver.tex}
 
+
+
 \begin{thebibliography}{9}
 \bibitem{rfc6455}{\em I. Fette, Google Inc., A. Melnikov, Isode Ltd.:} {\bf The WebSocket Protocol} \texttt{https://tools.ietf.org/html/rfc6455}
 \bibitem{mistrovstvi}{\em Barrie Sosinsky:} {\bf Mistrovství – počítačové sítě}
 \end{thebibliography}
+
+
 
 \end{document}

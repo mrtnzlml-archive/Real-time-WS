@@ -1,11 +1,56 @@
-\chapter{Program obsluhující koncentrátory}
+\chapter{Struktura programového řešení}
 
-\chapter{Komunikační protokol}
+\section{Komunikace koncentrátor - server}
+\begin{minted}[linenos,breaklines]{c}
+/**
+  * @brief  Configurates the network interface
+  * @param  None
+  * @retval None
+  */
+static void Netif_Config(void) {
+	struct ip_addr ipaddr;
+	struct ip_addr netmask;
+	struct ip_addr gw;
+	
+	IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
+	IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
+	IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+	
+	/* Add the network interface */
+	netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
+	
+	/* Registers the default network interface */
+  netif_set_default(&gnetif);
+  
+  if (netif_is_link_up(&gnetif)) {
+    /* When the netif is fully configured this function must be called */
+    netif_set_up(&gnetif);
+  } else {
+    /* When the netif link is down this function must be called */
+    netif_set_down(&gnetif);
+  }
+  
+  /* Set the link callback function, this function is called on change of link status*/
+  netif_set_link_callback(&gnetif, ethernetif_update_config);
+}
+\end{minted}
 
-\chapter{Real-time server}
+\begin{minted}[linenos,breaklines]{js}
+udpSocket.on('message', function (msg, rinfo) {
+    sails.log.verbose(JSON.stringify(msg.toString()));
+    //FIXME: not good!
+    if (result = msg.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1([0-9a-z]+)\1)+/i)) { //RESP
+        //redisClient.lpush('TEMP_000001:data', result[3]);
+        //redisClient.ltrim('TEMP_000001:data', 0, 999);
 
-\chapter{Databázový server}
+        redisClient.lpush('TEMP_000002:data', result[3]);
+        redisClient.ltrim('TEMP_000002:data', 0, 999);
+    }
+    var message = new Buffer('test');
+    udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address);
+}).bind(sails.config.globals.UDP_PORT, function () {
+    sails.log('Starting UDP server (port ' + sails.config.globals.UDP_PORT + ')...');
+});
+\end{minted}
 
-\section{RESP protokol}
-
-\chapter{Webová aplikace}
+\section{Komunikace server - webová aplikace}

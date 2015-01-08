@@ -8,20 +8,49 @@ Celá síť se tak skládá z klasického ethernetového vedení a rozbočovač�
 
 Samotné koncové prvky se pak sestávají z nízkoodběrových procesorů, které mají menší, pro danou aplikaci však dostatečný výkon. Zde opět záleží na daném účelu koncového zařízení. Pokud má sloužit jako koncentrátor, tedy zařízení sbírající data ze senzorů, potřebuje větší výkon než například termální čidlo. Výkon koncového prvku je tak dán samotným programem, který na tomto prvku poběží.
 
-Tato síť je tedy v takovém stavu, kdy je zapojen server (nejlépe na nezávislém napájení) a senzory jsou zapojeny v ethernetové síti pomocí běžných síťových prvků. Důležité je však vyřešit co se stane, když vypadne napájení? V tomto okamžiku síť prakticky přestane fungovat. Toto se nijak neliší od např. běžné zapojení elektroinstalace. Sice by šlo zajistit napájení koncových prvků, protože server může být zapojen na více nezávislých zdrojích elektrické energie, to však nebude např. v rodinném domě běžné. Horší případ nastane, když vypadne připojení k internetu. Zde by se nejednalo o problém, pokud by se server nacházel v řízeném objektu. Jediný efekt by byl ten, že by nebylo možné server ovládat vzdáleně. Horší situace ovšem nastane v okamžiku, kdy je server umístěn ve vzdálené serverovně. V takovém případě je pro tuto senzorickou síť potřeba vyřešit tzv. disaster solution, tedy nějaký fallback zařízení při selhání. Samotné koncové členy musí vědět jak se chovat bez příchozího signálu. To většinou není problém, protože paradoxně není většinou potřeba řešit jejich chování. To je nutné pouze v případě zabezpečení objektů. Starostí koncových členů totiž není např. vypnout světlo, pokud není přítomen signál. V takovém objektu je však zapotřebí zařadit do sítě zařízení, které bude přijímat od serveru povely a obsluhovat síť. V případě přerušení spojení se serverem převezme toto zařízení kontrolu nad sítí a uvede objekt do dočasného módu, než se problém vyřeší, nebo než přijede servis. Bude tak možné i nadále ovládat alespoň na základní úrovni většinu zařízení.
+Tato síť je tedy v takovém stavu, kdy je zapojen server (nejlépe na nezávislém napájení) a senzory jsou zapojeny v ethernetové síti pomocí běžných síťových prvků. Důležité je však vyřešit co se stane, když vypadne napájení? V tomto okamžiku síť prakticky přestane fungovat. Toto se nijak neliší od např. běžné zapojení elektroinstalace. Sice by šlo zajistit napájení koncových prvků, protože server může být zapojen na více nezávislých zdrojích elektrické energie, to však nebude např. v rodinném domě běžné. Horší případ nastane, když vypadne připojení k internetu. Zde by se nejednalo o problém, pokud by se server nacházel v řízeném objektu. Jediný efekt by byl ten, že by nebylo možné server ovládat vzdáleně. Horší situace ovšem nastane v okamžiku, kdy je server umístěn ve vzdálené serverovně. V takovém případě je pro tuto senzorickou síť potřeba vyřešit tzv. disaster solution, tedy nějaký fallback zařízení při selhání. Samotné koncové členy musí vědět jak se chovat bez příchozího signálu. To většinou není problém, protože paradoxně není potřeba řešit jejich chování. To je nutné pouze v případě zabezpečení objektů. Starostí koncových členů totiž není např. vypnout světlo, pokud není systém připojen k internetu. V takovém objektu je však zapotřebí zařadit do sítě zařízení, které bude přijímat od serveru povely a obsluhovat síť. V případě přerušení spojení se serverem převezme toto zařízení kontrolu nad sítí a uvede objekt do dočasného módu, než se problém vyřeší, nebo než přijede servis. Bude tak možné i nadále ovládat alespoň na základní úrovni většinu zařízení.
 
 \section{Real-time ve webových aplikacích}
-Ve webových aplikacích žádný real-time jako takový v podstatě neexistuje. 
-%TODO AJAX, websocket
+Ve webových aplikacích žádný real-time jako takový v podstatě neexistuje. Existují však technologie, které umožňují rychlou komunikaci s webovým serverem, resp. rychlou výměnu dat, což vždy nemusí být jedno a to samé.
+
+Jedním z typických zástupců je AJAX (popř. AJAJ). Jedná se jednosměrný mechanismus, kdy se po periodické akci, nebo například při stisku tlačítka vyvolá javascriptová akce, která uzavře HTTP spojení se serverem a získá data v závislosti na požadavku. Následně překreslí část stránky obsahující nová data. Nedojde tak k obnovení celé stránky, ke kterému by došlo při běžném pohybu návštěvníka na stránce. Výhodou je, že není zapotřebí přenášet celou stránku. Nevýhodou však je možný nárůst HTTP požadavků na server a hlavně nutnost vyjednat se serverem spojení při každém požadavku, což je časově velmi náročné. Pro tuto aplikaci je proto použití AJAXu nevhodné.
+
+Oproti tomu websocket \cite{rfc6455} je protokol, který umožňuje otevřít socket mezi serverem a prohlížečem a pomocí rámců posílat obousměrně informace. Vyjednat spojení se serverem tak stačí pouze jednou při otevření webové stránky a následně je možné velmi rychle se stránkou komunikovat. Zároveň se periodicky kontroluje, jestli je stránka stále aktivní (tzv. heartbeat) a pokud ne, server spojení uzavře. Nespornou výhodou je také fakt, že websocket využívá principu event-driven, takže kromě periodické kontroly aktivního spojení je možné posílat data pouze pokud je to nutné, což hodně ušetří na komunikaci mezi serverem a browserem. Websocket staví nad HTTP, takže mu dnešní prohlížeče rozumí, nicméně pro případ toho, že by webovou stránku otevřel uživatel ve starším prohlížeči, jsou většinou k dispozici fallback řešení ve formě jiných technologií tak, aby stránka fungovala. V tomto případě se jedná zejména o XHR-polling a JSONP-polling.
 
 \section{TCP}
-Protokol TCP je jedním ze dvou transportních protokolů, které tento systém využívá.
-%TODO Co to je, jak to funguje a k čemu je to dobré.
+Protokol TCP je jedním ze dvou transportních protokolů, které tento systém využívá. Stejně tak jako UDP je zde tento protokol rozbírán zejména z toho důvodu, že právě na TCP packetech a UDP datagramech je vystavěna komunikace mezi koncentrátory a serverem. Oproti UDP protokolu se jedná o poměrně komplikovanou a tedy i časově náročnou komunikaci. Posloupnost komunikace je následující, přičemž na adrese \texttt{192.168.0.20} se  nachází server:
+
+%TODO
+\begin{minted}[linenos,breaklines,mathescape]{text}
+192.168.0.11 -> 192.168.0.20 : SYN
+192.168.0.11 <- 192.168.0.20 : SYN, ACK
+192.168.0.11 -> 192.168.0.20 : ACK
+\end{minted}
+
+Nespornou výhodou TCP je však fakt, že tento protokol zajišťuje to, že daný packet dorazí na cílovou adresu. To například u UDP neplatí.
+
 \begin{figure}[h]
     \centering
-	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/tcp.png}}
-	\caption{TCP stavový diagram} %TODO zdroj http://commons.wikimedia.org/wiki/File:Tcp_state_diagram_fixed_new.svg
-    %\label{fig:awesome_image}
+	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/tcp2.png}}
+	\caption{Uspořádání TCP packetu}
+	\label{fig:tcp-packet}
 \end{figure}
 
+%\begin{figure}[H]
+%    \centering
+%	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/tcp.png}}
+%	\caption{TCP stavový diagram}
+%	\url{http://commons.wikimedia.org/wiki/File:Tcp_state_diagram_fixed_new.svg}
+%	\label{fig:tcp}
+%\end{figure}
+
 \section{UDP}
+% http://serverfault.com/questions/8981/what-is-the-difference-between-udp-and-tcp
+fire and forget
+
+\begin{figure}[h]
+    \centering
+	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/udp.png}}
+	\caption{Uspořádání UDP datagramu}
+	\label{fig:tcp-packet}
+\end{figure}
