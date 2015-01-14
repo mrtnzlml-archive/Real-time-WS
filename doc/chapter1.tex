@@ -18,18 +18,30 @@ Jedním z typických zástupců je AJAX (popř. AJAJ). Jedná se jednosměrný m
 Oproti tomu websocket \cite{rfc6455} je protokol, který umožňuje otevřít socket mezi serverem a prohlížečem a pomocí rámců posílat obousměrně informace. Vyjednat spojení se serverem tak stačí pouze jednou při otevření webové stránky a následně je možné velmi rychle se stránkou komunikovat. Zároveň se periodicky kontroluje, jestli je stránka stále aktivní (tzv. heartbeat) a pokud ne, server spojení uzavře. Nespornou výhodou je také fakt, že websocket využívá principu event-driven, takže kromě periodické kontroly aktivního spojení je možné posílat data pouze pokud je to nutné, což hodně ušetří na komunikaci mezi serverem a browserem. Websocket staví nad HTTP, takže mu dnešní prohlížeče rozumí, nicméně pro případ toho, že by webovou stránku otevřel uživatel ve starším prohlížeči, jsou většinou k dispozici fallback řešení ve formě jiných technologií tak, aby stránka fungovala. V tomto případě se jedná zejména o XHR-polling a JSONP-polling.
 
 \section{TCP}
-Protokol TCP je jedním ze dvou transportních protokolů, které tento systém využívá. Stejně tak jako UDP je zde tento protokol rozbírán zejména z toho důvodu, že právě na TCP packetech a UDP datagramech je vystavěna komunikace mezi koncentrátory a serverem. Oproti UDP protokolu se jedná o poměrně komplikovanou a tedy i časově náročnou komunikaci. Posloupnost komunikace je následující, přičemž na adrese \texttt{192.168.0.20} se  nachází server:
+Protokol TCP je jedním ze dvou transportních protokolů \cite{mistrovstvi}, které tento systém využívá. Stejně tak jako UDP je zde tento protokol rozbírán zejména z toho důvodu, že právě na TCP packetech a UDP datagramech je vystavěna komunikace mezi koncentrátory a serverem. Oproti UDP protokolu se jedná o poměrně komplikovanou a tedy i časově náročnou komunikaci. Posloupnost komunikace je následující, přičemž na adrese \texttt{192.168.0.20} se  nachází server:
 
-%TODO
-\begin{minted}[linenos,breaklines,mathescape]{text}
+\begin{minted}[linenos,breaklines]{text}
 192.168.0.11 -> 192.168.0.20 : SYN
 192.168.0.11 <- 192.168.0.20 : SYN, ACK
 192.168.0.11 -> 192.168.0.20 : ACK
 \end{minted}
 
-Nespornou výhodou TCP je však fakt, že tento protokol zajišťuje to, že daný packet dorazí na cílovou adresu. To například u UDP neplatí.
+Spojení tedy probíhá zhruba následovně. Koncentrátor (\texttt{192.168.0.11}) otevírá TCP spojení vysláním požadavku na synchronizaci příznakem \texttt{SYN}. Server potvrzuje spojení pomocí příznaku \texttt{ACK} a vysílá také požadavek na synchronizaci (\texttt{SYN}). Koncentrátor toto spojení přijímá pomocí \texttt{ACK} příznaku, čímž je spojení ustanoveno. Tomuto procesu se říká three-way handshake \cite{mistrovstvi}. Samotné poslání jednoho paketu včetně dat a uzavření spojení pak vypadá následovně:
 
-\begin{figure}[h]
+\begin{minted}[linenos,breaklines,mathescape]{text}
+192.168.0.11 -> 192.168.0.20 : SYN
+192.168.0.11 <- 192.168.0.20 : SYN, ACK
+192.168.0.11 -> 192.168.0.20 : PSH, ACK
+192.168.0.11 <- 192.168.0.20 : FIN, ACK
+192.168.0.11 -> 192.168.0.20 : FIN, ACK
+192.168.0.11 <- 192.168.0.20 : ACK
+\end{minted}
+
+Začátek spojení (three-way handshake) zůstává stejný, ale pro úsporu množství přenášených informací se hned při potvrzení spojení pomocí \texttt{ACK} posílají na server data (\texttt{PSH}). Následně server uzavírá spojení a potvrzuje přijetí dat (\texttt{FIN, ACK}), koncentrátor uzavírá spojení a potvrzuje uzavření spojení serverem (\texttt{FIN, ACK}) a nakonec server potvrzuje uzavření spojení ze strany koncentrátoru (\texttt{ACK}). Je tedy zřejmé, že i po \texttt{FIN} příznaku dochází k další komunikaci. Nutně tedy tento příznak neznamená úplný konec spojení, ale pouze konec z jedné strany. V tomto případě uzavírá spojení server, ačkoliv spojení nezačínal. Je to vhodné z toho důvodu, že se ušetří jedna cesta pro potvrzení dat na straně serveru a následné ukončení ze strany koncentrátoru. Navíc server by se měl v dané síti chovat velmi zodpovědně, takže nepřipouští otevřená spojení, když k tomu není důvod. V současné chvíli nejsou mezi serverem a koncentrátorem implementovány perzistentní sockety.
+
+Nespornou výhodou TCP je fakt, že tento protokol zajišťuje to, že daný packet dorazí na cílovou adresu. To například u UDP neplatí. TCP se proto používá pro přenos kritických informací (například vypnutí/zapnutí světla). Jsou to operace, které se musí bezpodmínečně vykonat a jejich nevykonání by vedlo k velmi zvláštnímu chování sítě ze strany uživatele.
+
+\begin{figure}[H]
     \centering
 	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/tcp2.png}}
 	\caption{Uspořádání TCP packetu}
@@ -37,7 +49,7 @@ Nespornou výhodou TCP je však fakt, že tento protokol zajišťuje to, že dan
 \end{figure}
 
 %\begin{figure}[H]
-%    \centering
+%   \centering
 %	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/tcp.png}}
 %	\caption{TCP stavový diagram}
 %	\url{http://commons.wikimedia.org/wiki/File:Tcp_state_diagram_fixed_new.svg}
@@ -45,12 +57,13 @@ Nespornou výhodou TCP je však fakt, že tento protokol zajišťuje to, že dan
 %\end{figure}
 
 \section{UDP}
-% http://serverfault.com/questions/8981/what-is-the-difference-between-udp-and-tcp
-fire and forget
+UDP je oproti TCP protokol typu \uv{fire and forget}. Nestará se tedy o to, jestli informace dorazila na místo určení. To má za následek určitou nespolehlivost přenosu informace, ale o mnohem méně režie potřebné pro přenos. V porovnání s TCP je tento datagram velmi malý:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
 	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/udp.png}}
 	\caption{Uspořádání UDP datagramu}
 	\label{fig:tcp-packet}
 \end{figure}
+
+Pro poslání informace potom stačí vyslat jeden tento datagram s daty a to je vše. Proto skutečnost, že neznáme výsledek přenosu vede k tomu, že musíme být smířeni s faktem, že se některé datagramy jednoduše ztratí. Tento přenos je tedy vhodný pro přenos velkého množství informací s tím, že nám případné ztráty nevadí. Typickým zástupcem toho typu přenosu jsou například kontinuální čidla, která neustále snímají (například teplotu) a v krátkých časových intervalech emitují informace.

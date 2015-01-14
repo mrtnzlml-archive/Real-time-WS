@@ -1,9 +1,73 @@
 \chapter{Volba vhodné technologie}
 
 \section{Prvky senzorické sítě}
+
 \section{Real-time server}
 
 \section{Databázový server}
+\cite{redis-benchmark}
+
+\begin{minted}[linenos,breaklines]{text}
+$ redis-benchmark -q -n 100000 -d 256
+PING_INLINE: 212314.23 requests per second
+PING_BULK: 211416.50 requests per second
+SET: 131752.31 requests per second
+GET: 199600.80 requests per second
+INCR: 213219.61 requests per second
+LPUSH: 213219.61 requests per second
+LPOP: 204918.03 requests per second
+SADD: 214592.28 requests per second
+SPOP: 212765.95 requests per second
+LPUSH (needed to benchmark LRANGE): 213675.22 requests per second
+LRANGE_100 (first 100 elements): 45269.35 requests per second
+LRANGE_300 (first 300 elements): 15586.04 requests per second
+LRANGE_500 (first 450 elements): 9325.75 requests per second
+LRANGE_600 (first 600 elements): 6472.49 requests per second
+MSET (10 keys): 131578.95 requests per second
+\end{minted}
+
+\begin{minted}[linenos,breaklines]{text}
+$ redis-benchmark -q -n 100000 -d 256 -P 16
+PING_INLINE: 1612903.25 requests per second
+PING_BULK: 2127659.75 requests per second
+SET: 1086956.50 requests per second
+GET: 1351351.38 requests per second
+INCR: 1219512.12 requests per second
+LPUSH: 934579.44 requests per second
+LPOP: 1030927.81 requests per second
+SADD: 1265822.75 requests per second
+SPOP: 1562499.88 requests per second
+LPUSH (needed to benchmark LRANGE): 990099.00 requests per second
+LRANGE_100 (first 100 elements): 35186.49 requests per second
+LRANGE_300 (first 300 elements): 8521.52 requests per second
+LRANGE_500 (first 450 elements): 5236.70 requests per second
+LRANGE_600 (first 600 elements): 3888.48 requests per second
+MSET (10 keys): 207468.88 requests per second
+\end{minted}
+
 \subsection{RESP protokol}
+Redis databáze komunikuje interně přes TCP v RESP (Redis Serialization Protocol) formátu. RESP používá celkem 5 typů dat. Vždy platí, že první byte je byte určující o jaký formát se jedná:
+
+\begin{itemize}
+\itemsep0em
+\item \texttt{+} jednoduchý string
+\item \texttt{-} error
+\item \texttt{:} integer
+\item \texttt{\$} bulk string (binary safe)
+\item \texttt{*} array
+\end{itemize}
+
+Následuje samotný obsah, nebo dodatečné informace, například o délce a vše je ukončeno pomocí \texttt{CRLF} (\texttt{\textbackslash r\textbackslash n}). Postupně tedy přenášené informace mohou vypadat například takto:
+
+\begin{itemize}
+\itemsep0em
+\item \texttt{+PONG\textbackslash r\textbackslash n}
+\item \texttt{-Error 123\textbackslash r\textbackslash n}
+\item \texttt{:54986\textbackslash r\textbackslash n}
+\item \texttt{\$4\textbackslash r\textbackslash nPING\textbackslash r\textbackslash n} (první část určuje délku bulk stringu, NULL je pak \texttt{\$-\textbackslash r\textbackslash n})
+\item \texttt{*2\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nGET\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nkey\textbackslash r\textbackslash n} (první je délka pole, následuje kombinace předchozích)
+\end{itemize}
+
+Redis server potom přijímá podle bulk stringů obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory posílají data (přes TCP i UDP) v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
 
 \section{Webová aplikace}
