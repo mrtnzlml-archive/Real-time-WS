@@ -12,6 +12,7 @@ module.exports = function UDPHook(sails) {
 
             udpSocket.on('message', function (msg, rinfo) {
                 sails.log.verbose(JSON.stringify(msg.toString()));
+                redisClient.incr('msg_count');
                 //FIXME: not good!
                 if (result = msg.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1([0-9a-z]+)\1)+/i)) { //RESP
                     //redisClient.lpush('TEMP_000001:data', result[3]);

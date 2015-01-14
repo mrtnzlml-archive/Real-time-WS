@@ -24,8 +24,7 @@ module.exports.routes = {
 
     /***************************************************************************
      *                                                                          *
-     * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-     * etc. depending on your default view engine) your home page.              *
+     * Make the view located at `views/Homepage/index.ejs`, your home page.     *
      *                                                                          *
      * (Alternatively, remove this and add an `index.html` file in your         *
      * `assets` directory)                                                      *
@@ -33,7 +32,10 @@ module.exports.routes = {
      ***************************************************************************/
 
     '/': {
-        view: 'homepage'
+        controller: 'homepage' //FIXME: funguje i http://127.0.0.1:1337/homepage a to není dobře
+    },
+    '/connect/:from/:to': {
+        controller: 'connect'
     }
 
     /***************************************************************************

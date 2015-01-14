@@ -1,4 +1,4 @@
-module.exports = function UDPHook(sails) {
+module.exports = function TCPHook(sails) {
     return {
         start: function () {
             var net = require('net');
