@@ -39,7 +39,7 @@ module.exports.routes = {
     },
     '/connect/:from/:to': {
         controller: 'connect'
-    }
+    },
 
     /***************************************************************************
      *                                                                          *
@@ -50,5 +50,9 @@ module.exports.routes = {
      * for configuration options and examples.                                  *
      *                                                                          *
      ***************************************************************************/
+
+    '/documentation': {
+        view: 'Documentation/index'
+    }
 
 };

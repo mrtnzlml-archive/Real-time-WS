@@ -1,43 +1,14 @@
-///**
-// * importer.less
-// *
-// * By default, new Sails projects are configured to compile this file
-// * from LESS to CSS.  Unlike CSS files, LESS files are not compiled and
-// * included automatically unless they are imported below.
-// *
-// * The LESS files imported below are compiled and included in the order
-// * they are listed.  Mixins, variables, etc. should be imported first
-// * so that they can be accessed by subsequent LESS stylesheets.
-// *
-// * (Just like the rest of the asset pipeline bundled in Sails, you can
-// * always omit, customize, or replace this behavior with SASS, SCSS,
-// * or any other Grunt tasks you like.)
-// */
-// For example:
-//
-// @import 'variables/colors.less';
+@import 'variables/colors.less';
 @import 'mixins/default.less';
-
 // @import 'styleguide.less';
 // @import 'pages/login.less';
 // @import 'pages/signup.less';
-//
-// etc.
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700&subset=latin-ext);
 
 html, body {
     text-align: left;
     font-size: 1em
-}
-
-html, body, img, form, textarea, input, fieldset, div, p, div, ul, li, ol, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, code {
-    margin: 0;
-    padding: 0
-}
-
-ul, li {
-    list-style: none
 }
 
 img {
@@ -60,7 +31,7 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: normal
+    font-weight: 300;
 }
 
 div.clear {
@@ -119,7 +90,7 @@ body {
 
 div.header {
     .transition(4s);
-    background: rgba(4, 36, 41, 0.89) url(http://sailsjs.org/images/img_sailsShadow.png) no-repeat 42% bottom;
+    background: @light url(../images/iot.png) no-repeat 80% center;
     padding: 60px 0 60px;
 }
 
@@ -150,7 +121,7 @@ div.main.container {
 }
 
 h1 {
-    color: #118798;
+    color: @dark;
     font-weight: 300;
 }
 
@@ -162,7 +133,7 @@ code {
 }
 
 a {
-    color: #118798;
+    color: @dark;
     font-weight: 300;
     text-decoration: underline;
 }
