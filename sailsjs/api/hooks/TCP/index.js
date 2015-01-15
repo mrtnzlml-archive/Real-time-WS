@@ -14,15 +14,15 @@ module.exports = function TCPHook(sails) {
                 var responseParser = new resp.ResponseParser();
                 responseParser.on('response', function (response) {
                     if (response[0].toLowerCase() == 'ping') {
-                        var device = response[1];
+                        var device = String(response[1]).toLowerCase();
                         var epoch = new Date().getTime();
                         sails.log.verbose('PING from ' + device);
                         redisClient.sismember('devices', device, function (err, result) {
                             if (result) {
-                                redisClient.hmset(device, 'last_ping', epoch);
+                                redisClient.hmset('device:' + device, 'last_ping', epoch);
                             } else {
                                 redisClient.sadd('devices', device);
-                                redisClient.hmset(device,
+                                redisClient.hmset('device:' + device,
                                     'ip', socket.remoteAddress,
                                     'port', socket.remotePort,
                                     'active', true,
@@ -30,11 +30,13 @@ module.exports = function TCPHook(sails) {
                                 );
                                 sails.log('Added device ' + device);
                             }
+                            redisClient.hincrby('device:' + device, 'msg_count', 1);
                         });
                     }
                 });
                 //TODO: prozkoumat socket a data (hledá se něco jako iRTT)
                 socket.on('data', function (data) {
+                    redisClient.incr('msg_count');
                     if (data.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1[0-9a-z]+\1)+/i)) { //RESP
                         responseParser.parse(data);
                     }

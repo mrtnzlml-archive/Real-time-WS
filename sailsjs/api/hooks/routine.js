@@ -11,13 +11,13 @@ module.exports = function WebsocketHook(sails) {
             setInterval(function () {
                 redisClient.smembers('devices', function (err, result) {
                     result.forEach(function (device) {
-                        redisClient.hmget(device, 'last_ping', function (err, reply) {
+                        redisClient.hmget('device:' + device, 'last_ping', function (err, reply) {
                             var last_ping = reply[0];
                             var epoch = new Date().getTime();
                             if (epoch - last_ping < 2000) {
-                                redisClient.hmset(device, 'active', true);
+                                redisClient.hmset('device:' + device, 'active', true);
                             } else {
-                                redisClient.hmset(device, 'active', false);
+                                redisClient.hmset('device:' + device, 'active', false);
                             }
                         });
                     });

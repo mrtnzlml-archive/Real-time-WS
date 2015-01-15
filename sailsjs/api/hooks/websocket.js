@@ -22,7 +22,7 @@ module.exports = function WebsocketHook(sails) {
                                 });
                                 socket.emit('data', device + ':' + Math.round(sum / sma));
                             });
-                            redisClient.hmget(device, 'ip', 'port', 'active', function (err, reply) {
+                            redisClient.hmget('device:' + device, 'ip', 'port', 'active', function (err, reply) {
                                 socket.emit('status', device + ':' + reply);
                             });
                         }, 50);

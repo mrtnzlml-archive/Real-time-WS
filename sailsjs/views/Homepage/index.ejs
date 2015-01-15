@@ -1,60 +1,48 @@
-<!-- Default home page -->
 <script type="text/javascript">
     setTimeout(function sunrise() {
         document.getElementsByClassName('header')[0].style.backgroundColor = '#118798';
     }, 0);
 </script>
 
-<div class="default-page">
-    <div class="header">
-        <a href="/">
-            <h1 id="main-title" class="container">
-                <span style="font-weight:bold;font-size:1.2em">{</span>
-                <span style="font-weight:bold">PROJECT</span>:SPEEDY
-                <span style="font-weight:bold;font-size:1.2em">}</span>
-            </h1>
-        </a>
-
-        <h3 class="container">Be a real-time hero&hellip;</h3>
+<div class="main container clearfix">
+    <% if(req.session.flash && req.session.flash.info) { %>
+    <div class="alert alert-info">
+        <%= req.flash('info') %>
     </div>
-    <div class="main container clearfix">
-        <% if(req.session.flash && req.session.flash.info) { %>
-        <div class="alert alert-info">
-            <%= req.flash('info') %>
-        </div>
+    <% } %>
+    <h1><%= devices.length %> connected devices</h1>
+    <ul class="getting-started">
+        <% for(var i = 0; i < devices.length; i++) { %>
+        <li class="clearfix">
+            <div class="step" style="border-left: solid 2px #118798">
+                <h3>
+                    <span id="<%= devices[i] %>_status" class="status" title="Status unknown"></span>
+                    <%= devices[i].toUpperCase() %>
+                    <small>
+                        Thermal sensor
+                        (<a href="/device/<%= devices[i] %>">manage</a>)
+                    </small>
+                </h3>
+                <p>
+                    Data:
+                    <span id="<%= devices[i] %>" style="font-size:25px">Loading&hellip;</span>
+                </p>
+                <p>
+                    Connectable devices:
+                    <% for(var j = 0; j < devices.length; j++) { %>
+                    <% if(i != j) { %>
+                    <a href="/connect/<%= devices[i] %>/<%= devices[j] %>"><%= devices[j] %></a>
+                    <% } %>
+                    <% } %>
+                </p>
+                <p>Connected devices:</p>
+            </div>
+        </li>
         <% } %>
-        <h1><%= devices.length %> connected devices</h1>
-        <ul class="getting-started">
-            <% for(var i = 0; i < devices.length; i++) { %>
-            <li class="clearfix">
-                <div class="step">
-                    <div class="sprite one"></div>
-                    <h3>
-                        <span id="<%= devices[i] %>_status" class="status" title="Status unknown"></span>
-                        <%= devices[i] %>
-                        <small>Thermal sensor</small>
-                    </h3>
-                    <p>
-                        Data:
-                        <span id="<%= devices[i] %>" style="font-size:25px">Loading&hellip;</span>
-                    </p>
-                    <p>
-                        Connectable devices:
-                        <% for(var j = 0; j < devices.length; j++) { %>
-                        <% if(i != j) { %>
-                        <a href="/connect/<%= devices[i] %>/<%= devices[j] %>"><%= devices[j] %></a>
-                        <% } %>
-                        <% } %>
-                    </p>
-                    <p>Connected devices: -</p>
-                </div>
-            </li>
-            <% } %>
-        </ul>
-        <div class="links">
-            <h4>Messages so far</h4>
+    </ul>
+    <div class="links">
+        <h4>Messages so far</h4>
 
-            <div id="msg_count">Loading&hellip;</div>
-        </div>
+        <div id="msg_count">Loading&hellip;</div>
     </div>
 </div>

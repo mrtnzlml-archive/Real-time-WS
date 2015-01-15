@@ -1,0 +1,31 @@
+<div class="main container clearfix">
+    <div class="getting-started">
+        <a href="/">
+            <span class="glyphicon glyphicon-chevron-left"></span> Go back
+        </a>
+
+        <div class="page-header">
+            <h1>
+                <span class="status" title="Status unknown"></span>
+                <%= device_name.toUpperCase() %>
+                <small>Thermal sensor</small>
+            </h1>
+        </div>
+        <p>IP: <%= device_data.ip %></p>
+        <p>Port: <%= device_data.port %></p>
+        <p>Active: <%= device_data.active %></p>
+        <p>Message count: <%= device_data.msg_count %></p>
+        <p>Last ping: <%= device_data.last_ping %></p>
+        <p>Connectable devices:</p>
+        <p>Connected devices:</p>
+    </div>
+    <div class="links">
+        <h4>What would you like to do?</h4>
+        <ul>
+            <li><a>PING this device</a></li>
+            <li><a>RESET this device</a></li>
+            <li><a>Release from connections</a></li>
+            <li><a>Drop all connections</a></li>
+        </ul>
+    </div>
+</div>

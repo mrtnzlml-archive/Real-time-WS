@@ -34,6 +34,9 @@ module.exports.routes = {
     '/': {
         controller: 'homepage' //FIXME: funguje i http://127.0.0.1:1337/homepage a to není dobře
     },
+    '/device/:device': {
+        controller: 'device'
+    },
     '/connect/:from/:to': {
         controller: 'connect'
     }
