@@ -1,10 +1,16 @@
 \chapter{Volba vhodné technologie}
+Pro tuto síť nejsou v tuto chvíli stanoveny zadávající firmou žádné konkrétní požadavky na hardware. Proto je možné vybrat z hlediska softwarového řešení jakoukoliv platformu. Z hardwarového hlediska je doporučeno používat evaluační desky od STMicroelectronics. V následující části budu popisovat jednotlivé použité technologie a důvod jejich volby.
 
 \section{Prvky senzorické sítě}
+%TODO popsat také druhou desku (40x)
+
 
 \section{Real-time server}
+%TODO Node.js
+
 
 \section{Databázový server}
+%TODO Redis
 \cite{redis-benchmark}
 
 \begin{minted}[linenos,breaklines]{text}
@@ -71,3 +77,4 @@ Následuje samotný obsah, nebo dodatečné informace, například o délce a v�
 Redis server potom přijímá podle bulk stringů obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory posílají data (přes TCP i UDP) v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
 
 \section{Webová aplikace}
+%TODO Sails.js, Express, Sockets.io

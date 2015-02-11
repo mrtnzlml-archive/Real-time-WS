@@ -1,3 +1,17 @@
+$(function () {
+    var data = new RealTimeData(2);
+
+    //.interpolate('monotone');
+    var chart = $('#area').epoch({
+        type: 'time.area',
+        data: data.history(),
+        axes: ['left', 'bottom', 'right']
+    });
+
+    setInterval(function() { chart.push(data.next()); }, 1000);
+    chart.push(data.next());
+});
+
 setTimeout(function sunrise() {
     document.getElementsByClassName('header')[0].style.backgroundColor = '#2980b9';
 }, 0);

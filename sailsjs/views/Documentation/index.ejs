@@ -1,8 +1,7 @@
 <div class="main container clearfix">
     <h1>Documentation</h1>
     <p>
-        This document contains all necessary information about project internal and database structure. Feel free to
-        update it&hellip;
+        This document contains all necessary information about project internal and database structure.
     </p>
 
     <h2>Database structure</h2>
@@ -30,4 +29,17 @@
         for storing integer value of all requests sent through this server. This number should be much bigger than
         <code>msg_count</code> in the <code>device:xxx</code> table.
     </p>
+
+    <h2>Signals</h2>
+    <p>
+        There are two ways how to send data from concentrator to the server and vice versa. You can do this via TCP
+        packets or UDP datagrams. By default server is listening on port <code>50000</code> (for both protocols).
+        Data should be in <strong>RESP</strong> (REdis Serialization Protocol) protocol. TCP is intended for important
+        data like one-time signal (signal switch) or ping. It's because of you're using UDP, you cannot be sure that UDP
+        datagram will reach the destination (server). It's fact - UDP is "fire and forget" protocol.
+    </p>
+<pre>
+TCP:    *2\r\n$4\r\nPING\r\n$11\r\nTEMP_000001\r\n
+UDP:    *2\r\n$11\r\nTEMP_000001\r\n$4\r\n0512d\r\n
+</pre>
 </div>

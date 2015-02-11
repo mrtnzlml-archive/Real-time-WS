@@ -1,9 +1,10 @@
-\documentclass[oneside,12pt,a4paper]{book} % draft (twoside)
+\documentclass[oneside,12pt,a4paper,draft]{book} %opt: draft/final (twoside, openany/openright)
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
 \usepackage{hyperref} % links in \tableofcontents
 \usepackage{minted} % syntax highlighter
+\usepackage{pdfpages}
 \hypersetup{
 	colorlinks,
 	citecolor=blue,
@@ -43,7 +44,8 @@ Autor práce: Martin Zlámal\\
 Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2014
 \end{titlepage}
 
-%\input{zadani.tex}
+\includepdf[pages={1}]{img/zadani1.jpg}
+\includepdf[pages={1}]{img/zadani2.jpg}
 \input{abstrakt.tex}
 \pagenumbering{roman}
 \input{abstract.tex}

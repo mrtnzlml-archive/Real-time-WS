@@ -145,7 +145,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
   * @retval None
   */
 static void Error_Handler(void) {
-	BSP_LED_On(LED1);
+	BSP_LED_On(LED1); //LED1
 	BSP_LED_On(LED2);
 	BSP_LED_On(LED3);
 	BSP_LED_On(LED4);

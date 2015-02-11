@@ -57,8 +57,8 @@ void concentrator_send() {
   struct pbuf *p;
   
 	//sprintf((char*)data, "{\"r\":true,\"t\":%d,\"d\":[%d,%d]}", (int)epoch, message_count++, (int)rand());
-	//sprintf((char*)data, "+%s:%d\r\n", DEVICE_UID, uhADCxConvertedValue); //TODO: klouzavy prumer
-	sprintf((char*)data, "*2\r\n$4\r\nDATA\r\n$4\r\n%04d\r\n", uhADCxConvertedValue);
+	//sprintf((char*)data, "+%s:%d\r\n", DEVICE_UID, uhADCxConvertedValue);
+	sprintf((char*)data, "*2\r\n$11\r\n%s\r\n$4\r\n%04d\r\n", DEVICE_UID, uhADCxConvertedValue);
 	//char *s = respString("OK");
 	//sprintf((char*)data, "%s", s);
 	//free(s);
