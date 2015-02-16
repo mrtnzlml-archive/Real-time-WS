@@ -55,8 +55,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern ADC_HandleTypeDef    AdcHandle;
-extern TIM_HandleTypeDef		TimHandle;
-extern TIM_HandleTypeDef		TimHandle2;
+extern TIM_HandleTypeDef	TimHandle3;
+extern TIM_HandleTypeDef	TimHandle4;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -187,7 +187,7 @@ void ADC_IRQHandler(void)
   */
 void TIM3_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&TimHandle);
+  HAL_TIM_IRQHandler(&TimHandle3);
 }
 
 /**
@@ -197,7 +197,7 @@ void TIM3_IRQHandler(void)
   */
 void TIM4_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&TimHandle2);
+  HAL_TIM_IRQHandler(&TimHandle4);
 }
 
 /**

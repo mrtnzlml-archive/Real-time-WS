@@ -17,9 +17,9 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef TimHandle; // Timer handler declaration
-TIM_HandleTypeDef TimHandle2;
-static TIM_HandleTypeDef htim;
+TIM_HandleTypeDef TimHandle3; // Timer handler declaration for TIM3
+TIM_HandleTypeDef TimHandle4; // Timer handler declaration for TIM4
+TIM_HandleTypeDef TimHandle8; // Timer handler declaration for TIM8
 
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
 __IO uint32_t uhCCR1_Val = 100;
@@ -51,76 +51,17 @@ int main(void) {
 	BSP_Config(); //Configure the BSP (Board Support Package)
 	lwip_init(); //Initilaize the LwIP stack
 	Netif_Config(); //Configurates the network interface
-	
 	concentrator_init();
-	
 	User_notification(&gnetif); //Notify the User about the nework interface config status 
-	
-	/*##-1- Configure the TIM peripheral #######################################*/
-	TimHandle.Instance = TIM3;
-	TimHandle.Init.Period = 10000;
-	//Prescaler max value is 65535!
-	TimHandle.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
-	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
-	TimHandle.Init.ClockDivision = 0;
-	TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	if(HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
-		Error_Handler();
-	}
-	
-	TimHandle2.Instance = TIM4;
-	TimHandle2.Init.Period = 10000;
-	//Prescaler max value is 65535!
-	TimHandle2.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //100kHz
-	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
-	TimHandle2.Init.ClockDivision = 0;
-	TimHandle2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	if(HAL_TIM_OC_Init(&TimHandle2) != HAL_OK) {
-		Error_Handler();
-	}
 
-	/*##-2- Configure the Output Compare channels #########################################*/
-	sConfig.OCMode = TIM_OCMODE_TOGGLE;
-	sConfig.Pulse = uhCCR1_Val;
-	sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
-	if(HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, TIM_CHANNEL_1) != HAL_OK) {
-		Error_Handler();
-	}
-	if(HAL_TIM_OC_ConfigChannel(&TimHandle2, &sConfig, TIM_CHANNEL_2) != HAL_OK) {
-		Error_Handler();
-	}
-	
-	/*##-3- Start signals generation #######################################*/
-	/* Start channel 1 in Output compare mode */
-	if(HAL_TIM_OC_Start_IT(&TimHandle, TIM_CHANNEL_1) != HAL_OK) {
-		Error_Handler();
-	}
-	if(HAL_TIM_OC_Start_IT(&TimHandle2, TIM_CHANNEL_2) != HAL_OK) {
-		Error_Handler();
-	}
-	
-	TIM_Config(); //TIM8 Peripheral Configuration
+	TIM_Config(); //TIM3, TIM4, TIM8 Peripheral Configuration
 	ADC_Config(); //Configure the ADC3 peripheral
-	
-	/*##-3- Start the conversion process and enable interrupt ##################*/  
-	if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK) {
-		/* Start Conversation Error */
-		Error_Handler();
-	}
-  
-	/*##-4- TIM8 counter enable ################################################*/ 
-	if(HAL_TIM_Base_Start(&htim) != HAL_OK) {
-		/* Counter Enable Error */
-		Error_Handler();
-	}
-	
+
 	while (1) {
 		/* Read a received packet from the Ethernet buffers and send it 
 		to the lwIP for handling */
 		ethernetif_input(&gnetif);
-
-		/* Handle timeouts */
-		sys_check_timeouts();
+		sys_check_timeouts(); //Handle timeouts
 	}
 
 }
@@ -145,7 +86,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
   * @retval None
   */
 static void Error_Handler(void) {
-	BSP_LED_On(LED1); //LED1
+	BSP_LED_On(LED1);
 	BSP_LED_On(LED2);
 	BSP_LED_On(LED3);
 	BSP_LED_On(LED4);
@@ -282,38 +223,77 @@ static void SystemClock_Config(void) {
 }
 
 /**
-  * @brief  TIM configuration
+  * @brief  TIM3, TIM4, TIM8 configuration
   * @param  None
   * @retval None
   */
-static void TIM_Config(void)
-{
-  TIM_MasterConfigTypeDef sMasterConfig;
-  
-  /* Time Base configuration */
-  htim.Instance = TIM8;
-  
-  htim.Init.Period = 0x3C;          
-  htim.Init.Prescaler = 0;       
-  htim.Init.ClockDivision = 0;    
-  htim.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim.Init.RepetitionCounter = 0x0;
-  
-  if(HAL_TIM_Base_Init(&htim) != HAL_OK)
-  {
-    /* TIM8 Initialization Error */
-    Error_Handler();
-  }
-  
-  /* TIM8 TRGO selection */
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  
-  if(HAL_TIMEx_MasterConfigSynchronization(&htim, &sMasterConfig) != HAL_OK)
-  {
-    /* TIM8 TRGO selection Error */
-    Error_Handler();
-  }
+static void TIM_Config(void) {
+	TIM_MasterConfigTypeDef sMasterConfig;
+	
+	/*##-1- Configure the TIM peripheral #######################################*/
+	TimHandle3.Instance = TIM3;
+	TimHandle3.Init.Period = 10000;
+	//Prescaler max value is 65535!
+	TimHandle3.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
+	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
+	TimHandle3.Init.ClockDivision = 0;
+	TimHandle3.Init.CounterMode = TIM_COUNTERMODE_UP;
+	if(HAL_TIM_OC_Init(&TimHandle3) != HAL_OK) {
+		Error_Handler();
+	}
+	
+	TimHandle4.Instance = TIM4;
+	TimHandle4.Init.Period = 10000;
+	//Prescaler max value is 65535!
+	TimHandle4.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //100kHz
+	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
+	TimHandle4.Init.ClockDivision = 0;
+	TimHandle4.Init.CounterMode = TIM_COUNTERMODE_UP;
+	if(HAL_TIM_OC_Init(&TimHandle4) != HAL_OK) {
+		Error_Handler();
+	}
+	
+	TimHandle8.Instance = TIM8;
+	TimHandle8.Init.Period = 0x3C;          
+	TimHandle8.Init.Prescaler = 0;       
+	TimHandle8.Init.ClockDivision = 0;    
+	TimHandle8.Init.CounterMode = TIM_COUNTERMODE_UP;
+	TimHandle8.Init.RepetitionCounter = 0x0;
+	if(HAL_TIM_Base_Init(&TimHandle8) != HAL_OK) {
+		Error_Handler();
+	}
+	
+	/*##-2- Configure the Output Compare channels #########################################*/
+	sConfig.OCMode = TIM_OCMODE_TOGGLE;
+	sConfig.Pulse = uhCCR1_Val;
+	sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
+	if(HAL_TIM_OC_ConfigChannel(&TimHandle3, &sConfig, TIM_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
+	if(HAL_TIM_OC_ConfigChannel(&TimHandle4, &sConfig, TIM_CHANNEL_2) != HAL_OK) {
+		Error_Handler();
+	}
+	
+	/*##-3- Start signals generation #######################################*/
+	/* Start channel 1 in Output compare mode */
+	if(HAL_TIM_OC_Start_IT(&TimHandle3, TIM_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
+	if(HAL_TIM_OC_Start_IT(&TimHandle4, TIM_CHANNEL_2) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/* TIM8 TRGO selection */
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	if(HAL_TIMEx_MasterConfigSynchronization(&TimHandle8, &sMasterConfig) != HAL_OK) {
+		Error_Handler(); //TIM8 TRGO selection Error
+	}
+	
+	/*##-4- TIM8 counter enable ################################################*/ 
+	if(HAL_TIM_Base_Start(&TimHandle8) != HAL_OK) {
+		Error_Handler(); //Counter Enable Error
+	}
 }
 
 /**
@@ -322,40 +302,40 @@ static void TIM_Config(void)
   * @retval None
   */
 static void ADC_Config(void) {
-  ADC_ChannelConfTypeDef sConfig;
-  
-  /* ADC Initialization */
-  AdcHandle.Instance          = ADC3;
-  
-  AdcHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
-  AdcHandle.Init.Resolution = ADC_RESOLUTION10b;
-  AdcHandle.Init.ScanConvMode = ENABLE;
-  AdcHandle.Init.ContinuousConvMode = ENABLE;
-  AdcHandle.Init.DiscontinuousConvMode = DISABLE;
-  AdcHandle.Init.NbrOfDiscConversion = 0;
-  AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
-  AdcHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T8_TRGO;
-  AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  AdcHandle.Init.NbrOfConversion = 1;
-  AdcHandle.Init.DMAContinuousRequests = ENABLE;
-  AdcHandle.Init.EOCSelection = ENABLE;
-      
-  if(HAL_ADC_Init(&AdcHandle) != HAL_OK)
-  {
-    /* ADC Initialization Error */
-    Error_Handler();
-  }
-  
-  /* Configure ADC3 regular channel */  
-  sConfig.Channel = ADC_CHANNEL_7;
-  sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-  sConfig.Offset = 0;
-  
-  if(HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK) {
-    /* Channel Configuration Error */
-    Error_Handler();
-  }
+	ADC_ChannelConfTypeDef sConfig;
+
+	/* ADC Initialization */
+	AdcHandle.Instance = ADC3;
+
+	AdcHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
+	AdcHandle.Init.Resolution = ADC_RESOLUTION10b;
+	AdcHandle.Init.ScanConvMode = ENABLE;
+	AdcHandle.Init.ContinuousConvMode = ENABLE;
+	AdcHandle.Init.DiscontinuousConvMode = DISABLE;
+	AdcHandle.Init.NbrOfDiscConversion = 0;
+	AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+	AdcHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T8_TRGO;
+	AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+	AdcHandle.Init.NbrOfConversion = 1;
+	AdcHandle.Init.DMAContinuousRequests = ENABLE;
+	AdcHandle.Init.EOCSelection = ENABLE;
+	if(HAL_ADC_Init(&AdcHandle) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/* Configure ADC3 regular channel */
+	sConfig.Channel = ADC_CHANNEL_7;
+	sConfig.Rank = 1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+	sConfig.Offset = 0;
+	if(HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/* Start the conversion process and enable interrupt */  
+	if(HAL_ADC_Start_IT(&AdcHandle) != HAL_OK) {
+		Error_Handler();
+	}
 }
 
 /**
@@ -365,10 +345,9 @@ static void ADC_Config(void) {
   *         you can add your own implementation.    
   * @retval None
   */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle)
-{
-  /* Get the converted value of regular channel */
-  uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
+	/* Get the converted value of regular channel */
+	uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
 }
 
 #ifdef  USE_FULL_ASSERT

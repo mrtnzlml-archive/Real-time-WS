@@ -1,4 +1,5 @@
 module.exports = function WebsocketHook(sails) {
+    //FIXME: rename to linker
     return {
         start: function () {
             var redis = require('redis');
