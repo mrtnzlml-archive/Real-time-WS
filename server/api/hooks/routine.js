@@ -1,5 +1,5 @@
 module.exports = function WebsocketHook(sails) {
-    //FIXME: rename to linker
+
     return {
         start: function () {
             var redis = require('redis');
@@ -24,6 +24,7 @@ module.exports = function WebsocketHook(sails) {
                     });
                 });
             }, 1000);
+
             sails.log('Starting ROUTINE...');
         },
         initialize: function (cb) { // Runs automatically when the hook initializes
@@ -34,4 +35,5 @@ module.exports = function WebsocketHook(sails) {
             return cb();
         }
     }
+
 };

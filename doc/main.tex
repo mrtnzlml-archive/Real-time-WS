@@ -1,10 +1,11 @@
-\documentclass[oneside,12pt,a4paper,draft]{book} %opt: draft/final (twoside, openany/openright)
+\documentclass[oneside,12pt,a4paper,final]{book} %opt: draft/final (twoside, openany/openright)
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
 \usepackage{hyperref} % links in \tableofcontents
 \usepackage{minted} % syntax highlighter
 \usepackage{pdfpages}
+\usepackage{textcomp}
 \hypersetup{
 	colorlinks,
 	citecolor=blue,
@@ -13,6 +14,10 @@
 	urlcolor=blue
 }
 \addto\captionsczech{\renewcommand{\chaptername}{}} %remove "chapter" word
+
+%TODO někde nazačátku objasnit pojem koncentrátor
+%TODO číslování stránek
+%TODO zkontrolovat použití všech zdrojů
 
 \makeatletter
 \newcommand{\tocfill}{\cleaders\hbox{$\m@th \mkern\@dotsep mu . \mkern\@dotsep mu$}\hfill}
@@ -67,14 +72,24 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2014
 \chapter*{Seznam symbolů a zkratek}
 \noindent
 \begin{abbreviations}
-\item[AJAX]	Asynchronous JavaScript and XML
-\item[AJAJ]	Asynchronous JavaScript and JSON
-\item[HTTP]	Hypertext Transfer Protocol
-\item[IP]	Internet Protocol
-\item[RESP]	Redis Serialization Protocol
-\item[RFC]	Request for Comments
-\item[TCP]	Transmission Control Protocol
-\item[UDP]	User Datagram Protocol
+\item[AJAX]		Asynchronous JavaScript and XML
+\item[AJAJ]		Asynchronous JavaScript and JSON
+\item[BGA]		Ball Grid Array
+\item[EDA]		Event-Driven Architecture
+\item[HTTP]		Hypertext Transfer Protocol
+\item[IP]		Internet Protocol
+\item[JSON]		JavaScript Object Notation
+\item[JSONP]	JSON with padding
+\item[MAC]		Media Access Control
+\item[RAM]		Random-Access Memory
+\item[RESP]		Redis Serialization Protocol
+\item[RFC]		Request for Comments
+\item[TCP]		Transmission Control Protocol
+\item[UDP]		User Datagram Protocol
+\item[UTP]		Unshielded Twisted Pair
+\item[UFBGA]	Ultra Fine BGA
+\item[XHR]		XMLHttpRequest
+\item[XML]		Extensible Markup Language
 \end{abbreviations}
 \addcontentsline{toc}{chapter}{Seznam symbolů a zkratek}
 
@@ -92,14 +107,20 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2014
 \begin{thebibliography}{9}
 \bibitem{rfc6455}{\em I. Fette, Google Inc., A. Melnikov, Isode Ltd.:} {\bf The WebSocket Protocol} \url{https://tools.ietf.org/html/rfc6455}
 
+\bibitem{real-time}{\em University of Telecommunications, Leipzig, Sebastian Lammermann:} {\bf Ethernet as a Real-Time Technology} \url{http://www.lammermann.eu/wb/media/documents/real-time_ethernet.pdf}
+
 \bibitem{mistrovstvi}{\em Barrie Sosinsky:} {\bf Mistrovství – počítačové sítě}
 
 \bibitem{cube}{\em STMicroelectronics:} {\bf Getting started with STM32CubeF2 firmware package for STM32F2xx series} \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00111485.pdf}
 
+\bibitem{nodejs}{\bf Node.js:} \url{http://nodejs.org/}
+
+\bibitem{redis}{\bf Redis.io:} \url{http://redis.io/}
+
 \bibitem{hal}{\em STMicroelectronics:} {\bf Description of STM32F4xx HAL drivers} \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00105879.pdf}
 
 \bibitem{manual}{\em STMicroelectronics:} {\bf Reference manual - STM32F405xx/07xx, STM32F415xx/17xx, STM32F42xxx and
-STM32F43xxx advanced ARM®-based 32-bit MCUs} \url{http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf}
+STM32F43xxx advanced ARM\textregistered-based 32-bit MCUs} \url{http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf}
 
 \bibitem{redis-benchmark}{\em Redis.io:} {\bf How fast is Redis} \url{http://redis.io/topics/benchmarks}
 \end{thebibliography}

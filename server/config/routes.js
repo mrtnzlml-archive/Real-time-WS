@@ -40,6 +40,9 @@ module.exports.routes = {
     '/connect/:from/:to': {
         controller: 'connect'
     },
+    '/disconnect/:from/:to': {
+        controller: 'disconnect'
+    },
 
     /***************************************************************************
      *                                                                          *

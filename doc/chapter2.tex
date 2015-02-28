@@ -2,15 +2,117 @@
 Pro tuto síť nejsou v tuto chvíli stanoveny zadávající firmou žádné konkrétní požadavky na hardware. Proto je možné vybrat z hlediska softwarového řešení jakoukoliv platformu. Z hardwarového hlediska je doporučeno používat evaluační desky od STMicroelectronics. V následující části budu popisovat jednotlivé použité technologie a důvod jejich volby.
 
 \section{Prvky senzorické sítě}
-%TODO popsat také druhou desku (40x)
+Prvky senzorické sítě jsou testovány na evaluačních deskách s procesory STM32F207IGH6 a STM32F457IGH6 s využitím oficiálních Cube knihoven \cite{cube}. Jedná se o 32-bit procesory pro obecné použití. Pro oba procesory dále platí, že mají 176 pinů s velikostí flash paměti 1024 KB v provedení pouzdra UFBGA pro běžné rozsahy teplot od -40 do 85 °C.
 
+\subsection{Procesor STM32F207IGH6}
+\begin{itemize}
+\itemsep0em
+\item Jádro ARM 32-bit Cortex\texttrademark-M3 CPU (120 MHz max)
+\item 128 KB SRAM
+\item LCD interface
+\item 12 \ensuremath{\times} 16-bit timer, 2 \ensuremath{\times} 32-bit timer - až 120 MHz
+\item 15 komunikačních rozhraní
+\item 2 \ensuremath{\times} USB, 10/100 Ethernet
+\item 8 až 14-bit interface pro kameru
+\item CRC jednotka
+\end{itemize}
+
+\subsection{Procesor STM32F457IGH6}
+\begin{itemize}
+\itemsep0em
+\item Jádro ARM 32-bit Cortex\texttrademark-M4 CPU (168 MHz max)
+\item 192 KB SRAM
+\item LCD interface
+\item 12 \ensuremath{\times} 16-bit timer, 2 \ensuremath{\times} 32-bit timer - až 168 MHz
+\item 15 komunikačních rozhraní
+\item 2 \ensuremath{\times} USB, 10/100 Ethernet
+\item 8 až 14-bit interface pro kameru
+\item CRC jednotka
+\end{itemize}
+
+Veškeré evaluační desky s procesory jsou připojeny pomocí klasických síťových prvků a UTP kabelů do serveru.
 
 \section{Real-time server}
-%TODO Node.js
+Jako real-time server, který obsluhuje celou síť i webovou aplikaci je zvolen Node.js \cite{nodejs}. Jedná se o platfomu postavenou nad V8 JavaScript Engine od společnosti Google. V8 je engine napsaný v C++, který využívá například prohlížeč Google Chrome jako jádro pro velmi rychlé zpracování javascriptu. Díky tomu je možné využívat téměř všech vlastností javascriptu, zejména pak single-thread asynchronní chování (non-blocking I/O model) a EDA architektury. Jedná se o velmi podobný engine jako je v prohlížeči Google Chrome s tím rozdílem, že Node.js neobsahuje možnost práce s oknem programu, nebo s dokumentem jako takovým, protože zde žádný není. Oproti tomu umožňuje přistupovat k process objektu, který zase není dostupný v prohlížečích. Následující ukázka ukazuje jednoduchý webový server napsaný právě s pomocí Node.js:
 
+\begin{minted}[linenos,breaklines]{javascript}
+var http = require('http');
+var PORT = 8000;
+
+var server = http.createServer(function(request, response) {
+	response.writeHead(200, {'content-type': 'text/html'});
+	response.write("<h1>hello</h1>\n");
+	setTimeout(function() {
+		response.end("<p>world</p>\n");
+	}, 2000);
+});
+
+server.listen(PORT, function() {
+	console.log('Server is listening on port ' + PORT);
+});
+\end{minted}
+
+Tento server je zároveň vysoce škálovatelný a to hlavně do šíře. Je tak možné vytvořit velký počet vzájemně komunikujících uzlů (node), které spolu komunikují. Tyto uzly jsou však striktně odděleny (i na úrovni paměti) a nemohou se tak přímo ovlivňovat. Tento model je vhodný pro velmi vytížené aplikace, protože je možné potřebný výkon rozložit na velké množství méně výkonných strojů.
 
 \section{Databázový server}
-%TODO Redis
+Na pozici databázového serveru byl zvolen Redis \cite{redis}. Redis je key-value databáze. Od nejrozšířenějších relačních databázích se liší například tím, že je násobně výkonnější a neobsahuje relace. Významným prvkem této databáze je právě vztah klíče a hodnoty, kdy hodnotu je možné ukládat do sedmi datových struktur (string, hash, list, set, sorted set, bitmap, hyperloglog). Velkou rychlost Redisu zajišťuje zejména to, že pracuje s RAM pamětí serveru. Přijaté hodnoty si nejdříve ukládá právě do paměti a následně je podle konfigurace ukládá na disk. Příklad výchozí konfigurace:
+
+\begin{minted}[linenos,breaklines]{text}
+# save <seconds> <changes>
+save 900 1
+save 300 10
+save 60 10000
+\end{minted}
+
+Vždy musí být splněna časová podmínka i množství změn za tento čas. Takové nastavení pak tedy udává, že se po 900 vteřinách (15 minut) uloží změny na disk, pokud byla provedena změna alespoň jednoho klíče, nebo po 300 vteřinách při změně alespoň deseti klíčů, resp. po minutě, došlo-li ke změně alespoň 10 000 klíčů. Již z této konfigurace je zřejmé, že se u Redisu očekává velké vytížení a tato databáze je na to připravena.
+
+\subsection{Redis klíče}
+Redis klíče mohou být velké až 512 MB a jsou binary safe, tzn. že validní je jak běžný text, tak prázdný text, ale také binární data, nebo obsahy souborů (do maximální velikosti klíče). Samotným klíčům lze pak také nastavovat životnost. Klíče potom expirují po nastaveném čase.
+
+\subsection{Datová struktura string}
+Datová struktura string je nejzákladnější způsob jak je možné uložit data do databáze. Princip je velmi jednoduchý. Každému klíči se přiřadí textová hodnota. V této práci je datová struktura string používána k ukládání a inkrementování celkového počtu přijatých nebo odeslaných zpráv. Ukázka použití počítadla:
+
+\begin{minted}[linenos,breaklines]{text}
+> SET counter 1
+OK
+> INCR counter
+(integer) 2
+> INCRBY counter 50
+(integer) 102
+> INCRBYFLOAT counter 3.0e3
+"3102"
+\end{minted}
+
+Časová náročnost těchto operací je O(1).
+
+\subsection{Datová struktura hash}
+Hash je velmi podobný stringu s tím rozdílem, že je možné ukládat k jednomu klíči více hodnot. Časová komplexita je pak O(1) pro jeden prvek resp. O(N) kde N je počet ukládaných nebo vybíraných prvků. V této práci je datová struktura hash použita právě pro ukládání informací o koncovém zařízení. Konkrétně se o koncových zařízeních uchovává IP adresa, porty TCP a UDP komunikace, čas posledního ohlášení, status aktivity a počet přenesených zpráv.
+
+\subsection{Datová struktura list}
+List je v Redisu implementovaný jako spojový seznam. Tato implementace umožňuje vkládat nová data na začátek, nebo na konec spojového seznamu v konstantním čase nezávisle na počtu prvků v seznamu. Časová komplexita je tedy opět O(1). U operací kdy se vkládá prvek dovnitř seznamu je komplexita O(N), kdy N je počet prvků, přes které je nutné iterovat, než se dostaneme k požadovanému umístění. V nejlepším případě muže být tedy i zde časová komplexita O(1). List je v tomto projektu použitý pro ukládání historie příchozích dat z koncentrátorů následovně:
+
+\begin{minted}[linenos,breaklines]{text}
+> LPUSH device_uid:data <data>
+> LTRIM device_uid:data 0 999
+\end{minted}
+
+Výhodné na tomto přístupu je to, že je složitost obou příkazů O(1). Je to dáno tím, že LPUSH umisťuje data do seznamu zleva což není nijak časově náročné a dále komplexita LTRIM funkce je dána počtem prvků, které se touto funkcí odstraní, což je jeden starý. S minimální režií je tak uchováváno posledních 1000 hodnot.
+
+\subsection{Datová struktura set a sorted set}
+Sety jsou neseřazené kolekce unikátních stringů. Zde je nutné zdůraznit, že hodnoty zde skutečně nejsou seřazeny a vracený výsledek tak může měnit pořadí. Výhodné je, že je možné do této množiny ukládat data se složitostí O(N), kde N je počet prvků. To samé platí i pro čtení. Tato struktura se hodí pro ukládání relací čímž je možné simulovat relační vztahy mezi objekty. V tomto projektu je proto set používaný pro ukládání všech známých zařízení k síti a dále pro ukládání vazeb mezi jednotlivými koncentrátory.
+
+Sorted set je obdoba setu s tím rozdílem, že prvky jsou v množině seřazeny podle zvoleného skóre. Tato struktura není v projektu nikde použita a je zde uvedena pouze pro úplnost.
+
+\subsection{Datová struktura bitmap}
+Bitmapy umožňují ukládat binární data do databáze. Tento způsob práce s daty je pouze obdobou práce se stringy. Vzhledem k tomu, že se jedná o práci s nejmenší jednotkou informace, je tato struktura velmi úsporná co se týče velikosti a velmi se hodí pro ukládání velkého množství pravdivých resp. nepravdivých informací. Bitmapy jsou limitovány na velikost 512 MB stejně jako klíče. To jinými slovy znamená, že je v jednom klíči možné uchovat informace až o $2^{32}$ stavech.
+
+Tato struktura není v projektu nikde použita a je zde uvedena pouze pro úplnost.
+
+\subsection{Datová struktura hyperloglog}
+Posledním a relativně novým datovým typem je hyperloglog. Jedná se o statistickou datovou strukturu, která se používá zejména pro rychlé určení kvantity unikátních dat s chybou méně než 1\%. Tato struktura předchází paměťové náročnosti při počítání množství unikátních dat. V běžném případě je totiž nutné pamatovat si tyto data, aby bylo možné při dalším vstupu unikátní hodnotu započítat, nebo ji ignorovat, protože je již započítána. Redis při své implementaci používá konstantní množství paměti, konkrétně 12 kB v nejhorším případě.
+
+Tato struktura není v projektu nikde použita a je zde uvedena pouze pro úplnost.
+
 \cite{redis-benchmark}
 
 \begin{minted}[linenos,breaklines]{text}

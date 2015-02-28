@@ -15,15 +15,31 @@
         <p>Connectable devices:</p>
         <p>Connected devices:</p>
 
+        <h2>
+            Data convertor table
+            <small style="color:green">Already applied</small>
+        </h2>
+<pre>
+0     ->  1024
+256   ->  768
+512   ->  512
+768   ->  256
+1024  ->  0
+</pre>
+
         <!--<div id="area" class="epoch category20c" style="height: 200px;"></div>-->
     </div>
     <div class="links">
         <h4>What would you like to do?</h4>
         <ul>
-            <li><a>PING this device</a></li>
-            <li><a>RESET this device</a></li>
-            <li><a>Release from connections</a></li>
-            <li><a>Drop all connections</a></li>
+            <li>
+                <a>Release from connections</a><br>
+                Nobody will be able to send data to this device.
+            </li>
+            <li>
+                <a>Drop all connections</a><br>
+                This device will not be able to send data to another devices.
+            </li>
         </ul>
     </div>
 </div>
