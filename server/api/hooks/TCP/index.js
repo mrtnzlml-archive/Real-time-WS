@@ -40,7 +40,7 @@ module.exports = function TCPHook(sails) {
                     if (data.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1[0-9a-z]+\1)+/i)) { //RESP
                         responseParser.parse(data);
                     }
-                    socket.end(); //IMPORTANT!
+                    //socket.end();
                 });
                 socket.on('error', function (err) {
                     sails.log.error(err);

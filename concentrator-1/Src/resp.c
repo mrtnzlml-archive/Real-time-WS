@@ -4,10 +4,11 @@
 char *CRLF = "\x0d\x0a";
 
 char *respString(char *string) {
-	char *result = malloc(strlen("+") + strlen(string) + strlen(CRLF) + 1);
+	char *result = (char *) malloc(strlen("+") + strlen(string) + strlen(CRLF) + 1);
 	strcpy(result, "+");
 	strcat(result, string);
 	strcat(result, CRLF);
+	//free(result);
 	return result;
 }
 

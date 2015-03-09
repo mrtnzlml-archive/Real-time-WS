@@ -1,56 +1,43 @@
 \chapter{Struktura programového řešení}
+Struktura celého programového řešení je znázorněna na obrázku \ref{fig:speedy}. Celý projekt funguje následovně. Jednotlivé procesory, resp. koncentrátory snímají potřebné veličiny, nebo čekají na impulz od uživatele sítě popř. serveru. Tyto koncentrátory komunikují s real-time serverem pomocí protokolů TCP nebo UDP podle toho, jaký druh komunikace je pro daný účel potřeba. Server veškeré přijaté hodnoty ukládá do databáze a zároveň při každé příchozí akci prohlásí zařízení za aktivní. Udržuje tak neustále jeho status. Kromě toho, že server do databáze hodnoty ukládá, tak si také drží jednotlivé relace mezi koncentrátory resp. koncovými členy a odesílá data zpět. Tvoří tak jednotlivá propojení koncentrátorů, která je možné dynamicky měnit. Toto je asi největší výhoda tohoto řešení. Zároveň mají koncentrátory možnost zapisovat do databáze přímo. Je to dáno tím, že i se serverem komunikují v RESP formátu. Tato funkce není využívána, protože by bylo zapotřebí zapsat tvar databáze do každého koncentrátoru, což by bylo velmi omezující pro další rozšiřitelnost projektu. Nicméně tato možnost zde je a je možné ji využít pro rychlejší ukládání do databáze.
+
+Na serveru dále běží webový server, který poskytuje webovou stránku, kde je možné celou síť ovládat. Každý uživatel sítě se pak může připojit pomocí svého zařízení (mobilní telefon, tablet, notebook, počítač, atd.) a síť ovládat. Fakticky se jedná o změny relací v síti a o změnu parametrů jednotlivých koncových členů. Server se pak postará o distribuci dat v síti podle zvolené konfigurace.
+
+%TODO převodní tabulky
+
+\begin{figure}[H]
+    \centering
+	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/speedy.png}}
+	\caption{Struktura programového řešení}
+	\label{fig:speedy}
+\end{figure}
 
 \section{Komunikace koncentrátor - server}
+Koncentrátory jsou napsány v programovacím jazyce C s využitím oficiálních Cube knihoven od STMicroelectronics. Jsou tady napsány nízkoúrovňově, ale se zachováním přijatelného programového prostředí. Koncentrátor má několik základních funkcí. Předně je jeho úkolem připojit se na pevně stanovenou IP adresu v síti. Ta je momentálně stanovena na \texttt{192.168.0.20:50000}. Koncentrátor se pak periodicky s frekvencí 1 Hz ohlašuje přes TCP serveru. Formát dat je v RESP formátu:
+
+\begin{minted}[breaklines]{text}
+*2\r\n$4\r\nPING\r\n$11\r\nTEMP_000001\r\n
+\end{minted}
+
+První část zprávy je samotný příkaz (PING) následovaný unikátním identifikátorem zařízení. Následuje krátká vzorová ukázka funkčního kódu pro odesílání notifikací o aktivitě.
+
 \begin{minted}[linenos,breaklines]{c}
-/**
-  * @brief  Configurates the network interface
-  * @param  None
-  * @retval None
-  */
-static void Netif_Config(void) {
-	struct ip_addr ipaddr;
-	struct ip_addr netmask;
-	struct ip_addr gw;
-	
-	IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
-	IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
-	IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
-	
-	/* Add the network interface */
-	netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
-	
-	/* Registers the default network interface */
-  netif_set_default(&gnetif);
-  
-  if (netif_is_link_up(&gnetif)) {
-    /* When the netif is fully configured this function must be called */
-    netif_set_up(&gnetif);
-  } else {
-    /* When the netif link is down this function must be called */
-    netif_set_down(&gnetif);
-  }
-  
-  /* Set the link callback function, this function is called on change of link status*/
-  netif_set_link_callback(&gnetif, ethernetif_update_config);
+struct tcp_pcb *client_pcb;
+struct ip_addr IPaddr;
+
+client_pcb = tcp_new();
+if (client_pcb != NULL) {
+  IP4_ADDR( &IPaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3 );
+  tcp_bind(client_pcb, &IPaddr, DEST_PORT);
+  IP4_ADDR( &DestIPaddr, DEST_IP_ADDR0, DEST_IP_ADDR1, DEST_IP_ADDR2, DEST_IP_ADDR3 );
+  tcp_connect(client_pcb, &DestIPaddr, DEST_PORT, tcp_ping_callback);
+} else { //can not create tcp pcb
+  memp_free(MEMP_TCP_PCB, echoclient_pcb);
 }
 \end{minted}
 
-\begin{minted}[linenos,breaklines]{js}
-udpSocket.on('message', function (msg, rinfo) {
-    sails.log.verbose(JSON.stringify(msg.toString()));
-    //FIXME: not good!
-    if (result = msg.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1([0-9a-z]+)\1)+/i)) { //RESP
-        //redisClient.lpush('TEMP_000001:data', result[3]);
-        //redisClient.ltrim('TEMP_000001:data', 0, 999);
+Po připojení se zavolá funkce \texttt{tcp\_ping\_callback}, která již může odeslat data v požadovaném formátu.
 
-        redisClient.lpush('TEMP_000002:data', result[3]);
-        redisClient.ltrim('TEMP_000002:data', 0, 999);
-    }
-    var message = new Buffer('test');
-    udpSocket.send(message, 0, message.length, rinfo.port, rinfo.address);
-}).bind(sails.config.globals.UDP_PORT, function () {
-    sails.log('Starting UDP server (port ' + sails.config.globals.UDP_PORT + ')...');
-});
-\end{minted}
+\section{Komunikace server - koncentrátor}
 
 \section{Komunikace server - webová aplikace}

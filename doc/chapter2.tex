@@ -4,6 +4,13 @@ Pro tuto síť nejsou v tuto chvíli stanoveny zadávající firmou žádné kon
 \section{Prvky senzorické sítě}
 Prvky senzorické sítě jsou testovány na evaluačních deskách s procesory STM32F207IGH6 a STM32F457IGH6 s využitím oficiálních Cube knihoven \cite{cube}. Jedná se o 32-bit procesory pro obecné použití. Pro oba procesory dále platí, že mají 176 pinů s velikostí flash paměti 1024 KB v provedení pouzdra UFBGA pro běžné rozsahy teplot od -40 do 85 °C.
 
+\begin{figure}[h]
+    \centering
+	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/eval_board.jpg}}
+	\caption{Použitá evaluační deska}
+	\label{fig:eval-board}
+\end{figure}
+
 \subsection{Procesor STM32F207IGH6}
 \begin{itemize}
 \itemsep0em
@@ -57,7 +64,7 @@ Tento server je zároveň vysoce škálovatelný a to hlavně do šíře. Je tak
 \section{Databázový server}
 Na pozici databázového serveru byl zvolen Redis \cite{redis}. Redis je key-value databáze. Od nejrozšířenějších relačních databázích se liší například tím, že je násobně výkonnější a neobsahuje relace. Významným prvkem této databáze je právě vztah klíče a hodnoty, kdy hodnotu je možné ukládat do sedmi datových struktur (string, hash, list, set, sorted set, bitmap, hyperloglog). Velkou rychlost Redisu zajišťuje zejména to, že pracuje s RAM pamětí serveru. Přijaté hodnoty si nejdříve ukládá právě do paměti a následně je podle konfigurace ukládá na disk. Příklad výchozí konfigurace:
 
-\begin{minted}[linenos,breaklines]{text}
+\begin{minted}[breaklines]{text}
 # save <seconds> <changes>
 save 900 1
 save 300 10
@@ -72,7 +79,7 @@ Redis klíče mohou být velké až 512 MB a jsou binary safe, tzn. že validní
 \subsection{Datová struktura string}
 Datová struktura string je nejzákladnější způsob jak je možné uložit data do databáze. Princip je velmi jednoduchý. Každému klíči se přiřadí textová hodnota. V této práci je datová struktura string používána k ukládání a inkrementování celkového počtu přijatých nebo odeslaných zpráv. Ukázka použití počítadla:
 
-\begin{minted}[linenos,breaklines]{text}
+\begin{minted}[breaklines]{text}
 > SET counter 1
 OK
 > INCR counter
@@ -91,7 +98,7 @@ Hash je velmi podobný stringu s tím rozdílem, že je možné ukládat k jedno
 \subsection{Datová struktura list}
 List je v Redisu implementovaný jako spojový seznam. Tato implementace umožňuje vkládat nová data na začátek, nebo na konec spojového seznamu v konstantním čase nezávisle na počtu prvků v seznamu. Časová komplexita je tedy opět O(1). U operací kdy se vkládá prvek dovnitř seznamu je komplexita O(N), kdy N je počet prvků, přes které je nutné iterovat, než se dostaneme k požadovanému umístění. V nejlepším případě muže být tedy i zde časová komplexita O(1). List je v tomto projektu použitý pro ukládání historie příchozích dat z koncentrátorů následovně:
 
-\begin{minted}[linenos,breaklines]{text}
+\begin{minted}[breaklines]{text}
 > LPUSH device_uid:data <data>
 > LTRIM device_uid:data 0 999
 \end{minted}
@@ -113,7 +120,8 @@ Posledním a relativně novým datovým typem je hyperloglog. Jedná se o statis
 
 Tato struktura není v projektu nikde použita a je zde uvedena pouze pro úplnost.
 
-\cite{redis-benchmark}
+\subsection{Výkon Redisu}
+Redis díky svému přístupu k paměti a omezenému počtu zapisování na disk je velmi rychlá databáze. Dále je připravena na škálování do šíře, takže je možné připojit další servery jako databázové uzly \cite{redis-cluster}. Níže je uvedený reálný výsledek benchmarku \cite{redis-benchmark} na Linuxovém stroji Debian s 2\texttimes CPU po 2 GHz, 2 GB RAM. Test je proveden pro různé datové struktury a jejich příkazy vždy pro 50 souběžných připojení a 100 000 požadavků s délkou SET/GET hodnoty 256 B. V tomto prvním testu jsou vždy příkazy posílány postupně a postupně také vybavovány.
 
 \begin{minted}[linenos,breaklines]{text}
 $ redis-benchmark -q -n 100000 -d 256
@@ -133,6 +141,8 @@ LRANGE_500 (first 450 elements): 9325.75 requests per second
 LRANGE_600 (first 600 elements): 6472.49 requests per second
 MSET (10 keys): 131578.95 requests per second
 \end{minted}
+
+Je zřejmé, že již při základní konfiguraci dosahuje Redis vysokých výkonů. Nevýhodou této konfigurace, resp. přístupu k práci s Redisem, je skutečnost, že nový požadavek je vždy poslán až po zpracování databází a vrácení odpovědi. Redis totiž funguje pomocí TCP, takže klient odesílá požadavek a přijímá od serveru odpověď. Tato smyčka může být velmi krátká, zejména pak pokud je redis umístěn na stejném serveru jako klient. V každém případě však vzniká časová prodleva mezi tím, kdy putují pakety od klienta k serveru a zpět. Tento čas se nazývá RTT a i čas potřebný pro lokální smyčku na serveru může být v součtu velký při velkém počtu požadavků. Tento problém se dá částečně vyřešit tzv. pipeliningem. Pak je možné posílat více zřetězených požadavků v jednom dotazu. Následující příklad ukazuje stejný benchmark jako dříve, ale se zapnutým pipeliningem. Vždy se zřetězí 16 příkazů do jednoho požadavku:
 
 \begin{minted}[linenos,breaklines]{text}
 $ redis-benchmark -q -n 100000 -d 256 -P 16
@@ -179,4 +189,6 @@ Následuje samotný obsah, nebo dodatečné informace, například o délce a v�
 Redis server potom přijímá podle bulk stringů obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory posílají data (přes TCP i UDP) v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
 
 \section{Webová aplikace}
-%TODO Sails.js, Express, Sockets.io
+Webový server je možné spustit na již běžícím Node.js serveru. Pro webovou aplikaci byl zvolen framework Sails.js \cite{sails}. Sails je MVC webový framework, který staví právě nad Node.js, ale ulehčuje práci při stavbě webových aplikací. Výhodou tohoto přístupu je to, že je možné na jednom serveru zapnout jak server zpracující požadavky z koncentrátorů, tak server obsluhující požadavky klientů z webového prohlížeče. Sails má navíc vestavěnou podporu pro protokol websocket, který je potřebný pro rychlou komunikaci serveru právě s prohlížečem.
+
+Volba tohoto frameworku je pouze na osobních preferencích. Žádný z existujících frameworků neobsahuje další výhody, které by jej stavěly do jednoznačné výhody. Navíc z hlediska sítě je potřebný hlavně Node.js a webová aplikace je možná postavit také pouze na Node.js. Ačkoliv tedy tato aplikace tvoří velkou část kódů, není pro samotné fungování projektu klíčová.

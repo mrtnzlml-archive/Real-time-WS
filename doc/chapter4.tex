@@ -1,4 +1,12 @@
 \chapter{Praktická aplikace}
 
 \chapter{Rozšíření stávajícího řešení}
-IPv6, Bezdrátová komunikace, Zabezpečení, Další prvky sítě
+Stávající řešení je plně funkční a splňuje veškeré požadavky v zadání. Jedná se však pouze o základ na kterém lze stavět systém, který by bylo možné použít v reálných budovách. Prvně je totiž zapotřebí tuto síť zabezpečit. To se týká zejména okamžiku, kdy by síť začala komunikovat přes WiFi (nebo jinou bezdrátovou technologii), ale platí to stejně i pro metalické vedení. Nesmí být možné, aby mohl kdokoliv ovlivňovat chování sítě, pokud k tomu není oprávněn.
+
+Dalším důležitým prvkem je implementace IPv6. V současné chvíli je totiž nepsaným předpokladem, že budou koncentrátory připojeny v privátní síti a využívají IPv4. Pokud by však měla síť fungovat i na veřejné síti, vzroste počet potřebných IP adres a již v tuto chvíli je jich nedostatek. Oproti tomu je IPv6 adres je $2^{128}$ \cite{ripe}, což je více než dostatek.
+
+Vzhledem k tomu, že je celá síť závislá na centrálním serveru, nelze následující požadavek jednoduše implementovat. Bylo by však vhodné, aby se server začal postupně přesouvat na samotné koncentrátory, až by jej vůbec nebylo potřeba. To by znamenalo server úplně horizontálně rozškálovat, což v současnou chvíli není možné. Jednak proto, že by se to z hlediska Node.js nedělalo dobře, jednak také proto, že koncentrátory mají poměrně malý výkon. Tento krok by však přiblížil celý projekt k naprosto autonomní síti, kde by se velmi jednoduše řešil například výpadek jednoho z koncentrátorů. Přestala by totiž fungovat pouze malá část sítě. Navíc by bylo možné částečně se zbavit metalických vodičů a vytvářet tzv. mesh sítě, což by ostatně bylo žádoucí. Každý koncentrátor by se mohl bez větší námahy připojit na všechny koncentrátory, které jsou poblíž.
+
+Dále je zajímavou myšlenkou implementovat real-time přenos i na komunikaci mezi koncentrátory a serverem např. Ethernet Powerlink. Zde je však otázka, jestli je tato implementace žádoucí, protože real-time přenos v tomto slova smyslu je právě časově vázaný a svým charakterem tak zpomaluje (i když zpřesňuje) přenos dat. V současné chvíli také není implementováno přijímání adres z DHCP serveru, kvůli jednoduchosti. Na funkcionalitě se nic nemění, je však možné pohodlně vyvíjet, bez nutnosti dalšího prvku v síti.
+
+V neposlední řadě bude také nutné vybavit síť velkým počtem růz\-no\-ro\-dých prvků jako jsou různé vypínače, snímače a akční členy, protože dobrou síť dělá mimo jiného také počet možností, které lze se sítí dělat.
