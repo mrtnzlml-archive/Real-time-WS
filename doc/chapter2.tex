@@ -2,12 +2,12 @@
 Pro tuto síť nejsou v tuto chvíli stanoveny zadávající firmou žádné konkrétní požadavky na hardware. Proto je možné vybrat z hlediska softwarového řešení jakoukoliv platformu. Z hardwarového hlediska je doporučeno používat evaluační desky od STMicroelectronics. V následující části budu popisovat jednotlivé použité technologie a důvod jejich volby.
 
 \section{Prvky senzorické sítě}
-Prvky senzorické sítě jsou testovány na evaluačních deskách s procesory STM32F207IGH6 a STM32F457IGH6 s využitím oficiálních Cube knihoven \cite{cube}. Jedná se o 32-bit procesory pro obecné použití. Pro oba procesory dále platí, že mají 176 pinů s velikostí flash paměti 1024 KB v provedení pouzdra UFBGA pro běžné rozsahy teplot od -40 do 85 °C.
+Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontroléry STM32F207IGH6 a STM32F457IGH6 s využitím oficiálních Cube knihoven \cite{cube}. Jedná se o 32-bit mikrokontroléry pro obecné použití. Pro oba mikrokontroléry dále platí, že mají 176 pinů s velikostí flash paměti 1024 KB v provedení pouzdra UFBGA pro běžné rozsahy teplot od -40 do 85 °C.
 
 \begin{figure}[h]
     \centering
 	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/eval_board.jpg}}
-	\caption{Použitá evaluační deska}
+	\caption{Použitá vývojová deska} %TODO dopsat typ (označení) desky
 	\label{fig:eval-board}
 \end{figure}
 
@@ -37,7 +37,7 @@ Prvky senzorické sítě jsou testovány na evaluačních deskách s procesory S
 \item CRC jednotka
 \end{itemize}
 
-Veškeré evaluační desky s procesory jsou připojeny pomocí klasických síťových prvků a UTP kabelů do serveru.
+Veškeré vývojové desky s mikrokontroléry jsou připojeny pomocí klasických síťových prvků a UTP kabelů do serveru.
 
 \section{Real-time server}
 Jako real-time server, který obsluhuje celou síť i webovou aplikaci je zvolen Node.js \cite{nodejs}. Jedná se o platfomu postavenou nad V8 JavaScript Engine od společnosti Google. V8 je engine napsaný v C++, který využívá například prohlížeč Google Chrome jako jádro pro velmi rychlé zpracování javascriptu. Díky tomu je možné využívat téměř všech vlastností javascriptu, zejména pak single-thread asynchronní chování (non-blocking I/O model) a EDA architektury. Jedná se o velmi podobný engine jako je v prohlížeči Google Chrome s tím rozdílem, že Node.js neobsahuje možnost práce s oknem programu, nebo s dokumentem jako takovým, protože zde žádný není. Oproti tomu umožňuje přistupovat k process objektu, který zase není dostupný v prohlížečích. Následující ukázka ukazuje jednoduchý webový server napsaný právě s pomocí Node.js:
@@ -74,7 +74,8 @@ save 60 10000
 Vždy musí být splněna časová podmínka i množství změn za tento čas. Takové nastavení pak tedy udává, že se po 900 vteřinách (15 minut) uloží změny na disk, pokud byla provedena změna alespoň jednoho klíče, nebo po 300 vteřinách při změně alespoň deseti klíčů, resp. po minutě, došlo-li ke změně alespoň 10 000 klíčů. Již z této konfigurace je zřejmé, že se u Redisu očekává velké vytížení a tato databáze je na to připravena.
 
 \subsection{Redis klíče}
-Redis klíče mohou být velké až 512 MB a jsou binary safe, tzn. že validní je jak běžný text, tak prázdný text, ale také binární data, nebo obsahy souborů (do maximální velikosti klíče). Samotným klíčům lze pak také nastavovat životnost. Klíče potom expirují po nastaveném čase.
+%TODO počeštit binary safe
+Redis klíče mohou být velké až 512 MB a jsou binary safe, tzn. že platný je jak běžný text, tak prázdný text, ale také binární data, nebo obsahy souborů (do maximální velikosti klíče). Samotným klíčům lze pak také nastavovat životnost (pomocí příkazu \texttt{EXPIRE}). Klíče potom vyprší po nastaveném čase.
 
 \subsection{Datová struktura string}
 Datová struktura string je nejzákladnější způsob jak je možné uložit data do databáze. Princip je velmi jednoduchý. Každému klíči se přiřadí textová hodnota. V této práci je datová struktura string používána k ukládání a inkrementování celkového počtu přijatých nebo odeslaných zpráv. Ukázka použití počítadla:
@@ -90,20 +91,20 @@ OK
 "3102"
 \end{minted}
 
-Časová náročnost těchto operací je O(1).
+Časová náročnost těchto operací je O(1)\footnote{Označení $O(f(x))$ značí asymptotickou složitost algoritmu. Složitosti algoritmů rozdělujeme do různých tříd ($1 < log(n) < n < n\cdot log(n) < n^k < k^n < k! < n^n$), které určují jak je daný algoritmus rychlý. Zápisy je pak možné číst tak, že algoritmus je stejně rychlý, nebo rychlejší, než $f(x)$.}.
 
 \subsection{Datová struktura hash}
-Hash je velmi podobný stringu s tím rozdílem, že je možné ukládat k jednomu klíči více hodnot. Časová komplexita je pak O(1) pro jeden prvek resp. O(N) kde N je počet ukládaných nebo vybíraných prvků. V této práci je datová struktura hash použita právě pro ukládání informací o koncovém zařízení. Konkrétně se o koncových zařízeních uchovává IP adresa, porty TCP a UDP komunikace, čas posledního ohlášení, status aktivity a počet přenesených zpráv.
+Hash je velmi podobný stringu s tím rozdílem, že je možné ukládat k jednomu klíči více hodnot. Časová složitost je pak O(1) pro jeden prvek resp. O(N) kde N je počet ukládaných nebo vybíraných prvků. V této práci je datová struktura hash použita právě pro ukládání informací o koncovém zařízení. Konkrétně se o koncových zařízeních uchovává IP adresa, porty TCP a UDP komunikace, čas posledního ohlášení, status aktivity a počet přenesených zpráv.
 
 \subsection{Datová struktura list}
-List je v Redisu implementovaný jako spojový seznam. Tato implementace umožňuje vkládat nová data na začátek, nebo na konec spojového seznamu v konstantním čase nezávisle na počtu prvků v seznamu. Časová komplexita je tedy opět O(1). U operací kdy se vkládá prvek dovnitř seznamu je komplexita O(N), kdy N je počet prvků, přes které je nutné iterovat, než se dostaneme k požadovanému umístění. V nejlepším případě muže být tedy i zde časová komplexita O(1). List je v tomto projektu použitý pro ukládání historie příchozích dat z koncentrátorů následovně:
+List je v Redisu implementovaný jako spojový seznam. Tato implementace umožňuje vkládat nová data na začátek, nebo na konec spojového seznamu v konstantním čase nezávisle na počtu prvků v seznamu. Časová složitost je tedy opět O(1). U operací kdy se vkládá prvek dovnitř seznamu je složitost O(N), kdy N je počet prvků, přes které je nutné iterovat, než se dostaneme k požadovanému umístění. V nejlepším případě muže být tedy i zde časová složitost O(1). List je v tomto projektu použitý pro ukládání historie příchozích dat z koncentrátorů následovně:
 
 \begin{minted}[breaklines]{text}
 > LPUSH device_uid:data <data>
 > LTRIM device_uid:data 0 999
 \end{minted}
 
-Výhodné na tomto přístupu je to, že je složitost obou příkazů O(1). Je to dáno tím, že LPUSH umisťuje data do seznamu zleva což není nijak časově náročné a dále komplexita LTRIM funkce je dána počtem prvků, které se touto funkcí odstraní, což je jeden starý. S minimální režií je tak uchováváno posledních 1000 hodnot.
+Výhodné na tomto přístupu je to, že je složitost obou příkazů O(1). Je to dáno tím, že LPUSH umisťuje data do seznamu zleva což není nijak časově náročné a dále složitost LTRIM funkce je dána počtem prvků, které se touto funkcí odstraní, což je jeden starý. S minimální režií je tak uchováváno posledních 1000 hodnot.
 
 \subsection{Datová struktura set a sorted set}
 Sety jsou neseřazené kolekce unikátních stringů. Zde je nutné zdůraznit, že hodnoty zde skutečně nejsou seřazeny a vracený výsledek tak může měnit pořadí. Výhodné je, že je možné do této množiny ukládat data se složitostí O(N), kde N je počet prvků. To samé platí i pro čtení. Tato struktura se hodí pro ukládání relací čímž je možné simulovat relační vztahy mezi objekty. V tomto projektu je proto set používaný pro ukládání všech známých zařízení k síti a dále pro ukládání vazeb mezi jednotlivými koncentrátory.
@@ -111,7 +112,7 @@ Sety jsou neseřazené kolekce unikátních stringů. Zde je nutné zdůraznit, 
 Sorted set je obdoba setu s tím rozdílem, že prvky jsou v množině seřazeny podle zvoleného skóre. Tato struktura není v projektu nikde použita a je zde uvedena pouze pro úplnost.
 
 \subsection{Datová struktura bitmap}
-Bitmapy umožňují ukládat binární data do databáze. Tento způsob práce s daty je pouze obdobou práce se stringy. Vzhledem k tomu, že se jedná o práci s nejmenší jednotkou informace, je tato struktura velmi úsporná co se týče velikosti a velmi se hodí pro ukládání velkého množství pravdivých resp. nepravdivých informací. Bitmapy jsou limitovány na velikost 512 MB stejně jako klíče. To jinými slovy znamená, že je v jednom klíči možné uchovat informace až o $2^{32}$ stavech.
+Bitmapy umožňují ukládat binární data do databáze. Tento způsob práce s daty je pouze obdobou práce se stringy. Vzhledem k tomu, že se jedná o práci s nejmenší jednotkou informace, je tato struktura velmi úsporná co se týče velikosti a velmi se hodí pro ukládání velkého množství pravdivých resp. nepravdivých informací. Bitmapy jsou limitovány na velikost 512 MB stejně jako klíče. To jinými slovy znamená, že je v jednom klíči možné uchovat informace až o $2^{32}$ stavech ($2^{32} = 4\,294\,967\,296\,b = 536\,870\,912\,B = 524\,288\,kB = 512\,MB$).
 
 Tato struktura není v projektu nikde použita a je zde uvedena pouze pro úplnost.
 
@@ -163,16 +164,18 @@ LRANGE_600 (first 600 elements): 3888.48 requests per second
 MSET (10 keys): 207468.88 requests per second
 \end{minted}
 
+%TODO REDIS - test dotazové smyčky pro delší segmentovou síť viz poznámky p. Krista
+
 \subsection{RESP protokol}
 Redis databáze komunikuje interně přes TCP v RESP (Redis Serialization Protocol) formátu. RESP používá celkem 5 typů dat. Vždy platí, že první byte je byte určující o jaký formát se jedná:
 
 \begin{itemize}
 \itemsep0em
-\item \texttt{+} jednoduchý string
-\item \texttt{-} error
-\item \texttt{:} integer
-\item \texttt{\$} bulk string (binary safe)
-\item \texttt{*} array
+\item \texttt{+} simple string (jednoduchý řetězec)
+\item \texttt{-} error (chybový stav)
+\item \texttt{:} integer (celé číslo)
+\item \texttt{\$} bulk string (binary safe řetězec)
+\item \texttt{*} array (pole)
 \end{itemize}
 
 Následuje samotný obsah, nebo dodatečné informace, například o délce a vše je ukončeno pomocí \texttt{CRLF} (\texttt{\textbackslash r\textbackslash n}). Postupně tedy přenášené informace mohou vypadat například takto:
@@ -182,11 +185,11 @@ Následuje samotný obsah, nebo dodatečné informace, například o délce a v�
 \item \texttt{+PONG\textbackslash r\textbackslash n}
 \item \texttt{-Error 123\textbackslash r\textbackslash n}
 \item \texttt{:54986\textbackslash r\textbackslash n}
-\item \texttt{\$4\textbackslash r\textbackslash nPING\textbackslash r\textbackslash n} (první část určuje délku bulk stringu, NULL je pak \texttt{\$-\textbackslash r\textbackslash n})
+\item \texttt{\$4\textbackslash r\textbackslash nPING\textbackslash r\textbackslash n} (první část určuje délku bulk stringu, NULL je pak \texttt{\$-1\textbackslash r\textbackslash n})
 \item \texttt{*2\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nGET\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nkey\textbackslash r\textbackslash n} (první je délka pole, následuje kombinace předchozích)
 \end{itemize}
 
-Redis server potom přijímá podle bulk stringů obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory posílají data (přes TCP i UDP) v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
+Redis server potom přijímá podle řetězců obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory posílají data (přes TCP i UDP) v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
 
 \section{Webová aplikace}
 Webový server je možné spustit na již běžícím Node.js serveru. Pro webovou aplikaci byl zvolen framework Sails.js \cite{sails}. Sails je MVC webový framework, který staví právě nad Node.js, ale ulehčuje práci při stavbě webových aplikací. Výhodou tohoto přístupu je to, že je možné na jednom serveru zapnout jak server zpracující požadavky z koncentrátorů, tak server obsluhující požadavky klientů z webového prohlížeče. Sails má navíc vestavěnou podporu pro protokol websocket, který je potřebný pro rychlou komunikaci serveru právě s prohlížečem.

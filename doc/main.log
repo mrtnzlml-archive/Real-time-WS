@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2014.11.9)  9 MAR 2015 21:51
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2014.11.9)  24 MAR 2015 00:16
 entering extended mode
 **main.tex
 (C:\Users\Martin\Desktop\real-time-ws\doc\main.tex
@@ -372,7 +372,7 @@ Now handling font encoding PD1 ...
 ("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
-Package hyperref Info: Option `draft' set `true' on input line 4319.
+Package hyperref Info: Option `final' set `true' on input line 4319.
 Package hyperref Info: Hyper figures OFF on input line 4443.
 Package hyperref Info: Link nesting OFF on input line 4448.
 Package hyperref Info: Hyper index ON on input line 4451.
@@ -510,6 +510,17 @@ LaTeX Info: Redefining \\ on input line 3056.
 \@float@every@listing=\toks20
 \c@listing=\count120
 )
+runsystem(for ^%i in (pygmentize.exe pygmentize.bat pygmentize.cmd) do set >mai
+n.aex <nul: /p x=^%~$PATH:i>>main.aex)...executed.
+
+runsystem(del "main.aex")...executed.
+
+
+file deleted
+runsystem(pygmentize -S default -f latex -P commandprefix=PYGdefault > "main.ou
+t.pyg")...executed.
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
 (C:\Users\Martin\AppData\Roaming\MiKTeX\2.9\tex\latex\pdfpages\pdfpages.sty
 Package: pdfpages 2013/08/25 v0.4v Insert pages of external PDF documents (AM)
 
@@ -698,11 +709,7 @@ Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 16.
 
-(C:\Users\Martin\Desktop\real-time-ws\doc\main.aux
-
-LaTeX Warning: Label `fig:tcp-packet' multiply defined.
-
-)
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
@@ -719,7 +726,8 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
 LaTeX Font Info:    ... okay on input line 30.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 30.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 30.
- ("C:\Program Files\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 30.
@@ -739,12 +747,8 @@ LaTeX Font Info:    ... okay on input line 30.
 \everyMPtoPDFconversion=\toks23
 )
 \AtBeginShipoutBox=\box37
-
-
-Package hyperref Warning: Draft mode on.
-
 Package hyperref Info: Link coloring ON on input line 30.
-("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
@@ -756,12 +760,90 @@ LaTeX Info: Redefining \ref on input line 30.
 LaTeX Info: Redefining \pageref on input line 30.
 LaTeX Info: Redefining \nameref on input line 30.
 
-<zcu.png, id=1, 118.041pt x 61.6704pt> [1
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out)
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out)
+\@outlinefile=\write6
+
+<zcu.png, id=127, 118.041pt x 61.6704pt>
+File: zcu.png Graphic file (type png)
+ <use zcu.png>
+Package pdftex.def Info: zcu.png used on input line 36.
+(pdftex.def)             Requested size: 118.0407pt x 61.67023pt.
+ [1
 
 
-{C:/Users/Martin/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] <img/zadan
-i1.jpg, id=9, 614.295pt x 845.3181pt>
-[1] <img/zadani2.jpg, id=15, 614.295pt x 845.3181pt> [2]
+{C:/Users/Martin/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users/M
+artin/Desktop/real-time-ws/doc/zcu.png>] <img/zadani1.jpg, id=135, 614.295pt x 
+845.3181pt>
+File: img/zadani1.jpg Graphic file (type jpg)
+
+<use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 614.29349pt x 845.31604pt.
+File: img/zadani1.jpg Graphic file (type jpg)
+ <use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 614.29349pt x 845.31604pt.
+File: img/zadani1.jpg Graphic file (type jpg)
+ <use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 614.29349pt x 845.31604pt.
+File: img/zadani1.jpg Graphic file (type jpg)
+
+<use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+File: img/zadani1.jpg Graphic file (type jpg)
+ <use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+File: img/zadani1.jpg Graphic file (type jpg)
+ <use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.53 \includepdf[pages={1}]{img/zadani1.jpg}
+                                            
+File: img/zadani1.jpg Graphic file (type jpg)
+ <use img/zadani1.jpg>
+Package pdftex.def Info: img/zadani1.jpg used on input line 53.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+ [1 <C:/Users/Martin/Desktop/real-time-ws/doc/img/zadani1.jpg>]
+<img/zadani2.jpg, id=141, 614.295pt x 845.3181pt>
+File: img/zadani2.jpg Graphic file (type jpg)
+ <use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 614.29349pt x 845.31604pt.
+File: img/zadani2.jpg Graphic file (type jpg)
+
+<use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 614.29349pt x 845.31604pt.
+File: img/zadani2.jpg Graphic file (type jpg)
+ <use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 614.29349pt x 845.31604pt.
+File: img/zadani2.jpg Graphic file (type jpg)
+ <use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+File: img/zadani2.jpg Graphic file (type jpg)
+
+<use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+File: img/zadani2.jpg Graphic file (type jpg)
+ <use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+File: img/zadani2.jpg Graphic file (type jpg)
+ <use img/zadani2.jpg>
+Package pdftex.def Info: img/zadani2.jpg used on input line 54.
+(pdftex.def)             Requested size: 597.78697pt x 822.60178pt.
+ [2 <C:/Users/Martin/Desktop/real-time-ws/doc/img/zadani2.jpg>]
 (C:\Users\Martin\Desktop\real-time-ws\doc\abstrakt.tex)
 (C:\Users\Martin\Desktop\real-time-ws\doc\abstract.tex [1
 
@@ -781,74 +863,267 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  [4
 
 ])
-\tf@toc=\write6
+\tf@toc=\write7
  [5]
+
+Package hyperref Warning: Composite letter `\textring+u'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textring' on input line 64.
+
 (C:\Users\Martin\Desktop\real-time-ws\doc\main.lof)
-\tf@lof=\write7
+\tf@lof=\write8
  [6
 
 
 ]
+
+Package hyperref Warning: Composite letter `\textring+u'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textring' on input line 100.
+
 (C:\Users\Martin\Desktop\real-time-ws\doc\uvod.tex [7
 
 ]
  1.
-) (C:\Users\Martin\Desktop\real-time-ws\doc\chapter1.tex [1
+) (C:\Users\Martin\Desktop\real-time-ws\doc\chapter1.texpdfTeX warning (ext4): 
+destination with the same identifier (name{page.1}) has been already used, dupl
+icate ignored
+<to be read again> 
+                   \relax 
+l.1 \chapter
+            {Real-time komunikace} [1
 
 ]
  2.
-[2
+pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.5 
+     [2
 
-] [3] [4] <img/tcp2.png, id=59, 511.9125pt x 328.22626pt> [5]
-<img/udp.png, id=64, 511.9125pt x 108.405pt> [6])
-(C:\Users\Martin\Desktop\real-time-ws\doc\chapter2.tex [7]
+]
+
+Package hyperref Warning: Composite letter `\textasciicaron+r'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 6.
+
+
+Package hyperref Warning: Composite letter `\textasciicaron+e'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 6.
+
+[3] [4]
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P linenos -P "verboptions=,breaklines" -o "main.out.pyg" 
+ "main.pyg")...executed.
+
+ (C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P linenos -P mathescape -P "verboptions=,breaklines" -o "
+main.out.pyg"  "main.pyg")...executed.
+
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
+Overfull \hbox (7.27643pt too wide) in paragraph at lines 42--43
+[]\OT1/cmr/m/n/12 Zacatek spo-jen (trcestne zahajen) zustava stej
+ne, ale pro usporu mnozstv
+ []
+
+[5] <img/tcp2.png, id=256, 511.9125pt x 328.22626pt>
+File: img/tcp2.png Graphic file (type png)
+ <use img/tcp2.png>
+Package pdftex.def Info: img/tcp2.png used on input line 48.
+(pdftex.def)             Requested size: 390.0pt x 250.06055pt.
+
+[6pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.63 
+      <C:/Users/Martin/Desktop/real-time-ws/doc/img/tcp2.png (PNG copy)>]
+<img/udp.png, id=261, 511.9125pt x 108.405pt>
+File: img/udp.png Graphic file (type png)
+ <use img/udp.png>
+Package pdftex.def Info: img/udp.png used on input line 66.
+(pdftex.def)             Requested size: 390.0pt x 82.58879pt.
+)
+(C:\Users\Martin\Desktop\real-time-ws\doc\chapter2.tex [7pdfTeX warning (ext4):
+ destination with the same identifier (name{figure.2.2}) has been already used,
+ duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.1 \chapter
+            {Volba vhodné technologie} <C:/Users/Martin/Desktop/real-time-ws/d
+oc/img/udp.png>]
  3.
-<img/eval_board.jpg, id=72, 497.60907pt x 376.40625pt>
+
+Package hyperref Warning: Composite letter `\textasciicaron+e'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 4.
+
+<img/eval_board.jpg, id=269, 497.60907pt x 376.40625pt>
+File: img/eval_board.jpg Graphic file (type jpg)
+
+<use img/eval_board.jpg>
+Package pdftex.def Info: img/eval_board.jpg used on input line 9.
+(pdftex.def)             Requested size: 390.0pt x 295.01433pt.
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [8
 
-] [9] [10] [11] [12] [13]
+] [9pdfTeX warning (ext4): destination with the same identifier (name{figure.3.
+1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.44 
+      <C:/Users/Martin/Desktop/real-time-ws/doc/img/eval_board.jpg>]
+runsystem(pygmentize -l javascript -f latex -F tokenmerge  -P style=default -P 
+commandprefix=PYGdefault   -P linenos -P "verboptions=,breaklines" -o "main.out
+.pyg"  "main.pyg")...executed.
+
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
+) [10]
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P "verboptions=,breaklines" -o "main.out.pyg"  "main.pyg"
+)...executed.
+
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
+
+Package hyperref Warning: Composite letter `\textasciicaron+c'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 76.
+
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P "verboptions=,breaklines" -o "main.out.pyg"  "main.pyg"
+)...executed.
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 137.
- [14]
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 174
+(Font)              <7> on input line 94.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 94.
+
+Underfull \hbox (badness 1005) in paragraph at lines 94--94
+[][][]\OT1/cmr/m/n/10 Oznacen $\OML/cmm/m/it/10 O\OT1/cmr/m/n/10 (\OML/cmm/m
+/it/10 f\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 ))$ znac asympto-
+tic-kou slozitost al-go-ritmu. Slozitosti al-go-ritmu
+ []
+
+[11]
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P "verboptions=,breaklines" -o "main.out.pyg"  "main.pyg"
+)...executed.
+
+ (C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg) [12] [13]
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P linenos -P "verboptions=,breaklines" -o "main.out.pyg" 
+ "main.pyg")...executed.
+
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P linenos -P "verboptions=,breaklines" -o "main.out.pyg" 
+ "main.pyg")...executed.
+
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg [14])
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 177
 .
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\ts1cmtt.fd"
 File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 178
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 181
 .
-LaTeX Font Info:    No file OMScmtt.fd. on input line 178.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 181.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbackslash' on input line 178.
+(Font)              for symbol `textbackslash' on input line 181.
 
 [15]) (C:\Users\Martin\Desktop\real-time-ws\doc\chapter3.tex [16]
  4.
-<img/speedy.png, id=107, 727.21687pt x 465.99094pt> [17
 
-] [18])
+Package hyperref Warning: Composite letter `\textasciicaron+r'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 1.
+
+<img/speedy.png, id=331, 727.21687pt x 465.99094pt>
+File: img/speedy.png Graphic file (type png)
+ <use img/speedy.png>
+Package pdftex.def Info: img/speedy.png used on input line 10.
+(pdftex.def)             Requested size: 390.0pt x 249.91063pt.
+
+[17
+
+]
+runsystem(pygmentize -l text -f latex -F tokenmerge  -P style=default -P comman
+dprefix=PYGdefault   -P "verboptions=,breaklines" -o "main.out.pyg"  "main.pyg"
+)...executed.
+
+ (C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg)
+runsystem(pygmentize -l c -f latex -F tokenmerge  -P style=default -P commandpr
+efix=PYGdefault   -P linenos -P "verboptions=,breaklines" -o "main.out.pyg"  "m
+ain.pyg")...executed.
+
+
+(C:\Users\Martin\Desktop\real-time-ws\doc\main.out.pyg [18pdfTeX warning (ext4)
+: destination with the same identifier (name{figure.4.1}) has been already used
+, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.5 ...{tcp\PYGdefaultZus{}new}\PYGdefault{p}{();}
+                                                   <C:/Users/Martin/Desktop/rea
+l-time-ws/doc/img/speedy.png>]))
 (C:\Users\Martin\Desktop\real-time-ws\doc\chapter4.tex [19]
  5.
 [20
 
 ]
  6.
+
+Package hyperref Warning: Composite letter `\textasciicaron+r'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 3.
+
+
+Package hyperref Warning: Composite letter `\textasciicaron+r'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 3.
+
+
+Overfull \hbox (2.99037pt too wide) in paragraph at lines 8--9
+\OT1/cmr/m/n/12 Node.js, nebo kon-ku-rencnho io.js je nutne Li-nu-xove pro
+stred. Nicmene realne
+ []
+
 [21
 
 ]) (C:\Users\Martin\Desktop\real-time-ws\doc\zaver.tex [22]
  7.
+
+Package hyperref Warning: Composite letter `\textasciicaron+e'
+(hyperref)                not defined in PD1 encoding,
+(hyperref)                removing `\textasciicaron' on input line 1.
+
 ) [23
 
 ]
 Underfull \hbox (badness 1571) in paragraph at lines 120--121
-\OT1/cmr/bx/n/12 m-ware pac-kage for STM32F2xx se-ries $\OT1/cmtt/m/n/12 http :
- / / www . st . com /$
+\OT1/cmr/bx/n/12 m-ware pac-kage for STM32F2xx se-ries [][]$\OT1/cmtt/m/n/12 ht
+tp : / / www . st . com /$
  []
 
 
@@ -859,14 +1134,14 @@ $\OT1/cmtt/m/n/12 st-[]web-[]ui / static / active / en / resource / technical /
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 126--127
-[]\OT1/cmr/m/it/12 Redis.io: \OT1/cmr/bx/n/12 Re-dis clus-ter tu-to-rial: $\OT1
-/cmtt/m/n/12 http : / / redis . io / topics /$
+[]\OT1/cmr/m/it/12 Redis.io: \OT1/cmr/bx/n/12 Re-dis clus-ter tu-to-rial: [][]$
+\OT1/cmtt/m/n/12 http : / / redis . io / topics /$
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 132--133
 []\OT1/cmr/m/it/12 RIPE NCC \OT1/cmr/bx/n/12 Un-der-stan-ding IP Ad-d-res-sing 
-$\OT1/cmtt/m/n/12 https :$
+[][]$\OT1/cmtt/m/n/12 https :$
  []
 
 
@@ -876,18 +1151,18 @@ re /$
  []
 
 
-Underfull \hbox (badness 5345) in paragraph at lines 135--136
+Underfull \hbox (badness 5345) in paragraph at lines 139--140
 []\OT1/cmr/m/it/12 STMicroelectronics: \OT1/cmr/bx/n/12 De-scrip-tion of STM32F
 4xx HAL dri-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 138--140
+Underfull \hbox (badness 10000) in paragraph at lines 142--144
 \OT1/cmr/bx/n/12 STM32F415xx/17xx, STM32F42xxx and STM32F43xxx
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 138--140
+Underfull \hbox (badness 10000) in paragraph at lines 142--144
 $\OT1/cmtt/m/n/12 en / resource / technical / document / reference _ manual / D
 M00031020 .$
  []
@@ -895,46 +1170,53 @@ M00031020 .$
 [24
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 144.
+runsystem(del "main.pyg")...executed.
+
+runsystem(del "main.out.pyg")...executed.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
  [25]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 144.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
  (C:\Users\Martin\Desktop\real-time-ws\doc\main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 144.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 144.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 148.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: CC16ABF64C7E7EBB8045C836A4F7F6E8;2208.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 144.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 148.
  ) 
 Here is how much of TeX's memory you used:
- 9078 strings out of 493921
- 135855 string characters out of 3147279
- 244690 words of memory out of 3000000
- 12213 multiletter control sequences out of 15000+200000
- 10592 words of font info for 37 fonts, out of 3000000 for 9000
+ 9348 strings out of 493921
+ 140460 string characters out of 3147279
+ 249915 words of memory out of 3000000
+ 12363 multiletter control sequences out of 15000+200000
+ 10760 words of font info for 38 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 38i,17n,42p,1824b,499s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 40i,18n,42p,1806b,535s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Martin\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600
 \tcbx1200.pk> <C:\Users\Martin\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappe
 n\ec\dpi600\tctt1200.pk> <C:\Users\Martin\AppData\Local\MiKTeX\2.9\fonts\pk\ljf
 our\jknappen\ec\dpi600\tcrm1200.pk><C:/Program Files/MiKTeX 2.9/fonts/type1/pub
 lic/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsf
 onts/cm/cmcsc10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmmi12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.p
-fb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program File
-s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2
-.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts
-/type1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
-blic/amsfonts/cm/cmti12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
-fonts/cm/cmtt12.pfb>
-Output written on main.pdf (35 pages, 198181 bytes).
+/cmitt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10
+.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:
+/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program 
+Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
+1/public/amsfonts/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
+/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Pro
+gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Program Fil
+es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on main.pdf (35 pages, 1823721 bytes).
 PDF statistics:
- 189 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 500000)
- 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 492 PDF objects out of 1000 (max. 8388607)
+ 91 named destinations out of 1000 (max. 500000)
+ 304 words of extra memory for PDF output out of 10000 (max. 10000000)
 

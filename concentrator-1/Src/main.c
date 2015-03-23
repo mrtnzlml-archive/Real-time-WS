@@ -231,7 +231,7 @@ static void TIM_Config(void) {
 	TIM_MasterConfigTypeDef sMasterConfig;
 	
 	/*##-1- Configure the TIM peripheral #######################################*/
-	TimHandle3.Instance = TIM3;
+	TimHandle3.Instance = TIM3; //PING
 	TimHandle3.Init.Period = 10000;
 	//Prescaler max value is 65535!
 	TimHandle3.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
@@ -242,18 +242,18 @@ static void TIM_Config(void) {
 		Error_Handler();
 	}
 	
-	TimHandle4.Instance = TIM4;
+	TimHandle4.Instance = TIM4; //UDP
 	TimHandle4.Init.Period = 10000;
 	//Prescaler max value is 65535!
 	TimHandle4.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //100kHz
-	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
+	// T = 1/f = 1/100k = 0,00001 ; time = Period * T = 0,1s
 	TimHandle4.Init.ClockDivision = 0;
 	TimHandle4.Init.CounterMode = TIM_COUNTERMODE_UP;
 	if(HAL_TIM_OC_Init(&TimHandle4) != HAL_OK) {
 		Error_Handler();
 	}
 	
-	TimHandle8.Instance = TIM8;
+	TimHandle8.Instance = TIM8; //ADC
 	TimHandle8.Init.Period = 0x3C;          
 	TimHandle8.Init.Prescaler = 0;       
 	TimHandle8.Init.ClockDivision = 0;    

@@ -36,11 +36,13 @@ module.exports = function UDPHook(sails) {
                                 redisClient.lindex(device + ':data', 0, function (err, reply) {
                                     redisClient.hgetall('device:' + device, function (err, result) {
                                         //FIXME: vytvořit zde prodlevu - odesílají se moc rychle
-                                        var message = new Buffer(reply);
-                                        udpSocket.send(message, 0, message.length, result.udp_port, result.ip);
-                                        sails.log('Sending data from ' + device + ' (' + reply + ') to ' + connected + ' (' + result.ip + ':' + result.udp_port + ')');
-                                        redisClient.hincrby('device:' + device, 'msg_count', 1);
-                                        redisClient.incr('msg_count');
+                                        if (result.active == 'true') {
+                                            var message = new Buffer(reply);
+                                            udpSocket.send(message, 0, message.length, result.udp_port, result.ip);
+                                            sails.log('Sending data from ' + device + ' (' + reply + ') to ' + connected + ' (' + result.ip + ':' + result.udp_port + ')');
+                                            redisClient.hincrby('device:' + device, 'msg_count', 1);
+                                            redisClient.incr('msg_count');
+                                        }
                                     });
                                 });
                             }
