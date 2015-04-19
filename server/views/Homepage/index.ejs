@@ -1,54 +1,42 @@
-<div class="main container clearfix">
-    <% if(req.session.flash && req.session.flash.info) { %>
-    <div class="alert alert-info">
-        <%= req.flash('info') %>
-    </div>
-    <% } %>
-    <% if(req.session.flash && req.session.flash.success) { %>
-    <div class="alert alert-success">
-        <%= req.flash('success') %>
-    </div>
-    <% } %>
-    <h1><%= connectableDevices.length %> connected devices</h1>
+<h1><%= connectableDevices.length %> connected devices</h1>
 
-    <div class="getting-started">
-        <% connectableDevices.forEach(function (device) { %>
-        <div class="clearfix">
-            <div class="step" style="border-left: solid 2px #2980b9">
-                <h3>
-                    <span id="<%= device %>_status" class="status" title="Status unknown"></span>
-                    Thermal sensor
-                    <small>
-                        <%= device.toUpperCase() %>
-                        (<a href="/device/<%= device %>">manage</a>)
-                    </small>
-                </h3>
-                <p>
-                    Data:
-                    <span id="<%= device %>" style="font-size:25px">Loading&hellip;</span>
-                </p>
-                <p>
-                    Connectable devices:
-                    <% connectableDevices.forEach(function (connectableDevice) { %>
-                        <% if(connectableDevice != device && connectedDevices[device].indexOf(connectableDevice) == -1) { %>
-                            <a href="/connect/<%= device %>/<%= connectableDevice %>"><%= connectableDevice %></a>&nbsp;
-                        <% } %>
-                    <% }); %>
-                </p>
-                <p>
-                    Connected devices:
-                    <% connectedDevices[device].forEach(function (connectedDevice) { %>
-                        <a href="/disconnect/<%= device %>/<%= connectedDevice %>"><%= connectedDevice %></a>&nbsp;
-                    <% }); %>
-                </p>
-            </div>
+<div class="getting-started">
+    <% connectableDevices.forEach(function (device) { %>
+    <div class="clearfix">
+        <div class="step" style="border-left: solid 2px #2980b9">
+            <h3>
+                <span id="<%= device %>_status" class="status" title="Status unknown"></span>
+                Thermal sensor
+                <small>
+                    <%= device.toUpperCase() %>
+                    (<a href="/device/<%= device %>">manage</a>)
+                </small>
+            </h3>
+            <p>
+                Data:
+                <span id="<%= device %>" style="font-size:25px">Loading&hellip;</span>
+            </p>
+            <p>
+                Connectable devices:
+                <% connectableDevices.forEach(function (connectableDevice) { %>
+                <% if(connectableDevice != device && connectedDevices[device].indexOf(connectableDevice) == -1) { %>
+                <a href="/connect/<%= device %>/<%= connectableDevice %>"><%= connectableDevice %></a>&nbsp;
+                <% } %>
+                <% }); %>
+            </p>
+            <p>
+                Connected devices:
+                <% connectedDevices[device].forEach(function (connectedDevice) { %>
+                <a href="/disconnect/<%= device %>/<%= connectedDevice %>"><%= connectedDevice %></a>&nbsp;
+                <% }); %>
+            </p>
         </div>
-        <% }); %>
     </div>
-    <div class="links">
-        <a href="/documentation">Documentation</a>
-        <h4>Messages so far</h4>
+    <% }); %>
+</div>
+<div class="links">
+    <a href="/documentation">Documentation</a>
+    <h4>Messages so far</h4>
 
-        <div id="msg_count">Loading&hellip;</div>
-    </div>
+    <div id="msg_count">Loading&hellip;</div>
 </div>

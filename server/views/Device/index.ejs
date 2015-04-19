@@ -1,45 +1,59 @@
-<div class="main container clearfix">
-    <h1>
-        <span id="<%= device_name %>_status" class="status" title="Status unknown"></span>
-        <%= device_name.toUpperCase() %>
-        <small>Thermal sensor</small>
-    </h1>
-    <div class="getting-started">
+<h1>
+    <span id="<%= device_name %>_status" class="status" title="Status unknown"></span>
+    <%= device_name.toUpperCase() %>
+    <small>Thermal sensor</small>
+</h1>
+<div class="getting-started">
+    <div class="step" style="border-left: solid 2px #2980b9">
         <p>
             Data:
             <span id="<%= device_name %>" style="font-size:25px">Loading&hellip;</span>
         </p>
-        <p>IP: <code><%= device_data.ip %>:<%= device_data.port %></code></p>
-        <p>Message count: <%= device_data.msg_count %></p>
-        <p>Last ping: <%= device_data.last_ping %></p>
-        <p>Connectable devices:</p>
-        <p>Connected devices:</p>
-
-        <h2>
-            Data convertor table
-            <small style="color:green">Already applied</small>
-        </h2>
-<pre>
-0     ->  1024
-256   ->  768
-512   ->  512
-768   ->  256
-1024  ->  0
-</pre>
+        <p>
+            TCP IP:
+            <code><span id="<%= device_name %>_tcp_ip"><%= device_data.ip %>:<%= device_data.port %></span></code>
+        </p>
+        <p>
+            UDP IP:
+            <code><span id="<%= device_name %>_udp_ip"><%= device_data.ip %>:<%= device_data.udp_port %></span></code>
+        </p>
+        <p>Message count: <span id="<%= device_name %>_msg_count"><%= device_data.msg_count %></span></p>
+        <p>Last ping: <span id="<%= device_name %>_last_ping"><%= new Date(Number(device_data.last_ping)) %></span></p>
+        <p>
+            Connectable devices:
+            <% connectableDevices.forEach(function (connectableDevice) { %>
+            <% if(connectableDevice != device_name && connectedDevices[device_name].indexOf(connectableDevice) == -1) { %>
+            <a href="/connect/<%= device_name %>/<%= connectableDevice %>"><%= connectableDevice %></a>&nbsp;
+            <% } %>
+            <% }); %>
+        </p>
+        <p>
+            Connected devices:
+            <% connectedDevices[device_name].forEach(function (connectedDevice) { %>
+            <a href="/disconnect/<%= device_name %>/<%= connectedDevice %>"><%= connectedDevice %></a>&nbsp;
+            <% }); %>
+        </p>
+        <p>
+            Function:
+            <select>
+                <option value="linear">Linear (normal)</option>
+            </select>
+            (<span style="color:green">Already applied</span>)
+        </p>
 
         <!--<div id="area" class="epoch category20c" style="height: 200px;"></div>-->
     </div>
-    <div class="links">
-        <h4>What would you like to do?</h4>
-        <ul>
-            <li>
-                <a>Release from connections</a><br>
-                Nobody will be able to send data to this device.
-            </li>
-            <li>
-                <a>Drop all connections</a><br>
-                This device will not be able to send data to another devices.
-            </li>
-        </ul>
-    </div>
+</div>
+<div class="links">
+    <h4>What would you like to do?</h4>
+    <ul>
+        <li>
+            <a href="/disconnect/release/<%= device_name %>">Release from connections</a><br>
+            Nobody will be able to send data to this device.
+        </li>
+        <li>
+            <a href="/disconnect/all/<%= device_name %>">Drop all connections</a><br>
+            This device will not be able to send data to another devices.
+        </li>
+    </ul>
 </div>

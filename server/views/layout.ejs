@@ -23,7 +23,24 @@
 
         <h3 class="container">Be a real-time hero&hellip;</h3>
     </div>
-    <%- body %>
+    <div class="main container clearfix">
+        <% if(req.session.flash && req.session.flash.info) { %>
+        <div class="alert alert-info">
+            <%= req.flash('info') %>
+        </div>
+        <% } %>
+        <% if(req.session.flash && req.session.flash.success) { %>
+        <div class="alert alert-success">
+            <%= req.flash('success') %>
+        </div>
+        <% } %>
+        <% if(req.session.flash && req.session.flash.danger) { %>
+        <div class="alert alert-danger">
+            <%= req.flash('danger') %>
+        </div>
+        <% } %>
+        <%- body %>
+    </div>
 </div>
 
 <!--TEMPLATES-->

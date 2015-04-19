@@ -121,6 +121,60 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 }
 
 /**
+  * @brief TIM MSP Initialization 
+  *        This function configures the hardware resources used in this example: 
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration
+  *           - DMA configuration for transmission request by peripheral
+  * @param htim: TIM handle pointer
+  * @retval None
+  */
+/*void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) {
+	GPIO_InitTypeDef   GPIO_InitStruct;
+	static DMA_HandleTypeDef  hdma_tim;
+
+	// Enable peripherals and GPIO Clocks:
+	__TIM1_CLK_ENABLE(); // TIM1 clock enable
+	__GPIOE_CLK_ENABLE(); // Enable GPIO Channel3/3N Clocks
+	__DMA2_CLK_ENABLE(); // Enable DMA2 clock
+  
+	// Configure TIM1_Channel3 in output, push-pull & alternate function mode:
+	GPIO_InitStruct.Pin = GPIO_PIN_13;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = GPIO_AF1_TIM1;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+	// Set the parameters to be configured:
+	hdma_tim.Init.Channel  = DMA_CHANNEL_6;
+	hdma_tim.Init.Direction = DMA_MEMORY_TO_PERIPH;
+	hdma_tim.Init.PeriphInc = DMA_PINC_DISABLE;
+	hdma_tim.Init.MemInc = DMA_MINC_ENABLE;
+	hdma_tim.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD ;
+	hdma_tim.Init.MemDataAlignment = DMA_MDATAALIGN_WORD ;
+	hdma_tim.Init.Mode = DMA_CIRCULAR;
+	hdma_tim.Init.Priority = DMA_PRIORITY_HIGH;
+	hdma_tim.Init.FIFOMode = DMA_FIFOMODE_DISABLE;         
+	hdma_tim.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+	hdma_tim.Init.MemBurst = DMA_MBURST_SINGLE;
+	hdma_tim.Init.PeriphBurst = DMA_PBURST_SINGLE; 
+
+	// Set hdma_tim instance:
+	hdma_tim.Instance = DMA2_Stream6;
+
+	// Link hdma_tim to hdma[3] (channel3):
+	__HAL_LINKDMA(htim, hdma[3], hdma_tim);
+  
+	// Initialize TIMx DMA handle:
+	HAL_DMA_Init(htim->hdma[3]); 
+  
+	// NVIC configuration for DMA transfer complete interrupt:
+	HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 0, 0);   
+	HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
+}*/
+
+/**
   * @brief  Initializes the Global MSP.
   * @param  None
   * @retval None

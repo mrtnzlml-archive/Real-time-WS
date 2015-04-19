@@ -31,18 +31,13 @@ module.exports.routes = {
      *                                                                          *
      ***************************************************************************/
 
-    '/': {
-        controller: 'homepage' //FIXME: funguje i http://127.0.0.1:1337/homepage a to není dobře
-    },
-    '/device/:device': {
-        controller: 'device'
-    },
-    '/connect/:from/:to': {
-        controller: 'connect'
-    },
-    '/disconnect/:from/:to': {
-        controller: 'disconnect'
-    },
+    '/': 'HomepageController',
+    '/homepage': '/',
+    '/device/:device': 'DeviceController',
+    '/connect/:from/:to': 'ConnectController',
+    '/disconnect/all/:from': 'DisconnectController.all',
+    '/disconnect/release/:from': 'DisconnectController.release',
+    '/disconnect/:from/:to': 'DisconnectController',
 
     /***************************************************************************
      *                                                                          *

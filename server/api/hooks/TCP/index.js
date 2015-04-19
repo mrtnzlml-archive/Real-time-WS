@@ -2,13 +2,7 @@ module.exports = function TCPHook(sails) {
     return {
         start: function () {
             var net = require('net');
-            var redis = require('redis');
-            var redisClient = redis.createClient();
             var resp = require('node-resp');
-
-            redisClient.on('error', function (err) {
-                sails.log.error(err);
-            });
 
             var server = net.createServer(function (socket) { //'connection' listener
                 var responseParser = new resp.ResponseParser();
@@ -17,12 +11,12 @@ module.exports = function TCPHook(sails) {
                         var device = String(response[1]).toLowerCase();
                         var epoch = new Date().getTime();
                         sails.log.verbose('PING from ' + device);
-                        redisClient.sismember('devices', device, function (err, result) {
+                        RedisService.sismember('devices', device, function (err, result) {
                             if (result) {
-                                redisClient.hmset('device:' + device, 'last_ping', epoch);
+                                RedisService.hmset('device:' + device, 'last_ping', epoch);
                             } else {
-                                redisClient.sadd('devices', device);
-                                redisClient.hmset('device:' + device,
+                                RedisService.sadd('devices', device);
+                                RedisService.hmset('device:' + device,
                                     'ip', socket.remoteAddress,
                                     'port', socket.remotePort,
                                     'active', true,
@@ -30,13 +24,12 @@ module.exports = function TCPHook(sails) {
                                 );
                                 sails.log('Added device ' + device);
                             }
-                            redisClient.hincrby('device:' + device, 'msg_count', 1);
+                            RedisService.hincrby('device:' + device, 'msg_count', 1);
                         });
                     }
                 });
-                //TODO: prozkoumat socket a data (hledá se něco jako iRTT)
                 socket.on('data', function (data) {
-                    redisClient.incr('msg_count');
+                    RedisService.incr('msg_count');
                     if (data.toString().match(/\*[0-9]+([\r][\n])(\$[0-9]+\1[0-9a-z]+\1)+/i)) { //RESP
                         responseParser.parse(data);
                     }

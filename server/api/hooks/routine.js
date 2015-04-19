@@ -2,23 +2,17 @@ module.exports = function WebsocketHook(sails) {
 
     return {
         start: function () {
-            var redis = require('redis');
-            var redisClient = redis.createClient();
-
-            redisClient.on('error', function (err) {
-                sails.log.error(err);
-            });
 
             setInterval(function () {
-                redisClient.smembers('devices', function (err, result) {
+                RedisService.smembers('devices', function (err, result) {
                     result.forEach(function (device) {
-                        redisClient.hmget('device:' + device, 'last_ping', function (err, reply) {
+                        RedisService.hmget('device:' + device, 'last_ping', function (err, reply) {
                             var last_ping = reply[0];
                             var epoch = new Date().getTime();
                             if (epoch - last_ping < 2000) {
-                                redisClient.hmset('device:' + device, 'active', true);
+                                RedisService.hmset('device:' + device, 'active', true);
                             } else {
-                                redisClient.hmset('device:' + device, 'active', false);
+                                RedisService.hmset('device:' + device, 'active', false);
                             }
                         });
                     });

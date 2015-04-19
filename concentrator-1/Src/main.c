@@ -1,4 +1,3 @@
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "lwip/netif.h"
 
@@ -13,19 +12,22 @@
 #include "udp.h"
 #include "tcp.h"
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef TimHandle3; // Timer handler declaration for TIM3
-TIM_HandleTypeDef TimHandle4; // Timer handler declaration for TIM4
-TIM_HandleTypeDef TimHandle8; // Timer handler declaration for TIM8
+ADC_HandleTypeDef AdcHandle; // ADC handler declaration
+
+TIM_HandleTypeDef TimHandle1; // Timer handler declaration for TIM1 - PWM
+TIM_HandleTypeDef TimHandle3; // Timer handler declaration for TIM3 - PING
+TIM_HandleTypeDef TimHandle4; // Timer handler declaration for TIM4 - UPD
+TIM_HandleTypeDef TimHandle8; // Timer handler declaration for TIM8 - ADC
 
 TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure declaration
-__IO uint32_t uhCCR1_Val = 100;
+
 struct netif gnetif;
-ADC_HandleTypeDef    AdcHandle; // ADC handler declaration
+
 __IO uint16_t uhADCxConvertedValue = 0; // Variable used to get converted value
+__IO uint16_t uhADCxConvertedValuePercent = 0; // Variable used to get converted value in percent
+
+uint32_t aCCValue_Buffer = 0;
+uint32_t uhTimerPeriod  = 0; // Timer Period
 
 /* Private function prototypes -----------------------------------------------*/
 static void Error_Handler(void);
@@ -37,7 +39,6 @@ static void TIM_Config(void);
 void concentrator_send(void);
 
 /* Private functions ---------------------------------------------------------*/
-
 int main(void) {
 
 	/* STM32F4xx HAL library initialization:
@@ -52,7 +53,12 @@ int main(void) {
 	lwip_init(); //Initilaize the LwIP stack
 	Netif_Config(); //Configurates the network interface
 	concentrator_init();
-	User_notification(&gnetif); //Notify the User about the nework interface config status 
+	User_notification(&gnetif); //Notify the User about the nework interface config status
+	
+	/* Compute the value of ARR regiter to generate signal frequency at 17.57 Khz */
+	uhTimerPeriod = (uint32_t) ((SystemCoreClock / 17570 ) - 1);
+	/* Compute CCR1 value to generate a duty cycle at ?% */
+	//aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
 
 	TIM_Config(); //TIM3, TIM4, TIM8 Peripheral Configuration
 	ADC_Config(); //Configure the ADC3 peripheral
@@ -98,6 +104,7 @@ static void BSP_Config(void) {
 
 	__GPIOB_CLK_ENABLE();
 
+	/* Initialize Ethernet */
 	GPIO_InitStructure.Pin = GPIO_PIN_14;
 	GPIO_InitStructure.Mode = GPIO_MODE_IT_FALLING;
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
@@ -106,7 +113,7 @@ static void BSP_Config(void) {
 	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0xf, 0);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn); 
 
-	/* Initialize STM324xG-EVAL's LEDs */
+	/* Initialize LEDs */
 	BSP_LED_Init(LED1);
 	BSP_LED_Init(LED2);
 	BSP_LED_Init(LED3);
@@ -137,18 +144,18 @@ static void Netif_Config(void) {
 	netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
 	
 	/* Registers the default network interface */
-  netif_set_default(&gnetif);
+	netif_set_default(&gnetif);
   
-  if (netif_is_link_up(&gnetif)) {
-    /* When the netif is fully configured this function must be called */
-    netif_set_up(&gnetif);
-  } else {
-    /* When the netif link is down this function must be called */
-    netif_set_down(&gnetif);
-  }
+	if (netif_is_link_up(&gnetif)) {
+		/* When the netif is fully configured this function must be called */
+		netif_set_up(&gnetif);
+	} else {
+		/* When the netif link is down this function must be called */
+		netif_set_down(&gnetif);
+	}
   
-  /* Set the link callback function, this function is called on change of link status*/
-  netif_set_link_callback(&gnetif, ethernetif_update_config);
+	/* Set the link callback function, this function is called on change of link status*/
+	netif_set_link_callback(&gnetif, ethernetif_update_config);
 }
 
 /**
@@ -230,10 +237,9 @@ static void SystemClock_Config(void) {
 static void TIM_Config(void) {
 	TIM_MasterConfigTypeDef sMasterConfig;
 	
-	/*##-1- Configure the TIM peripheral #######################################*/
-	TimHandle3.Instance = TIM3; //PING
+	/*########## TIM3 peripheral - PING (1 Hz) ##########*/
+	TimHandle3.Instance = TIM3;
 	TimHandle3.Init.Period = 10000;
-	//Prescaler max value is 65535!
 	TimHandle3.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 10000) - 1); //10kHz
 	// T = 1/f = 1/10k = 0,0001 ; time = Period * T = 1s
 	TimHandle3.Init.ClockDivision = 0;
@@ -241,10 +247,20 @@ static void TIM_Config(void) {
 	if(HAL_TIM_OC_Init(&TimHandle3) != HAL_OK) {
 		Error_Handler();
 	}
+	// Configure the Output Compare channel:
+	sConfig.OCMode = TIM_OCMODE_TOGGLE;
+	sConfig.Pulse = 100;
+	sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
+	if(HAL_TIM_OC_ConfigChannel(&TimHandle3, &sConfig, TIM_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
+	if(HAL_TIM_OC_Start_IT(&TimHandle3, TIM_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
 	
-	TimHandle4.Instance = TIM4; //UDP
+	/*########## TIM4 peripheral - UDP (10 Hz) ##########*/
+	TimHandle4.Instance = TIM4;
 	TimHandle4.Init.Period = 10000;
-	//Prescaler max value is 65535!
 	TimHandle4.Init.Prescaler = (uint32_t)(((SystemCoreClock / 2) / 100000) - 1); //100kHz
 	// T = 1/f = 1/100k = 0,00001 ; time = Period * T = 0,1s
 	TimHandle4.Init.ClockDivision = 0;
@@ -252,48 +268,54 @@ static void TIM_Config(void) {
 	if(HAL_TIM_OC_Init(&TimHandle4) != HAL_OK) {
 		Error_Handler();
 	}
-	
-	TimHandle8.Instance = TIM8; //ADC
-	TimHandle8.Init.Period = 0x3C;          
-	TimHandle8.Init.Prescaler = 0;       
-	TimHandle8.Init.ClockDivision = 0;    
-	TimHandle8.Init.CounterMode = TIM_COUNTERMODE_UP;
-	TimHandle8.Init.RepetitionCounter = 0x0;
-	if(HAL_TIM_Base_Init(&TimHandle8) != HAL_OK) {
-		Error_Handler();
-	}
-	
-	/*##-2- Configure the Output Compare channels #########################################*/
-	sConfig.OCMode = TIM_OCMODE_TOGGLE;
-	sConfig.Pulse = uhCCR1_Val;
-	sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
-	if(HAL_TIM_OC_ConfigChannel(&TimHandle3, &sConfig, TIM_CHANNEL_1) != HAL_OK) {
-		Error_Handler();
-	}
 	if(HAL_TIM_OC_ConfigChannel(&TimHandle4, &sConfig, TIM_CHANNEL_2) != HAL_OK) {
-		Error_Handler();
-	}
-	
-	/*##-3- Start signals generation #######################################*/
-	/* Start channel 1 in Output compare mode */
-	if(HAL_TIM_OC_Start_IT(&TimHandle3, TIM_CHANNEL_1) != HAL_OK) {
 		Error_Handler();
 	}
 	if(HAL_TIM_OC_Start_IT(&TimHandle4, TIM_CHANNEL_2) != HAL_OK) {
 		Error_Handler();
 	}
-
-	/* TIM8 TRGO selection */
+	
+	/*########## TIM8 peripheral - ADC ##########*/
+	TimHandle8.Instance = TIM8;
+	TimHandle8.Init.Period = 0x3C;
+	TimHandle8.Init.Prescaler = 0;
+	TimHandle8.Init.ClockDivision = 0;
+	TimHandle8.Init.CounterMode = TIM_COUNTERMODE_UP;
+	TimHandle8.Init.RepetitionCounter = 0x0;
+	if(HAL_TIM_Base_Init(&TimHandle8) != HAL_OK) {
+		Error_Handler();
+	}
+	// TIM8 TRGO selection:
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if(HAL_TIMEx_MasterConfigSynchronization(&TimHandle8, &sMasterConfig) != HAL_OK) {
 		Error_Handler(); //TIM8 TRGO selection Error
 	}
-	
-	/*##-4- TIM8 counter enable ################################################*/ 
 	if(HAL_TIM_Base_Start(&TimHandle8) != HAL_OK) {
 		Error_Handler(); //Counter Enable Error
 	}
+	
+	/*########## TIM1 peripheral - PWM ##########*/
+	/*TimHandle1.Instance = TIM1;
+	TimHandle1.Init.Period = uhTimerPeriod;
+	TimHandle1.Init.RepetitionCounter = 3;
+	TimHandle1.Init.Prescaler = 0;
+	TimHandle1.Init.ClockDivision = 0;
+	TimHandle1.Init.CounterMode = TIM_COUNTERMODE_UP;
+	if(HAL_TIM_PWM_Init(&TimHandle1) != HAL_OK) {
+		Error_Handler();
+	}
+	// Configure the PWM channel 3:
+	sConfig.OCMode = TIM_OCMODE_PWM1;
+	sConfig.OCPolarity = TIM_OCPOLARITY_HIGH;
+	sConfig.Pulse = aCCValue_Buffer;
+	if(HAL_TIM_PWM_ConfigChannel(&TimHandle1, &sConfig, TIM_CHANNEL_3) != HAL_OK) {
+		Error_Handler();
+	}
+	// Start PWM signal generation in DMA mode:
+	if(HAL_TIM_PWM_Start_DMA(&TimHandle1, TIM_CHANNEL_3, &aCCValue_Buffer, 1) != HAL_OK) {
+		Error_Handler();
+	}*/
 }
 
 /**
@@ -341,13 +363,14 @@ static void ADC_Config(void) {
 /**
   * @brief  Conversion complete callback in non blocking mode 
   * @param  AdcHandle : ADC handle
-  * @note   This example shows a simple way to report end of conversion, and 
-  *         you can add your own implementation.    
   * @retval None
   */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
-	/* Get the converted value of regular channel */
 	uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
+	/*if(uhADCxConvertedValue >= 0 || uhADCxConvertedValue <= 1024) {
+		uhADCxConvertedValuePercent = uhADCxConvertedValue / 10.24; // 100% = 1024
+	}*/
+	//aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
 }
 
 #ifdef  USE_FULL_ASSERT

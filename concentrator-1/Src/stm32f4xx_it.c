@@ -55,6 +55,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern ADC_HandleTypeDef    AdcHandle;
+extern TIM_HandleTypeDef	TimHandle1;
 extern TIM_HandleTypeDef	TimHandle3;
 extern TIM_HandleTypeDef	TimHandle4;
 
@@ -210,6 +211,15 @@ void EXTI15_10_IRQHandler(void) {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15); //Button
 }
 
+/**
+* @brief  This function handles DMA interrupt request.
+* @param  None
+* @retval None
+*/
+/*void DMA2_Stream6_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(TimHandle1.hdma[TIM_DMA_ID_CC3]);
+}*/
 
 /**
   * @}
