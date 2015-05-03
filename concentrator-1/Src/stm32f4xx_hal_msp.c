@@ -129,7 +129,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
   * @param htim: TIM handle pointer
   * @retval None
   */
-/*void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) {
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) {
 	GPIO_InitTypeDef   GPIO_InitStruct;
 	static DMA_HandleTypeDef  hdma_tim;
 
@@ -172,7 +172,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 	// NVIC configuration for DMA transfer complete interrupt:
 	HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 0, 0);   
 	HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
-}*/
+}
 
 /**
   * @brief  Initializes the Global MSP.

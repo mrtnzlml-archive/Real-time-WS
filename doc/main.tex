@@ -7,6 +7,9 @@
 \usepackage{pdfpages}
 \usepackage{textcomp}
 \usepackage{float} % figure [H]
+\usepackage{pgfplots} % tikzpicture
+\usepackage{amsmath} % linebreaks in math mode
+
 \hypersetup{
 	colorlinks,
 	citecolor=blue,
@@ -15,6 +18,10 @@
 	urlcolor=blue
 }
 \addto\captionsczech{\renewcommand{\chaptername}{}} %remove "chapter" word
+
+\pgfplotsset{major grid style={lightgray!50!white}}
+\pgfplotsset{soldot/.style={color=blue,only marks,mark=*}}
+\pgfplotsset{holdot/.style={color=blue,fill=white,only marks,mark=*}}
 
 %TODO někde nazačátku objasnit pojem koncentrátor
 %TODO zkontrolovat použití všech zdrojů

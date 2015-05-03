@@ -17,7 +17,7 @@
             UDP IP:
             <code><span id="<%= device_name %>_udp_ip"><%= device_data.ip %>:<%= device_data.udp_port %></span></code>
         </p>
-        <p>Message count: <span id="<%= device_name %>_msg_count"><%= device_data.msg_count %></span></p>
+        <p>Message count: <span id="<%= device_name %>_msg_count"><%= device_data.msg_count.replace(/\B(?=(\d{3})+(?!\d))/g, " ") %></span></p>
         <p>Last ping: <span id="<%= device_name %>_last_ping"><%= new Date(Number(device_data.last_ping)) %></span></p>
         <p>
             Connectable devices:
@@ -33,15 +33,36 @@
             <a href="/disconnect/<%= device_name %>/<%= connectedDevice %>"><%= connectedDevice %></a>&nbsp;
             <% }); %>
         </p>
-        <p>
-            Function:
-            <select>
-                <option value="linear">Linear (normal)</option>
-            </select>
-            (<span style="color:green">Already applied</span>)
-        </p>
 
-        <!--<div id="area" class="epoch category20c" style="height: 200px;"></div>-->
+        <form action="/device/function-change/<%= device_name %>" id="function-form" method="POST">
+            <p>
+                <label for="function">Function:</label>
+                <select id="function" name="function">
+                    <option value="linear" <%= device_data.function == 'linear' ? 'selected=selected' : '' %>>Linear (normal)</option>
+                    <option value="exponential" <%= device_data.function == 'exponential' ? 'selected=selected' : '' %>>Exponential</option>
+                    <option value="logarithmic" <%= device_data.function == 'logarithmic' ? 'selected=selected' : '' %>>Logarithmic</option>
+                    <option value="wavy" <%= device_data.function == 'wavy' ? 'selected=selected' : '' %>>Wavy</option>
+                    <option value="boolean" <%= device_data.function == 'boolean' ? 'selected=selected' : '' %>>Boolean</option>
+                </select>
+                <span id="saved" style="color:green;display:none"><strong>SAVED</strong></span>
+            </p>
+        </form>
+
+        <style>
+            path {
+                stroke: steelblue;
+                stroke-width: 2;
+                fill: none;
+            }
+            .axis path,
+            .axis line {
+                fill: none;
+                stroke: #333;
+                stroke-width: 1;
+            }
+        </style>
+        <div id="chart"></div>
+
     </div>
 </div>
 <div class="links">

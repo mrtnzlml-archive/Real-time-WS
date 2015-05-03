@@ -31,6 +31,7 @@ module.exports = function UDPHook(sails) {
                                     RedisService.hgetall('device:' + device, function (err, result) {
                                         //FIXME: vytvořit zde prodlevu - odesílají se moc rychle
                                         if (result.active == 'true') {
+                                            //TODO: použít data z převodní tabulky
                                             var message = new Buffer(reply);
                                             udpSocket.send(message, 0, message.length, result.udp_port, result.ip);
                                             sails.log('Sending data from ' + device + ' (' + reply + ') to ' + connected + ' (' + result.ip + ':' + result.udp_port + ')');
@@ -43,7 +44,7 @@ module.exports = function UDPHook(sails) {
                         });
                     });
                 });
-            }, 100);
+            }, 50);
 
         },
         initialize: function (cb) { // Runs automatically when the hook initializes

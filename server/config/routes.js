@@ -33,6 +33,7 @@ module.exports.routes = {
 
     '/': 'HomepageController',
     '/homepage': '/',
+    '/device/function-change/:device': 'DeviceController.function_change',
     '/device/:device': 'DeviceController',
     '/connect/:from/:to': 'ConnectController',
     '/disconnect/all/:from': 'DisconnectController.all',

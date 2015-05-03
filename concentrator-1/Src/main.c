@@ -24,7 +24,7 @@ TIM_OC_InitTypeDef sConfig; // Timer Output Compare Configuration Structure decl
 struct netif gnetif;
 
 __IO uint16_t uhADCxConvertedValue = 0; // Variable used to get converted value
-__IO uint16_t uhADCxConvertedValuePercent = 0; // Variable used to get converted value in percent
+__IO uint16_t uhADCxConvertedValuePercent = 50; // Variable used to get converted value in percent
 
 uint32_t aCCValue_Buffer = 0;
 uint32_t uhTimerPeriod  = 0; // Timer Period
@@ -57,8 +57,8 @@ int main(void) {
 	
 	/* Compute the value of ARR regiter to generate signal frequency at 17.57 Khz */
 	uhTimerPeriod = (uint32_t) ((SystemCoreClock / 17570 ) - 1);
-	/* Compute CCR1 value to generate a duty cycle at ?% */
-	//aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
+	/* Compute CCR1 value to generate a duty cycle at 50% at the beggining */
+	aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
 
 	TIM_Config(); //TIM3, TIM4, TIM8 Peripheral Configuration
 	ADC_Config(); //Configure the ADC3 peripheral
@@ -296,7 +296,7 @@ static void TIM_Config(void) {
 	}
 	
 	/*########## TIM1 peripheral - PWM ##########*/
-	/*TimHandle1.Instance = TIM1;
+	TimHandle1.Instance = TIM1;
 	TimHandle1.Init.Period = uhTimerPeriod;
 	TimHandle1.Init.RepetitionCounter = 3;
 	TimHandle1.Init.Prescaler = 0;
@@ -315,7 +315,7 @@ static void TIM_Config(void) {
 	// Start PWM signal generation in DMA mode:
 	if(HAL_TIM_PWM_Start_DMA(&TimHandle1, TIM_CHANNEL_3, &aCCValue_Buffer, 1) != HAL_OK) {
 		Error_Handler();
-	}*/
+	}
 }
 
 /**
@@ -366,11 +366,15 @@ static void ADC_Config(void) {
   * @retval None
   */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
-	uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);
-	/*if(uhADCxConvertedValue >= 0 || uhADCxConvertedValue <= 1024) {
-		uhADCxConvertedValuePercent = uhADCxConvertedValue / 10.24; // 100% = 1024
-	}*/
-	//aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
+	uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);	
+	if(uhADCxConvertedValue <= 0) {
+		uhADCxConvertedValuePercent = 0;
+	} else if(uhADCxConvertedValue >= 1023) {
+		uhADCxConvertedValuePercent = 100;
+	} else {
+		uhADCxConvertedValuePercent = (uhADCxConvertedValue * 100) / 1023; // 100% = 1023
+	}
+	aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -381,10 +385,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed(uint8_t* file, uint32_t line)
-{ 
+void assert_failed(uint8_t* file, uint32_t line) { 
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  while (1) {}
+	printf("Wrong parameters value: file %s on line %d\r\n", file, line);
+	while (1) {}
 }
 #endif

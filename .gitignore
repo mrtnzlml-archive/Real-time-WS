@@ -7,7 +7,9 @@ server/node_modules/*
 *.synctex.gz
 *.toc
 *.zip
+*.log
 
 STM3240G-EVAL
+Thumbs.db
 
 !.keep

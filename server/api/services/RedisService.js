@@ -41,6 +41,9 @@ module.exports = {
     lpush: function () {
         redisClient.lpush.apply(redisClient, arguments);
     },
+    rpush: function () {
+        redisClient.rpush.apply(redisClient, arguments);
+    },
     lrange: function () {
         redisClient.lrange.apply(redisClient, arguments);
     },

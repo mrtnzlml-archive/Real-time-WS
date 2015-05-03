@@ -22,7 +22,19 @@ module.exports = {
     },
 
     release: function (req, res) {
-        //TODO: vymazat všechny vazby, který ukazují na req.param('from')
+        RedisService.smembers('devices', function (err, result) {
+            result.forEach(function (device) {
+                RedisService.sismember('connection:' + device, req.param('from'), function (err, result) {
+                    if (result) { // FROM device exists
+                        sails.log('Releasing connection (from device ' + device + ' to ' + req.param('from') + ')');
+                        RedisService.srem('connection:' + device, req.param('from'), function (err, result) {
+                            sails.log('Connection successfully released (from device ' + device + ' to ' + req.param('from') + ')');
+                        });
+                    }
+                });
+            });
+        });
+        req.flash('success', 'All connections has been released successfully.');
         res.redirect(req.header('Referer') || '/');
     }
 

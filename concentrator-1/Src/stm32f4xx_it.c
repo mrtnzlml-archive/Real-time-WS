@@ -216,10 +216,10 @@ void EXTI15_10_IRQHandler(void) {
 * @param  None
 * @retval None
 */
-/*void DMA2_Stream6_IRQHandler(void)
+void DMA2_Stream6_IRQHandler(void)
 {
   HAL_DMA_IRQHandler(TimHandle1.hdma[TIM_DMA_ID_CC3]);
-}*/
+}
 
 /**
   * @}
