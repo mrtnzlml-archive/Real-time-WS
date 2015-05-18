@@ -22,21 +22,33 @@ module.exports = function UDPHook(sails) {
                 sails.log('Starting UDP server (port ' + sails.config.globals.UDP_PORT + ')...');
             });
 
+            var previous = {};
             setInterval(function () {
+                //get all devices
                 RedisService.smembers('devices', function (err, devices) {
                     devices.forEach(function (device) {
+                        //for each device get all connections
                         RedisService.smembers('connection:' + device, function (err, connected) {
+                            //if there is connected device
                             if (connected.length) {
+                                //get last data information from device #label-1
                                 RedisService.lindex(device + ':data', 0, function (err, reply) {
-                                    RedisService.hgetall('device:' + device, function (err, result) {
-                                        //FIXME: vytvořit zde prodlevu - odesílají se moc rychle
+                                    //get all info about connected device
+                                    RedisService.hgetall('device:' + connected, function (err, result) {
+                                        //and if device is active, send it data from #label-1
                                         if (result.active == 'true') {
-                                            //TODO: použít data z převodní tabulky
-                                            var message = new Buffer(reply);
-                                            udpSocket.send(message, 0, message.length, result.udp_port, result.ip);
-                                            sails.log('Sending data from ' + device + ' (' + reply + ') to ' + connected + ' (' + result.ip + ':' + result.udp_port + ')');
-                                            RedisService.hincrby('device:' + device, 'msg_count', 1);
-                                            RedisService.incr('msg_count');
+                                            RedisService.hget(device + ':table', Number(reply), function (err, newValue) {
+                                                if (newValue == previous[device]) { //Lazy sending
+                                                    //sails.log('I\'m lazy...');
+                                                    //return;
+                                                }
+                                                previous[device] = newValue;
+                                                var message = new Buffer(newValue);
+                                                udpSocket.send(message, 0, message.length, result.udp_port, result.ip);
+                                                sails.log.silly('Sending "' + message + '" from ' + device + ' to ' + connected + ' (' + result.ip + ':' + result.udp_port + ')');
+                                                RedisService.hincrby('device:' + device, 'msg_count', 1);
+                                                RedisService.incr('msg_count');
+                                            });
                                         }
                                     });
                                 });
@@ -44,7 +56,7 @@ module.exports = function UDPHook(sails) {
                         });
                     });
                 });
-            }, 50);
+            }, 10);
 
         },
         initialize: function (cb) { // Runs automatically when the hook initializes

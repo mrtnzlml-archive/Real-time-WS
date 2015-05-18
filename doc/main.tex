@@ -1,4 +1,4 @@
-\documentclass[oneside,12pt,a4paper,final]{book} %opt: draft/final (oneside/twoside, openany/openright)
+\documentclass[oneside,12pt,a4paper,draft]{book} %opt: draft/final (oneside/twoside, openany/openright)
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
@@ -9,6 +9,7 @@
 \usepackage{float} % figure [H]
 \usepackage{pgfplots} % tikzpicture
 \usepackage{amsmath} % linebreaks in math mode
+\usepackage{dirtree}
 
 \hypersetup{
 	colorlinks,
@@ -63,40 +64,45 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \pagenumbering{roman}
 \input{abstract.tex}
 \input{prohlaseni.tex}
-%\input{podekovani.tex}
+\input{podekovani.tex} %TODO (?)
 
 \tableofcontents
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
-%\cleardoublepage
-% \phantomsection
-%\addcontentsline{toc}{chapter}{\listtablename}
-%\listoftables
-
 
 
 \chapter*{Seznam symbolů a zkratek}
+\addcontentsline{toc}{chapter}{Seznam symbolů a zkratek}
 \noindent
 \begin{abbreviations}
+\item[ADC]		Analog-to-Digital Converter
 \item[AJAX]		Asynchronous JavaScript and XML
 \item[AJAJ]		Asynchronous JavaScript and JSON
 \item[BGA]		Ball Grid Array
+\item[BSP]		Board Support Package
 \item[CAN]		Controller Area Network
 \item[CPU]		Central Processing Unit
 \item[DHCP]		Dynamic Host Configuration Protocol
 \item[EDA]		Event-Driven Architecture
+\item[EJS]		Embedded JavaScript
+\item[HAL]		Hardware Abstraction Layer
 \item[HTTP]		Hypertext Transfer Protocol
+\item[I/O]		Input/Output
 \item[IP]		Internet Protocol
+\item[JS]		JavaScript
 \item[JSON]		JavaScript Object Notation
 \item[JSONP]	JSON with padding
 \item[MAC]		Media Access Control
 \item[MVC]		Model View Controller
+\item[NPM]		Node Package Manager
+\item[PWM]		Pulse Width Modulation
 \item[RAM]		Random-Access Memory
 \item[RESP]		Redis Serialization Protocol
 \item[RFC]		Request for Comments
 \item[RTT]		Round Trip Time
+\item[SMA]		Simple Moving Average
 \item[TCP]		Transmission Control Protocol
 \item[UDP]		User Datagram Protocol
 \item[UTP]		Unshielded Twisted Pair
@@ -104,7 +110,6 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \item[XHR]		XMLHttpRequest
 \item[XML]		Extensible Markup Language
 \end{abbreviations}
-\addcontentsline{toc}{chapter}{Seznam symbolů a zkratek}
 
 
 
@@ -118,6 +123,8 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 
 
 \begin{thebibliography}{99}
+%TODO pořádně doplnit zdroje
+
 \bibitem{rfc6455}{\em I. Fette, Google Inc., A. Melnikov, Isode Ltd.:} {\bf The WebSocket Protocol} \url{https://tools.ietf.org/html/rfc6455}
 
 \bibitem{real-time}{\em University of Telecommunications, Leipzig, Sebastian Lammermann:} {\bf Ethernet as a Real-Time Technology} \url{http://www.lammermann.eu/wb/media/documents/real-time_ethernet.pdf}
@@ -141,6 +148,18 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \bibitem{openwrt}{\em OpenWrt} {\bf Linux distribution for embedded devices} \url{https://openwrt.org/}
 
 \bibitem{tessel}{\bf Tessel 2:} \url{https://tessel.io/}
+
+\bibitem{cluster}{\bf Node.js - Cluster:} \url{https://nodejs.org/api/cluster.html}
+
+\bibitem{v8}{V8 JavaScript Engine} \url{https://code.google.com/p/v8/}
+
+\bibitem{heroku}{Heroku:} \url{https://www.heroku.com/}
+
+\bibitem{forever}{\em Forever:} {\bf A simple CLI tool for ensuring that a given script runs continuously:} \url{https://github.com/foreverjs/forever}
+
+\bibitem{q}{\em Q:} {\bf A tool for creating and composing asynchronous promises in JavaScript} \url{http://documentup.com/kriskowal/q/}
+
+\bibitem{socket}{Socket.IO} \url{http://socket.io/}
 
 %TODO nepoužito:
 \bibitem{hal}{\em STMicroelectronics:} {\bf Description of STM32F4xx HAL drivers} \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00105879.pdf}

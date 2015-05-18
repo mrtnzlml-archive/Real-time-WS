@@ -1,5 +1,5 @@
-\BOOKMARK [0][-]{section*.7}{Seznam obr\341zku}{}% 1
-\BOOKMARK [0][-]{chapter*.9}{Seznam symbolu a zkratek}{}% 2
+\BOOKMARK [0][-]{section*.8}{Seznam obr\341zku}{}% 1
+\BOOKMARK [0][-]{chapter*.10}{Seznam symbolu a zkratek}{}% 2
 \BOOKMARK [0][-]{chapter.1}{\332vod}{}% 3
 \BOOKMARK [0][-]{chapter.2}{Real-time komunikace}{}% 4
 \BOOKMARK [1][-]{section.2.1}{Hardwarov\351 prostredky senzorick\351 s\355te}{chapter.2}% 5
@@ -8,8 +8,8 @@
 \BOOKMARK [1][-]{section.2.4}{UDP}{chapter.2}% 8
 \BOOKMARK [0][-]{chapter.3}{Volba vhodn\351 technologie}{}% 9
 \BOOKMARK [1][-]{section.3.1}{Prvky senzorick\351 s\355te}{chapter.3}% 10
-\BOOKMARK [2][-]{subsection.3.1.1}{Procesor STM32F207IGH6}{section.3.1}% 11
-\BOOKMARK [2][-]{subsection.3.1.2}{Procesor STM32F457IGH6}{section.3.1}% 12
+\BOOKMARK [2][-]{subsection.3.1.1}{Mikrokontrol\351r STM32F207IGH6}{section.3.1}% 11
+\BOOKMARK [2][-]{subsection.3.1.2}{Mikrokontrol\351r STM32F457IGH6}{section.3.1}% 12
 \BOOKMARK [1][-]{section.3.2}{Real-time server}{chapter.3}% 13
 \BOOKMARK [1][-]{section.3.3}{Datab\341zov\375 server}{chapter.3}% 14
 \BOOKMARK [2][-]{subsection.3.3.1}{Redis kl\355ce}{section.3.3}% 15
@@ -23,9 +23,12 @@
 \BOOKMARK [2][-]{subsection.3.3.9}{RESP protokol}{section.3.3}% 23
 \BOOKMARK [1][-]{section.3.4}{Webov\341 aplikace}{chapter.3}% 24
 \BOOKMARK [0][-]{chapter.4}{Struktura programov\351ho re\235en\355}{}% 25
-\BOOKMARK [1][-]{section.4.1}{Komunikace koncentr\341tor - server}{chapter.4}% 26
-\BOOKMARK [1][-]{section.4.2}{Komunikace server - koncentr\341tor}{chapter.4}% 27
-\BOOKMARK [1][-]{section.4.3}{Komunikace server - webov\341 aplikace}{chapter.4}% 28
-\BOOKMARK [0][-]{chapter.5}{Praktick\341 aplikace}{}% 29
-\BOOKMARK [0][-]{chapter.6}{Roz\235\355ren\355 st\341vaj\355c\355ho re\235en\355}{}% 30
-\BOOKMARK [0][-]{chapter.7}{Z\341ver}{}% 31
+\BOOKMARK [1][-]{section.4.1}{Koncentr\341tory}{chapter.4}% 26
+\BOOKMARK [2][-]{subsection.4.1.1}{Komunikace se serverem}{section.4.1}% 27
+\BOOKMARK [2][-]{subsection.4.1.2}{Pr\355jem dat ze serveru}{section.4.1}% 28
+\BOOKMARK [1][-]{section.4.2}{Real-time Server}{chapter.4}% 29
+\BOOKMARK [2][-]{subsection.4.2.1}{Komunikace s koncentr\341tory}{section.4.2}% 30
+\BOOKMARK [2][-]{subsection.4.2.2}{Webov\375 server}{section.4.2}% 31
+\BOOKMARK [0][-]{chapter.5}{Praktick\341 aplikace}{}% 32
+\BOOKMARK [0][-]{chapter.6}{Roz\235\355ren\355 st\341vaj\355c\355ho re\235en\355}{}% 33
+\BOOKMARK [0][-]{chapter.7}{Z\341ver}{}% 34

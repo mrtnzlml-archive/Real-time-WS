@@ -27,6 +27,9 @@ module.exports = {
     hmget: function () {
         redisClient.hmget.apply(redisClient, arguments);
     },
+    hget: function () {
+        redisClient.hget.apply(redisClient, arguments);
+    },
     hgetall: function () {
         redisClient.hgetall.apply(redisClient, arguments);
     },

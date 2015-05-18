@@ -18,6 +18,7 @@ $(function () {
     });
 
     var n = 300, gdata = d3.range(n);
+    //FIXME: při nastartování historie, nebo nuly...
     var margin = {top: 20, right: 20, bottom: 20, left: 50},
         width = 750 - margin.left - margin.right,
         height = 200 - margin.top - margin.bottom;
@@ -80,17 +81,6 @@ $(function () {
 setTimeout(function sunrise() {
     document.getElementsByClassName('header')[0].style.backgroundColor = '#2980b9';
 }, 0);
-
-//io.socket.on('data', function (data) {
-//    var result = String(data).match(/([a-z]{4}_[0-9]{6}):(.*)/i);
-//    if (result) {
-//        var device = result[1];
-//        var data_element = document.getElementById(device);
-//        if (data_element) {
-//            data_element.innerHTML = result[2];
-//        }
-//    }
-//});
 
 io.socket.on('status', function (data) {
     var result = String(data).match(/([a-z]{4}_[0-9]{6}):(.*)/i);

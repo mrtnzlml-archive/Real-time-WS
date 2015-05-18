@@ -14,6 +14,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern __IO uint16_t uhADCxConvertedValue;
+extern __IO uint16_t uhADCxConvertedValuePercent;
+extern uint32_t aCCValue_Buffer;
+extern uint32_t uhTimerPeriod;
 
 /* Private function prototypes -----------------------------------------------*/
 void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr *addr, u16_t port);
@@ -89,17 +92,21 @@ void concentrator_send() {
   */
 void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, struct ip_addr *addr, u16_t port) {
 	BSP_LED_Toggle(LED4);
+
 	//int len = p->tot_len;
 	char *pc = (char *)p->payload;
-	char *delimiter = "+:\r\n";
-	char *token = strtok(pc, delimiter);
-	while(token != NULL) {
-		if (strcmp(token, "PING") == 0) {
-			BSP_LED_Toggle(LED4);
-		} else {
-			//...
-		}
-		token = strtok(NULL, delimiter);
+	
+	char *ptr;
+	uint16_t value = strtol(pc, &ptr, 10);
+	
+	if(value <= 0) {
+		uhADCxConvertedValuePercent = 0;
+	} else if(value >= 1023) {
+		uhADCxConvertedValuePercent = 100;
+	} else {
+		uhADCxConvertedValuePercent = (value * 100) / 1023; // 100% = 1023
 	}
+	aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
+
 	pbuf_free(p); //Free receive pbuf
 }

@@ -367,14 +367,6 @@ static void ADC_Config(void) {
   */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle) {
 	uhADCxConvertedValue = HAL_ADC_GetValue(AdcHandle);	
-	if(uhADCxConvertedValue <= 0) {
-		uhADCxConvertedValuePercent = 0;
-	} else if(uhADCxConvertedValue >= 1023) {
-		uhADCxConvertedValuePercent = 100;
-	} else {
-		uhADCxConvertedValuePercent = (uhADCxConvertedValue * 100) / 1023; // 100% = 1023
-	}
-	aCCValue_Buffer = (uint32_t)(((uint32_t) uhADCxConvertedValuePercent * (uhTimerPeriod - 1)) / 100);
 }
 
 #ifdef  USE_FULL_ASSERT

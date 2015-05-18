@@ -194,7 +194,7 @@ static err_t tcp_echoclient_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
     tcp_message_count++;
          
     /* Acknowledge tcp_data reception */
-    tcp_recved(tpcb, p->tot_len);  
+    tcp_recved(tpcb, p->tot_len);
     
     pbuf_free(p);
     tcp_echoclient_connection_close(tpcb, es);

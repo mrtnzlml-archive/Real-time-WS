@@ -1,7 +1,6 @@
 module.exports = function WebsocketHook(sails) {
     return {
         start: function () {
-            //TODO: sails.sockets (see: http://sailsjs.org/#/documentation/reference/websockets/sails.sockets)
             sails.io.on('connection', function (socket) {
                 RedisService.smembers('devices', function (err, result) {
                     socket.emit('devices', result);

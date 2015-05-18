@@ -8,7 +8,7 @@ Vzhled a ovládání celé aplikace je velmi jednoduché a intuitivní. Na úvod
 	\label{fig:speedy1}
 \end{figure}
 
-Detail konkrétního zařízení poskytuje podobný pohled, navíc však ukazuje dodatečné informace jako jsou například IP adresy, nebo čas posledního ohlášení. Kromě samotné vizualizace historie příchozích dat je možné nastavit charakter dat odchozích. To znamená, že když bude připojeno další zařízení, nebudou se data rovnou přeposílat, ale najde se příslušná hodnota podle zvolené funkce a tato hodnota se pošle. Ve výchozím stavu se vše chová lineárně, tzn. jaká informace přijde, taková se přeposílá. Je však možné zvolit exponenciální viz rovnice \ref{eq:exp}, logaritmický \ref{eq:log}, nebo vlnitý charakter \ref{eq:vlna}. Poslední variantou je boolean závislost, kdy do hodnoty 512 včetně je výstupem 0, jinak maximální hodnota.
+Detail konkrétního zařízení poskytuje podobný pohled, navíc však ukazuje dodatečné informace jako jsou například IP adresy, nebo čas posledního ohlášení. Kromě samotné vizualizace historie příchozích dat je možné nastavit charakter dat odchozích. To znamená, že když bude připojeno další zařízení, nebudou se data rovnou přeposílat, ale najde se příslušná hodnota podle zvolené funkce a tato hodnota se pošle. Ve výchozím stavu se vše chová lineárně, tzn. jaká informace přijde, taková se přeposílá. Je však možné zvolit exponenciální viz rovnice \ref{eq:exp}, logaritmický \ref{eq:log}, nebo vlnitý charakter \ref{eq:vlna}. Poslední variantou je boolean závislost, kdy do hodnoty 512 včetně je výstupem 0, jinak maximální hodnota. Lze ji tedy definovat jako upravenou Heavisideovu funkci \ref{eq:bool}.
 
 \begin{equation}
 	y_{\_exp} = 1.80753 \cdot 1.00625^x
@@ -26,9 +26,36 @@ Detail konkrétního zařízení poskytuje podobný pohled, navíc však ukazuje
 	\label{eq:vlna}
 \end{multline}
 
-\begin{figure}[H]
+\begin{equation}
+	y_{\_bool} = \left\{
+		\begin{matrix}
+			0 & \mbox{ pro }x \leq 512 \\
+			1023 & \mbox{ pro }x > 512
+		\end{matrix}
+	\right.
+	\label{eq:bool}
+\end{equation}
+
+Tyto funkce jsou naprogramovány ve složce \texttt{api/services} v souboru \texttt{FunctionsService.js}. Ukázková implementace logaritmické funkce vypadá takto:
+
+\begin{minted}[linenos,breaklines]{js}
+logarithmic: function (device, after_callback) {
+  RedisService.del(device + ':table');
+  for (var iterator = 0; iterator <= 1023; iterator++) {
+    var entry = -1053.96 + (289.931 * (Math.log(iterator) / Math.log(Math.exp(1))));
+    entry = entry <= 0 ? 0 : entry;
+    entry = entry >= 1023 ? 1023 : entry;
+    RedisService.hmset(device + ':table', iterator, Math.round(entry));
+  }
+  after_callback();
+},
+\end{minted}
+
+Funkce tedy nejdříve maže předchozí převodní tabulku a následně ukládá nové vypočtené hodnoty. Pomocí ternárního operátoru jsou pak implementovány omezovače hodnot.
+
+\begin{figure}[h]
 	\begin{tikzpicture}
-		\begin{axis}[width=1\textwidth,height=1\textwidth,xlabel={Vstupní hodnoty},ylabel={Výstupní hodnoty},legend style={at={(0.98,0.11)},anchor=east},grid=major]
+		\begin{axis}[width=0.95\textwidth,height=0.7\textwidth,xlabel={Vstupní hodnoty},ylabel={Výstupní hodnoty},legend style={at={(0.99,0.15)},anchor=east},grid=major]
 			\addplot[red,domain=0:1024,samples=10]{x};
 			\addlegendentry{Linerání závislost}
 			\addplot[blue,domain=0:1024,samples=100]{1.80753*(1.00625^x)};
@@ -42,6 +69,10 @@ Detail konkrétního zařízení poskytuje podobný pohled, navíc však ukazuje
 	\caption{Převodní funkce vstupních hodnot}
 \end{figure}
 
+Cílem této ukázky je ještě jednou znázornit, že celý systém pracuje na základě přeposílání jasně daných informací, které jsou realizovány pomocí jednoduchých čísel. Je tak možné provádět jakékoliv matematické operace bez nutnosti znalosti významu této informace. Tento přístup však není ideální. V první řadě se až postupem času ukázalo, že rozsah 1024 hodnot je pro určité případy malý. To se projevuje například u rychlých výstupů (řekněme diody). I při nejpomalejších změnách hodnot jsou tyto kroky rozpoznatelné. Jedná se o nepatrné změny, jsou však postřehnutelné. A to tím více, čím je nárůst hodnot strmější, tedy jak moc velká chyba vzniká v převodní tabulce. Jedno z možných řešení je zjemnění celého rozsahu, nebo neumožnění velkých skokových změn například pomocí některého z druhů klouzavého průměru. Je však zapotřebí myslet na to, že i tyto úpravy mají své nevýhody. V prvním případě množství hodnot a stále větší kmitání kolem jedné hodnoty, v druhém případě zpomalení systému.
+
+Jedním z možných vylepšení je tak dvojité chování serveru. Ten by totiž mohl přijímat jak převedené hodnoty, tak obecné hodnoty z čidla. Server by jim sice nemohl rozumět (pokud by neměl sám implementovanou převodní tabulku), ale mohl by informaci přeposílat dále do sítě. Tato funkce v současné době není implementovaná a to hlavně z toho důvodu, že je náročné tyto informace nějakým způsobem využívat a skladovat v databázi, protože se jedná o velmi konkrétní problémy vázané na konkrétního výrobce zařízení, nebo čidla. Oproti tomu číselná interpretace hodnot dobře ukazuje, co je v této síti možné vytvořit.
+
 \begin{figure}[h]
     \centering
 	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/speedy2.png}}
@@ -49,14 +80,16 @@ Detail konkrétního zařízení poskytuje podobný pohled, navíc však ukazuje
 	\label{fig:speedy2}
 \end{figure}
 
+Vzhledem ke svým vlastnostem je možné tuto síť použít jako domovní síť pro ovládání běžných prvků, což byl prvotní účel. Z hlediska technologie však tato síť není limitována pouze na ovládání elektroinstalace, ale je možné ji využít pro jakoukoliv senzorickou síť pro sběr dat a zároveň ovládání koncových členů. Její rozumné využití by bylo však tam, kde se bude struktura sítě často měnit, nebo zařízení přesouvat.
+
 \chapter{Rozšíření stávajícího řešení}
 Stávající řešení je plně funkční a splňuje veškeré požadavky v zadání. Jedná se však pouze o základ na kterém lze stavět systém, který by bylo možné použít v reálných budovách. Prvně je totiž zapotřebí tuto síť zabezpečit. To se týká zejména okamžiku, kdy by síť začala komunikovat přes WiFi (nebo jinou bezdrátovou technologii), ale platí to stejně i pro metalické vedení. Nesmí být možné, aby mohl kdokoliv ovlivňovat chování sítě, pokud k tomu není oprávněn.
 
-Dalším důležitým prvkem je implementace IPv6. V současné chvíli je totiž nepsaným předpokladem, že budou koncentrátory připojeny v privátní síti a využívají IPv4. Pokud by však měla síť fungovat i na veřejné síti, vzroste počet potřebných IP adres a již v tuto chvíli je jich nedostatek. Oproti tomu je IPv6 adres je $2^{128}$ \cite{ripe}, což je více než dostatek. V tomto projektu je použit LwIP stack, který IPv6 podporuje. Tato vlastnost není implementována, protože není potřeba. Pokud by se však projekt rozrostl do větších rozměrů, bylo by jej vhodné směřovat do stavu tzv. \uv{fog computingu}. To znamená, že se z původně převážně centralizovaného systému začne stávat silně distribuovaný a původně centralizovaná část sítě bude sloužit pouze pro analýzy a statistiky. Veškeré zpracování dat se bude odehrávat na krajích sítě. Tím se vyřeší například problém s latencí. Zde by již bylo krátkozraké uvažovat překlad IP adres v rámci intranetové sítě, protože jednotlivými koncovými členy sítě mohou být jakákoliv připojitelná zařízení, tedy například automobily, mobilní senzory atd. Překlad IP adres je tedy jednou z možností, ale otázku je, jestli to při tak velkém počtu adres má smysl.
+Dalším důležitým prvkem je implementace IPv6. V současné chvíli je totiž nepsaným předpokladem, že budou koncentrátory připojeny v privátní síti a využívají IPv4. Pokud by však měla síť fungovat i na veřejné síti, vzroste počet potřebných IP adres a již v tuto chvíli je jich nedostatek. Oproti tomu je IPv6 adres je $2^{128}$ \cite{ripe}\footnote{Ve skutečnosti je jich o něco méně viz článek od Chris Welsh \uv{Just how many IPv6 addresses are there? Really?} (\url{http://bit.ly/1Js6EpZ)}}, což je více než dostatek. V tomto projektu je použit LwIP stack, který IPv6 podporuje. Tato vlastnost není implementována, protože není potřeba. Pokud by se však projekt rozrostl do větších rozměrů, bylo by jej vhodné směřovat do stavu tzv. \uv{fog computingu}. To znamená, že se z původně převážně centralizovaného systému začne stávat silně distribuovaný a původně centralizovaná část sítě bude sloužit pouze pro analýzy a statistiky. Veškeré zpracování dat se bude odehrávat na krajích sítě. Tím se vyřeší například problém s latencí. Zde by již bylo krátkozraké uvažovat překlad IP adres v rámci intranetové sítě, protože jednotlivými koncovými členy sítě mohou být jakákoliv připojitelná zařízení, tedy například automobily, mobilní senzory atd. Překlad IP adres je tedy jednou z možností, ale otázku je, jestli to při tak velkém počtu adres má smysl.
 
 Vzhledem k tomu, že je v současné chvíli celá síť závislá na centrálním serveru, nelze následující požadavek jednoduše implementovat. Bylo by však vhodné, aby se server začal postupně přesouvat na samotné koncentrátory, až by jej vůbec nebylo potřeba. To by znamenalo server úplně horizontálně rozškálovat, což v současnou chvíli není možné. Jednak proto, že by se to z hlediska Node.js nedělalo dobře, jednak také proto, že koncentrátory mají poměrně malý výkon. Malý výkon v tom smyslu, že pro rozumné spuštění Node.js, nebo konkurenčního io.js je nutné Linuxové prostředí. Nicméně reálně fungující projekt využívající OpenWrt Linux \cite{openwrt} s io.js je například Tessel 2 (Cortex\texttrademark-M3 CPU - 180 MHz) \cite{tessel}. Tento krok by přiblížil celý projekt k naprosto autonomní síti, kde by se velmi jednoduše řešil například výpadek jednoho z koncentrátorů. Přestala by totiž fungovat pouze malá část sítě. Navíc by bylo možné částečně se zbavit metalických vodičů a vytvářet tzv. mesh sítě, což by ostatně bylo žádoucí. Každý koncentrátor by se mohl bez větší námahy připojit na všechny koncentrátory, které jsou poblíž.
 
-%TODO opravit následující tvrzení vit připomínky p. Krista
+%TODO opravit následující tvrzení viz připomínky p. Krista
 
 Dále je zajímavou myšlenkou implementovat real-time přenos i na komunikaci mezi koncentrátory a serverem např. Ethernet Powerlink. Zde je však otázka, jestli je tato implementace žádoucí, protože real-time přenos v tomto slova smyslu je právě časově vázaný a svým charakterem tak zpomaluje (i když zpřesňuje) přenos dat. V současné chvíli také není implementováno přijímání adres z DHCP serveru, kvůli jednoduchosti. Na funkcionalitě se nic nemění, je však možné pohodlně vyvíjet, bez nutnosti dalšího prvku v síti.
 

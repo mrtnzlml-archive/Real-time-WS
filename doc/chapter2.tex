@@ -11,7 +11,7 @@ Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontrol
 	\label{fig:eval-board}
 \end{figure}
 
-\subsection{Procesor STM32F207IGH6}
+\subsection{Mikrokontrolér STM32F207IGH6}
 \begin{itemize}
 \itemsep0em
 \item Jádro ARM 32-bit Cortex\texttrademark-M3 CPU (120 MHz max)
@@ -24,7 +24,7 @@ Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontrol
 \item CRC jednotka
 \end{itemize}
 
-\subsection{Procesor STM32F457IGH6}
+\subsection{Mikrokontrolér STM32F457IGH6}
 \begin{itemize}
 \itemsep0em
 \item Jádro ARM 32-bit Cortex\texttrademark-M4 CPU (168 MHz max)
@@ -47,15 +47,15 @@ var http = require('http');
 var PORT = 8000;
 
 var server = http.createServer(function(request, response) {
-	response.writeHead(200, {'content-type': 'text/html'});
-	response.write("<h1>hello</h1>\n");
-	setTimeout(function() {
-		response.end("<p>world</p>\n");
-	}, 2000);
+  response.writeHead(200, {'content-type': 'text/html'});
+  response.write("<h1>hello</h1>\n");
+  setTimeout(function() {
+    response.end("<p>world</p>\n");
+  }, 2000);
 });
 
 server.listen(PORT, function() {
-	console.log('Server is listening on port ' + PORT);
+  console.log('Server is listening on port ' + PORT);
 });
 \end{minted}
 

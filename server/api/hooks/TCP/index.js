@@ -5,6 +5,8 @@ module.exports = function TCPHook(sails) {
             var resp = require('node-resp');
 
             var server = net.createServer(function (socket) { //'connection' listener
+                var ip = socket.remoteAddress;
+                var port = socket.remotePort;
                 var responseParser = new resp.ResponseParser();
                 responseParser.on('response', function (response) {
                     if (response[0].toLowerCase() == 'ping') {
@@ -15,14 +17,20 @@ module.exports = function TCPHook(sails) {
                             if (result) {
                                 RedisService.hmset('device:' + device, 'last_ping', epoch);
                             } else {
-                                RedisService.sadd('devices', device);
-                                RedisService.hmset('device:' + device,
-                                    'ip', socket.remoteAddress,
-                                    'port', socket.remotePort,
-                                    'active', true,
-                                    'last_ping', epoch
-                                );
-                                sails.log('Added device ' + device);
+                                RedisService.sadd('devices', device, function (err, result) {
+                                    RedisService.hmset('device:' + device,
+                                        'ip', ip,
+                                        'port', port,
+                                        'active', true,
+                                        'last_ping', epoch,
+                                        'function', 'linear',
+                                        function (err, result) {
+                                            FunctionsService.linear(device, function () {
+                                                sails.log('Added device ' + device + ' (' + ip + ':' + port + ')');
+                                            });
+                                        }
+                                    );
+                                });
                             }
                             RedisService.hincrby('device:' + device, 'msg_count', 1);
                         });
