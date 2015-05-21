@@ -1,17 +1,18 @@
 \chapter{Volba vhodné technologie}
-Pro tuto síť nejsou v tuto chvíli stanoveny zadávající firmou žádné konkrétní požadavky na hardware. Proto je možné vybrat z hlediska softwarového řešení jakoukoliv platformu. Z hardwarového hlediska je doporučeno používat evaluační desky od STMicroelectronics. V následující části budu popisovat jednotlivé použité technologie a důvod jejich volby.
+Pro tuto síť nejsou v tuto chvíli stanoveny zadávající firmou žádné konkrétní požadavky na hardware. Proto je možné vybrat z hlediska softwarového řešení jakoukoliv platformu. Z hardwarového hlediska je doporučeno používat vývojové desky od STMicroelectronics. \index{STMicroelectronics} V následující části budu popisovat jednotlivé použité technologie a důvod jejich volby.
 
 \section{Prvky senzorické sítě}
-Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontroléry STM32F207IGH6 a STM32F457IGH6 s využitím oficiálních Cube knihoven \cite{cube}. Jedná se o 32-bit mikrokontroléry pro obecné použití. Pro oba mikrokontroléry dále platí, že mají 176 pinů s velikostí flash paměti 1024 KB v provedení pouzdra UFBGA pro běžné rozsahy teplot od -40 do 85 °C.
+Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontroléry STM32F207IGH6 a STM32F457IGH6 s využitím oficiálních Cube knihoven \cite{cube}. Jedná se o 32-bit mikrokontroléry pro obecné použití. Pro oba mikrokontroléry dále platí, že mají 176 pinů s velikostí flash paměti 1024 KB v provedení pouzdra UFBGA pro běžné rozsahy teplot od -40 do 85 °C. \index{Mikrokontrolér}
 
 \begin{figure}[h]
     \centering
 	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/eval_board.jpg}}
-	\caption{Použitá vývojová deska} %TODO dopsat typ (označení) desky
+	\caption{Použitá vývojová deska MB786 rev.B}
 	\label{fig:eval-board}
 \end{figure}
 
 \subsection{Mikrokontrolér STM32F207IGH6}
+\index{Mikrokontrolér STM32F207IGH6}
 \begin{itemize}
 \itemsep0em
 \item Jádro ARM 32-bit Cortex\texttrademark-M3 CPU (120 MHz max)
@@ -25,6 +26,7 @@ Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontrol
 \end{itemize}
 
 \subsection{Mikrokontrolér STM32F457IGH6}
+\index{Mikrokontrolér STM32F457IGH6}
 \begin{itemize}
 \itemsep0em
 \item Jádro ARM 32-bit Cortex\texttrademark-M4 CPU (168 MHz max)
@@ -40,7 +42,7 @@ Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontrol
 Veškeré vývojové desky s mikrokontroléry jsou připojeny pomocí klasických síťových prvků a UTP kabelů do serveru.
 
 \section{Real-time server}
-Jako real-time server, který obsluhuje celou síť i webovou aplikaci je zvolen Node.js \cite{nodejs}. Jedná se o platfomu postavenou nad V8 JavaScript Engine od společnosti Google. V8 je engine napsaný v C++, který využívá například prohlížeč Google Chrome jako jádro pro velmi rychlé zpracování javascriptu. Díky tomu je možné využívat téměř všech vlastností javascriptu, zejména pak single-thread asynchronní chování (non-blocking I/O model) a EDA architektury. Jedná se o velmi podobný engine jako je v prohlížeči Google Chrome s tím rozdílem, že Node.js neobsahuje možnost práce s oknem programu, nebo s dokumentem jako takovým, protože zde žádný není. Oproti tomu umožňuje přistupovat k process objektu, který zase není dostupný v prohlížečích. Následující ukázka ukazuje jednoduchý webový server napsaný právě s pomocí Node.js:
+Jako real-time \index{Real-time} server, který obsluhuje celou síť i webovou aplikaci je zvolen Node.js \cite{nodejs}. \index{Node.js} Jedná se o platfomu postavenou nad V8 JavaScript Engine od společnosti Google. V8 \index{V8} je engine napsaný v C++, který využívá například prohlížeč Google Chrome jako jádro pro velmi rychlé zpracování javascriptu. Díky tomu je možné využívat téměř všech vlastností javascriptu, zejména pak single-thread asynchronní chování (non-blocking I/O model) a EDA architektury. Jedná se o velmi podobný engine jako je v prohlížeči Google Chrome s tím rozdílem, že Node.js neobsahuje možnost práce s oknem programu, nebo s dokumentem jako takovým, protože zde žádný není. Oproti tomu umožňuje přistupovat k process objektu, který zase není dostupný v prohlížečích. Následující ukázka ukazuje jednoduchý webový server napsaný právě s pomocí Node.js:
 
 \begin{minted}[linenos,breaklines]{javascript}
 var http = require('http');
@@ -62,7 +64,7 @@ server.listen(PORT, function() {
 Tento server je zároveň vysoce škálovatelný a to hlavně do šíře. Je tak možné vytvořit velký počet vzájemně komunikujících uzlů (node), které spolu komunikují. Tyto uzly jsou však striktně odděleny (i na úrovni paměti) a nemohou se tak přímo ovlivňovat. Tento model je vhodný pro velmi vytížené aplikace, protože je možné potřebný výkon rozložit na velké množství méně výkonných strojů.
 
 \section{Databázový server}
-Na pozici databázového serveru byl zvolen Redis \cite{redis}. Redis je key-value databáze. Od nejrozšířenějších relačních databázích se liší například tím, že je násobně výkonnější a neobsahuje relace. Významným prvkem této databáze je právě vztah klíče a hodnoty, kdy hodnotu je možné ukládat do sedmi datových struktur (string, hash, list, set, sorted set, bitmap, hyperloglog). Velkou rychlost Redisu zajišťuje zejména to, že pracuje s RAM pamětí serveru. Přijaté hodnoty si nejdříve ukládá právě do paměti a následně je podle konfigurace ukládá na disk. Příklad výchozí konfigurace:
+Na pozici databázového serveru byl zvolen Redis \cite{redis}. \index{Redis} Redis je key-value databáze, ukládá  si tedy hodnoty různých datových typů, ke kterým se přistupuje pomocí identifikátoru - klíče. Od nejrozšířenějších relačních databázích se liší například tím, že je násobně výkonnější a neobsahuje relace. Významným prvkem této databáze je právě vztah klíče a hodnoty, kdy hodnotu je možné ukládat do sedmi datových struktur (string, hash, list, set, sorted set, bitmap, hyperloglog). Velkou rychlost Redisu zajišťuje zejména to, že pracuje s RAM pamětí serveru. Přijaté hodnoty si nejdříve ukládá právě do paměti a následně je podle konfigurace ukládá na disk. Příklad výchozí konfigurace:
 
 \begin{minted}[breaklines]{text}
 # save <seconds> <changes>
@@ -74,7 +76,6 @@ save 60 10000
 Vždy musí být splněna časová podmínka i množství změn za tento čas. Takové nastavení pak tedy udává, že se po 900 vteřinách (15 minut) uloží změny na disk, pokud byla provedena změna alespoň jednoho klíče, nebo po 300 vteřinách při změně alespoň deseti klíčů, resp. po minutě, došlo-li ke změně alespoň 10 000 klíčů. Již z této konfigurace je zřejmé, že se u Redisu očekává velké vytížení a tato databáze je na to připravena.
 
 \subsection{Redis klíče}
-%TODO počeštit binary safe
 Redis klíče mohou být velké až 512 MB a jsou binary safe, tzn. že platný je jak běžný text, tak prázdný text, ale také binární data, nebo obsahy souborů (do maximální velikosti klíče). Samotným klíčům lze pak také nastavovat životnost (pomocí příkazu \texttt{EXPIRE}). Klíče potom vyprší po nastaveném čase.
 
 \subsection{Datová struktura string}
@@ -167,7 +168,7 @@ MSET (10 keys): 207468.88 requests per second
 %TODO REDIS - test dotazové smyčky pro delší segmentovou síť viz poznámky p. Krista
 
 \subsection{RESP protokol}
-Redis databáze komunikuje interně přes TCP v RESP (Redis Serialization Protocol) formátu. RESP používá celkem 5 typů dat. Vždy platí, že první byte je byte určující o jaký formát se jedná:
+Redis databáze komunikuje interně přes TCP \index{TCP} v RESP \index{RESP} (Redis Serialization Protocol) formátu. RESP používá celkem 5 typů dat. Vždy platí, že první byte je byte určující o jaký formát se jedná:
 
 \begin{itemize}
 \itemsep0em
@@ -189,9 +190,9 @@ Následuje samotný obsah, nebo dodatečné informace, například o délce a v�
 \item \texttt{*2\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nGET\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nkey\textbackslash r\textbackslash n} (první je délka pole, následuje kombinace předchozích)
 \end{itemize}
 
-Redis server potom přijímá podle řetězců obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory posílají data (přes TCP i UDP) v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
+Redis server potom přijímá podle řetězců obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory (koncové členy sítě se kterými server komunikuje) posílají data přes TCP i UDP v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
 
 \section{Webová aplikace}
-Webový server je možné spustit na již běžícím Node.js serveru. Pro webovou aplikaci byl zvolen framework Sails.js \cite{sails}. Sails je MVC webový framework, který staví právě nad Node.js, ale ulehčuje práci při stavbě webových aplikací. Výhodou tohoto přístupu je to, že je možné na jednom serveru zapnout jak server zpracující požadavky z koncentrátorů, tak server obsluhující požadavky klientů z webového prohlížeče. Sails má navíc vestavěnou podporu pro protokol websocket, který je potřebný pro rychlou komunikaci serveru právě s prohlížečem.
+Webový server je možné spustit na již běžícím Node.js serveru. Pro webovou aplikaci byl zvolen framework Sails.js \cite{sails}. Sails \index{Sails} je MVC webový framework, který staví právě nad Node.js, \index{Node.js} ale ulehčuje práci při stavbě webových aplikací. Výhodou tohoto přístupu je to, že je možné na jednom serveru zapnout jak server zpracující požadavky z koncentrátorů, tak server obsluhující požadavky klientů z webového prohlížeče. Sails má navíc vestavěnou podporu pro protokol websocket, který je potřebný pro rychlou komunikaci serveru právě s prohlížečem. \index{Websocket}
 
 Volba tohoto frameworku je pouze na osobních preferencích. Žádný z existujících frameworků neobsahuje další výhody, které by jej stavěly do jednoznačné výhody. Navíc z hlediska sítě je potřebný hlavně Node.js a webová aplikace je možná postavit také pouze na Node.js. Ačkoliv tedy tato aplikace tvoří velkou část kódů, není pro samotné fungování projektu klíčová.

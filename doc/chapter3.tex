@@ -11,7 +11,7 @@ Na serveru dále běží webový server, který poskytuje webovou stránku, kde 
 \end{figure}
 
 \section{Koncentrátory}
-Systémový firmware pro koncentrátory je napsán v programovacím jazyce C s využitím oficiálních Cube knihoven od STMicroelectronics. Jsou tady napsány nízkoúrovňově, ale se zachováním přijatelného programového pro\-stře\-dí. Koncentrátor má několik základních funkcí. Předně je jeho úkolem připojit se na pevně stanovenou IP adresu v síti. Ta je momentálně stanovena na \texttt{192.168.0.20:50000}. Koncentrátor se pak periodicky s frekvencí 1 Hz o\-hla\-šu\-je přes TCP serveru. Tato frekvence je zvolena libovolně s ohledem na rozumné vytížení sítě těmito jinak zbytečnými informačními pakety. Síť se tak zbytečně nevytěžuje a zároveň dochází k rychlému zaregistrování výpadku koncentrátoru. 1 Hz je navíc krajní případ, protože jakákoliv příchozí informace se zároveň považuje za ohlášení.
+Systémový firmware pro koncentrátory \index{Mikrokontrolér} je napsán v programovacím jazyce C s využitím oficiálních Cube knihoven od STMicroelectronics. Jsou tady napsány nízkoúrovňově, ale se zachováním přijatelného programového pro\-stře\-dí. Koncentrátor má několik základních funkcí. Předně je jeho úkolem připojit se na pevně stanovenou IP adresu v síti. Ta je momentálně stanovena na \texttt{192.168.0.20:50000}. Koncentrátor se pak periodicky s frekvencí 1 Hz o\-hla\-šu\-je přes TCP serveru. Tato frekvence je zvolena libovolně s ohledem na rozumné vytížení sítě těmito jinak zbytečnými informačními pakety. Síť se tak zbytečně nevytěžuje a zároveň dochází k rychlému zaregistrování výpadku koncentrátoru. 1 Hz je navíc nejhorší případ, protože jakákoliv příchozí informace se zároveň považuje za ohlášení.
 
 Struktura programu z pohledu adresářové struktury je následující. Zobrazeny jsou pouze důležité části programu:
 
@@ -40,9 +40,9 @@ Struktura programu z pohledu adresářové struktury je následující. Zobrazen
 
 Hlavní část této práce se nachází v \texttt{Src} složce, zejména se pak jedná o soubory \texttt{main.c}, což je soubor obsahující hlavní program. Tento program využívá funkce z dalších souborů, jmenovitě pak například \texttt{tcp.c} a \texttt{udp.c}, které se již podle názvu starají o TCP resp. UDP spojení se serverem. Následuje zjednodušený popis hlavního programu včetně několika ukázek kódu.
 
-Nejdůležitější funkcí v každém podobném programu je funkce \texttt{main(void)}. Jedná se totiž o funkci, která je zavolána po spuštění programu. Ta prvně volá funkci pro inicializaci HAL knihovny \texttt{HAL\_Init(void)}. Následně je volána funkce pro nastavení systémových hodin \texttt{SystemClock\_Config(void)}, konfigurace BSP (\texttt{BSP\_Config(void)}), inicializace LwIP (\texttt{lwip\_init(void)}), konfigurace síťového rozhraní (\texttt{Netif\_Config(void)}), nastavení časovačů pomocí \texttt{TIM\_Config(void)} a nastavení ADC převodníku (\texttt{ADC\_Config(void)}). Toto nastavení zároveň všechny potřebné procesy startuje. Vždy když dojde k nějaké akci, jako je například stisk tlačítka, zavolá se tzv. callback, kde se provedou další potřebné úkoly na základě této spouštěcí akce. Tím pádem není nutné mít veškerou logiku v hlavní smyčce programu.
+Nejdůležitější funkcí v každém podobném programu je funkce \texttt{main(void)}. Jedná se totiž o funkci, která je zavolána po spuštění programu. Ta prvně volá funkci pro inicializaci HAL knihovny \texttt{HAL\_Init(void)} \cite{hal}. Následně je volána funkce pro nastavení systémových hodin \texttt{SystemClock\_Config(void)}, konfigurace BSP (\texttt{BSP\_Config(void)}), inicializace LwIP \index{LwIP} (\texttt{lwip\_init(void)}), konfigurace síťového rozhraní (\texttt{Netif\_Config(void)}), nastavení časovačů pomocí \texttt{TIM\_Config(void)} a nastavení ADC převodníku (\texttt{ADC\_Config(void)}). Toto nastavení zároveň všechny potřebné procesy startuje. Vždy když dojde k nějaké akci, jako je například stisk tlačítka, zavolá se tzv. callback, kde se provedou další potřebné úkoly na základě této spouštěcí akce. Tím pádem není nutné mít veškerou logiku v hlavní smyčce programu.
 
-Následující ukázka znázorňuje, jak Cube knihovny zabalují logiku jednotlivých operací. Pro jednoduchost uvádím práci s LED diodou. Samotná inicializace se provede velmi jednoduše pomocí \texttt{BSP\_LED\_Init(LED1);}. Z tohoto zápisu není zřejmé co se fakticky děje. Nicméně jednou z výhod Cube knihovny je fakt, že používá velmi podobný princip jako je Dependency Injection, tedy předávání závislostí. Samozřejmě toto nemůže být dotaženo do dokonalosti jako u vyšších objektově zaměřených programů, ale podstatné je, že se identifikátor diody předává v parametru. Tato skutečnost zamezuje tomu, aby docházelo k magické inicializaci něčeho na pozadí. Samotná inicializační metoda pak vypadá následovně:
+Následující ukázka znázorňuje, jak Cube knihovny \index{Cube} zabalují logiku jednotlivých operací. Pro jednoduchost uvádím práci s LED diodou. Samotná inicializace se provede velmi jednoduše pomocí \texttt{BSP\_LED\_Init(LED1);}. Z tohoto zápisu není zřejmé co se fakticky děje. Nicméně jednou z výhod Cube knihovny je fakt, že používá velmi podobný princip jako je Dependency Injection, tedy předávání závislostí. Samozřejmě toto nemůže být dotaženo do dokonalosti jako u vyšších objektově zaměřených programů, ale podstatné je, že se identifikátor diody předává v parametru. Tato skutečnost zamezuje tomu, aby docházelo k magické inicializaci něčeho na pozadí. Samotná inicializační metoda pak vypadá následovně:
 
 \begin{minted}[linenos,breaklines]{c}
 void BSP_LED_Init(Led_TypeDef Led) { //LED1 = 0
@@ -67,7 +67,7 @@ void EXTI15_10_IRQHandler(void) {
 }
 \end{minted}
 
-Ve funkci \texttt{HAL\_GPIO\_EXTI\_IRQHandler(uint16\_t GPIO\_Pin)} je pak ukryta následující implementace:
+Ve funkci \texttt{HAL\_GPIO\_EXTI\_IRQHandler(uint16\_t GPIO\_Pin)} je pak u\-kry\-ta následující implementace:
 
 \begin{minted}[linenos,breaklines]{c}
 void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin) {
@@ -89,10 +89,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 }
 \end{minted}
 
-Nyní je se tedy po stisku tlačítka vyvolá přerušení, které zavolá patřičný callback. V tomto volání je možné implementovat jakoukoliv logiku, zde například jednoduché přepnutí stavu LED diody. Jedná se o jednoduché příklady, ale tento princip se dále velmi podobně opakuje dále.
+Nyní je se tedy po stisku tlačítka vyvolá přerušení, které zavolá patřičný callback. V tomto volání je možné implementovat jakoukoliv logiku, zde například jednoduché přepnutí stavu LED diody. Jedná se o jednoduché příklady, ale tento princip se dále velmi podobně opakuje dále. Případné implementační detaily lze pak dohledat například v referenčním manuálu \cite{manual}.
 
 \subsection{Komunikace se serverem}
-Koncentrátory komunikují se serverem v RESP formátu, který může vypadat takto:
+Koncentrátory komunikují se serverem v RESP \index{RESP} formátu, který může vypadat takto:
 
 \begin{minted}[breaklines]{text}
 *2\r\n$4\r\nPING\r\n$11\r\nTEMP_000001\r\n
@@ -135,7 +135,7 @@ if(value <= 0) {
 }
 \end{minted}
 
-Proč se provádí přepočet na procenta? Celá síť si přeposílá číselné zprávičky v rozsahu 0 až 1023. Je to z toho důvodu, že pro každé zařízení má toto číslo jiný význam a koncentrátor se musí postarat o správnou interpretaci. V tomto případě má koncentrátor za úkol z přijaté hodnoty nakonfigurovat PWM výstup. Jak bude vysvětleno později, nejedná se o perfektní přístup, celá síť se však stává velmi jednotnou z hlediska přenášení informace a tyto hodnoty je možné na serveru ovlivňovat. Pro jednoduchý příklad stmívače to například znamená, že je možné jedním kliknutím změnit funkci potenciometru z lineárního na exponenciální, logaritmickou, nebo nějakou vlastní. To by bez zásahu serveru do této informace nebylo možné.
+Proč se provádí přepočet na procenta? Celá síť si přeposílá číselné zprá\-vič\-ky v rozsahu 0 až 1023. Je to z toho důvodu, že pro každé zařízení má toto číslo jiný význam a koncentrátor se musí postarat o správnou interpretaci. V tomto případě má koncentrátor za úkol z přijaté hodnoty nakonfigurovat PWM výstup. Jak bude vysvětleno později, nejedná se o perfektní přístup, celá síť se však stává velmi jednotnou z hlediska přenášení informace a tyto hodnoty je možné na serveru ovlivňovat. Pro jednoduchý příklad stmívače to například znamená, že je možné jedním kliknutím změnit funkci potenciometru z lineárního na exponenciální, logaritmickou, nebo nějakou vlastní. To by bez zásahu serveru do této informace nebylo možné.
 
 \begin{figure}[H]
     \centering
@@ -146,7 +146,7 @@ Proč se provádí přepočet na procenta? Celá síť si přeposílá číseln�
 \end{figure}
 
 \section{Real-time Server}
-Server je naprogramovaný v JavaScriptu s využitím Sails.js frameworku \cite{sails}. Tento framework staví nad Express frameworkem, který staví nad Node.js. Node.js je platforma postavená nad V8 \cite{v8}, tedy JavaScriptovém jádře napsaném v C++. Toto jádro je například součástí prohlížeče Chrome. Kromě toho, že toto jádro dosahuje vysokého výkonu při zpracování JS, otevírá také zajímavé možnosti, jak přistupovat k programu. Konkrétně nabízí například event-driven chování, nebo neblokující I/O model. Toto chování vychází z JavaScriptu jako takového. To může být svým způsobem zároveň nevýhoda. JavaScript se totiž chová (v běžných implementacích) jako jednovláknový asynchronní program. To sice umožňuje vytvářet zajímavé programové struktury, zároveň je však limitující jedno vlákno. Je proto lepší spustit odděleně webovou aplikaci a část zpracovávající příchozí signály. Každá tato část lze pak v případě potřeby spustit v clusteru \cite{cluster}. Adresářová struktura je zobrazena níže. Opět jsou znázorněny jen důležité části. Tato struktura odpovídá běžné struktuře Sails.js \cite{sails} aplikace s EJS šablonovacím systémem.
+Server je naprogramovaný v JavaScriptu s využitím Sails.js \index{Sails} frameworku \cite{sails}. Tento framework staví nad Express frameworkem, který staví nad Node.js. Node.js je platforma postavená nad V8 \cite{v8}, tedy JavaScriptovém jádře napsaném v C++. Toto jádro je například součástí prohlížeče Chrome. \index{V8} Kromě toho, že toto jádro dosahuje vysokého výkonu při zpracování JS, otevírá také zajímavé možnosti, jak přistupovat k programu. Konkrétně nabízí například event-driven chování, nebo neblokující I/O model. Toto chování vychází z JavaScriptu jako takového. To může být svým způsobem zároveň nevýhoda. JavaScript se totiž chová (v běžných implementacích) jako jednovláknový asynchronní program. To sice umožňuje vytvářet zajímavé programové struktury, zároveň je však limitující jedno vlákno. Je proto lepší spustit odděleně webovou aplikaci a část zpracovávající příchozí signály. Každá tato část lze pak v případě potřeby spustit v clusteru \cite{cluster}. Adresářová struktura je zobrazena níže. Opět jsou znázorněny jen důležité části. Tato struktura odpovídá běžné struktuře Sails.js \cite{sails} aplikace s EJS šablonovacím systémem.
 
 \begin{figure}[H]
 \dirtree{%
@@ -179,7 +179,7 @@ Server je naprogramovaný v JavaScriptu s využitím Sails.js frameworku \cite{s
 }
 \end{figure}
 
-Celý server lze nastartovat souborem \texttt{start.bat}, jehož obsah je znázorněn níže.
+Celý server lze nastartovat souborem \texttt{start.bat}, jehož obsah je zná\-zor\-něn níže.
 
 \begin{minted}[linenos,breaklines]{bat}
 @echo off
@@ -200,7 +200,7 @@ Celá aplikace je rozdělena na několik částí. První jsou šablony jednotli
 \begin{minted}[linenos,breaklines]{text}
 <h1><%= variable %></h1>
 <ul>
-  <% for(var i=0; i<xarray.length; i++) {%>
+  <% for(var i = 0; i < xarray.length; i++) { %>
     <li><%= xarray[i] %></li>
   <% } %>
 </ul>
@@ -224,7 +224,7 @@ module.exports = {
 };
 \end{minted}
 
-Při psaní takových programů je nutné mít na paměti, že se kód může (a bude) vykonávat asynchronně. Proto je nutné všechny synchronní operace provádět pomocí callbacků, nebo například přes návrhový vzor promise. Základní rozdíl je v tom, že běžné je v Node.js funkce kvůli synchronnímu chování zanořovat:
+Při psaní takových programů je nutné mít na paměti, že se kód může (a bude) vykonávat asynchronně. Proto je nutné všechny synchronní operace provádět pomocí callbacků, nebo například přes návrhový vzor promise. \index{Promise} Základní rozdíl je v tom, že běžné je v Node.js funkce kvůli synchronnímu chování zanořovat:
 
 \begin{minted}[linenos,breaklines]{js}
 step1(function (value1) {
@@ -256,7 +256,7 @@ Q.fcall(promisedStep1)
 
 Je možné použít knihovnu Q \cite{q} ze které jsou tyto příklady přebrány. Toto chování by mělo být v pozdějších verzích JavaScriptu k dispozici bez potřeby knihoven třetích stran. Vzhledem k tomu, že použití callbacků má celou řadu nevýhod, návrhový vzor promise se stává velmi populárním a postupně na něj přecházejí všechny velké knihovny.
 
-Samotná aplikace využívá následující tabulky v Redis databázi, kde \texttt{xxx} je unikátní identifikátor zařízení:
+Samotná aplikace využívá následující tabulky v Redis databázi, kde \texttt{xxx} je unikátní identifikátor zařízení: \index{Redis}
 
 \begin{itemize}
 \itemsep0em
@@ -283,7 +283,6 @@ Dále je pak k dispozici hodnota \texttt{msg\_count}, která udržuje počet vy\
 Server komunikuje s koncentrátory hlavně pomocí UDP. Celá logika je u\-mís\-tě\-na v souboru \texttt{api/hooks/UDP/index.js}, kde je také vyřešené odeslání UDP datagramů. Díky tomu, že se jedná o hook, celý skript se inicializuje při spouštění celé aplikace, ještě před nastartováním webového serveru. Je zde použit callback přístup, nikoliv návrhový vzor promise. Z důvodu složitosti zde neuvádím žádné ukázky kódu, za zmínku však stojí jedna zajímavá vlastnost, která je společná pro server i koncentrátory. Ve skutečnosti totiž neodesílají data pořád, ale pouze pokud je to potřeba, tzn. pokud se nová informace liší od předchozí. Tímto se zásadně sníží počet přenášených datagramů a je možné zvýšit rychlost cyklu. Právě na tomto místě pak dochází k využívání převodních tabulek, které jsou podrobně popsány v další kapitole. Podobná logika je k nalezení i v souboru \texttt{api/hooks/TCP/index.js} pro TCP. V souboru \texttt{api/hooks/routine.js} dochází k vyhodnocování aktivity připojených zařízení na základě posledního ohlášení.
 
 \subsection{Webový server}
-%TODO Cordova Phonegap
 Kromě real-time serveru existuje také webový server, který zabírá ve složce \texttt{server} nejvíce místa. Jednou z hlavních složek tohoto serveru, kromě již zmíněných šablon a kontrolérů, je část obsluhující websocket. Ta je k nalezení v souboru \texttt{api/hooks/websocket.js}. V tomto projektu je použita část frameworku Sails.js \cite{sails}, která websockety obsluhuje, fakticky však pouze zabaluje knihovnu Socket.IO \cite{socket}. Následuje zjednodušená ukázka použití této knihovny a to včetně zabalení kódu tak, aby se choval jako hook a spustil se při startu aplikace:
 
 \begin{minted}[linenos,breaklines]{js}
@@ -313,4 +312,6 @@ Sails.js při startování serveru zavolá metodu \texttt{initialize}. Ta násle
 	\label{eq:sma}
 \end{equation}
 
-Klouzavý průměr se tedy používá pouze při výstupu do webové aplikace. Jinak funguje celá síť s takovou informací, jaká opustila koncentrátor. Je nutné myslet na to, že klouzavý průměr sice vyhlazuje výkyvy v průběhu, zároveň však celý průběh zpomaluje. Toto zpomalení je pak větší se zvětšujícím se počtem vzorků, které se do SMA zahrnují.
+Klouzavý průměr se tedy používá pouze při výstupu do webové aplikace. Jinak funguje celá síť s takovou informací, jaká opustila koncentrátor. Je nutné myslet na to, že klouzavý průměr sice vyhlazuje výkyvy v průběhu, zároveň však celý průběh zpomaluje. Toto zpomalení je pak větší se zvět\-šu\-jí\-cím se počtem vzorků, které se do SMA zahrnují.
+
+Velkou výhodou je fakt, že je celý systém možné ovládat z webové aplikace. Tu je možné otevřít téměř na jakémkoliv zařízení, které je připojené k internetu. Celou aplikaci je však ještě možné zabalit do nativní mobilní aplikace například pomocí Apache Cordova \cite{cordova}, takže lze na jakékoliv mobilní zařízení nainstalovat. \index{Apache Cordova} Nejedná se sice o nejlepší způsob jak takovou aplikaci postavit, je to však mnohem rychlejší a levnější cesta. Některé frameworky, jako například Meteor umožňují tyto aplikaci vystavit již v základu pomocí dvou příkazů \cite{meteor}. Tento framework však nebyl zvolen, protože nemá dobrou integraci Redis \cite{redis} databáze a hodí se na jiné aplikace, kde je možné využít principu \uv{latency compensation}, \index{Latency compensation} tedy kompenzace času spotřebovaného pro komunikaci mezi serverem a prohlížečem. Toho je docíleno tak, že se programové metody umístí jak na server, tak na klientskou stranu. Následně při požadavku se metody zavolají na serveru, ale framework na straně klienta nečeká a provede simulaci dané operace i v prohlížeči. Tak je možné některé operace zpracovat ještě před odpovědí serveru. Pokud se výsledek operace ze serveru shoduje s výsledkem na straně klienta, vše je v pořádku. V opačném případě se provedené změny vrátí zpět a prohlížeč skutečně zrcadlí stav serveru. V případě úspěšné operace se tedy aplikace chová velmi rychle, jinak může docházet ke zvláštnímu chování uživatelského prostředí. Takto samozřejmě není možné provádět operace čekající na výsledek z databáze.

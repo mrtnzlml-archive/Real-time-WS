@@ -8,6 +8,16 @@ server/node_modules/*
 *.toc
 *.zip
 *.log
+*.bbl
+*.blg
+*.dvi
+*.idx
+*.ilg
+*.ind
+*.nlo
+*.out
+
+*.uvguix.*
 
 STM3240G-EVAL
 Thumbs.db

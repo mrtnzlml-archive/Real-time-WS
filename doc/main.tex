@@ -1,4 +1,4 @@
-\documentclass[oneside,12pt,a4paper,draft]{book} %opt: draft/final (oneside/twoside, openany/openright)
+\documentclass[oneside,12pt,a4paper,final]{book} %opt: draft/final (oneside/twoside, openany/openright)
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
@@ -9,7 +9,10 @@
 \usepackage{float} % figure [H]
 \usepackage{pgfplots} % tikzpicture
 \usepackage{amsmath} % linebreaks in math mode
-\usepackage{dirtree}
+\usepackage{dirtree} % struktura slozek
+\usepackage{makeidx} % rejstrik
+
+\makeindex
 
 \hypersetup{
 	colorlinks,
@@ -24,9 +27,6 @@
 \pgfplotsset{soldot/.style={color=blue,only marks,mark=*}}
 \pgfplotsset{holdot/.style={color=blue,fill=white,only marks,mark=*}}
 
-%TODO někde nazačátku objasnit pojem koncentrátor
-%TODO zkontrolovat použití všech zdrojů
-
 \makeatletter
 \newcommand{\tocfill}{\cleaders\hbox{$\m@th \mkern\@dotsep mu . \mkern\@dotsep mu$}\hfill}
 \makeatother
@@ -34,6 +34,8 @@
 \newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}%
         \setlength{\labelwidth}{6cm}\setlength{\leftmargin}{\labelwidth+\labelsep}%
                                               \setlength{\itemsep}{0pt}}}{\end{list}}
+
+\interfootnotelinepenalty=10000 %BRUTAL!
 
 \begin{document}
 
@@ -64,7 +66,7 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \pagenumbering{roman}
 \input{abstract.tex}
 \input{prohlaseni.tex}
-\input{podekovani.tex} %TODO (?)
+\input{podekovani.tex}
 
 \tableofcontents
 \cleardoublepage
@@ -90,10 +92,12 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \item[HAL]		Hardware Abstraction Layer
 \item[HTTP]		Hypertext Transfer Protocol
 \item[I/O]		Input/Output
+\item[IoT]		Internet of Things
 \item[IP]		Internet Protocol
 \item[JS]		JavaScript
 \item[JSON]		JavaScript Object Notation
 \item[JSONP]	JSON with padding
+\item[LED]		Light-Emitting Diode
 \item[MAC]		Media Access Control
 \item[MVC]		Model View Controller
 \item[NPM]		Node Package Manager
@@ -104,6 +108,7 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \item[RTT]		Round Trip Time
 \item[SMA]		Simple Moving Average
 \item[TCP]		Transmission Control Protocol
+\item[TED]		Technology, Entertainment, Design
 \item[UDP]		User Datagram Protocol
 \item[UTP]		Unshielded Twisted Pair
 \item[UFBGA]	Ultra Fine BGA
@@ -123,52 +128,87 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 
 
 \begin{thebibliography}{99}
-%TODO pořádně doplnit zdroje
+\addcontentsline{toc}{chapter}{Literatura}
+%http://www.citace.com/
 
-\bibitem{rfc6455}{\em I. Fette, Google Inc., A. Melnikov, Isode Ltd.:} {\bf The WebSocket Protocol} \url{https://tools.ietf.org/html/rfc6455}
+\bibitem{rfc6455}
+FETTE, Ian a Alexey MELNIKOV. The WebSocket Protocol. \textit{The Internet Engineering Task Force} [online]. 2011 [cit. 2015-05-20]. Dostupné z: \url{https://tools.ietf.org/html/rfc6455}
 
-\bibitem{real-time}{\em University of Telecommunications, Leipzig, Sebastian Lammermann:} {\bf Ethernet as a Real-Time Technology} \url{http://www.lammermann.eu/wb/media/documents/real-time_ethernet.pdf}
+\bibitem{real-time}
+LAMMERMANN, Sebastian. Ethernet as a Real-Time Technology. \textit{Lammermann.eu} [online]. 2008 [cit. 2015-05-20]. Dostupné z: \url{http://www.lammermann.eu/wb/media/documents/real-time_ethernet.pdf}
 
-\bibitem{mistrovstvi}{\em Barrie Sosinsky:} {\bf Mistrovství – počítačové sítě}
+\bibitem{mistrovstvi}
+SOSINSKY, Barrie A. \textit{Mistrovství – počítačové sítě}. Vyd.~1. Brno: Computer Press, 2011, 840~s. Mistrovství (Computer Press). ISBN 978-80-251-3363-7. 
 
-\bibitem{cube}{\em STMicroelectronics:} {\bf Getting started with STM32CubeF2 firmware package for STM32F2xx series} \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00111485.pdf}
+\bibitem{cube}
+\textit{Getting started with STM32CubeF2 firmware package for STM32F2xx series: User manual} [online]. 2014 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00111485.pdf}
 
-\bibitem{nodejs}{\bf Node.js:} \url{http://nodejs.org/}
+\bibitem{nodejs}
+\textit{Node.js} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://nodejs.org/}
 
-\bibitem{redis}{\bf Redis.io:} \url{http://redis.io/}
+\bibitem{redis}
+\textit{Redis.io} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://redis.io/}
 
-\bibitem{redis-cluster}{\em Redis.io:} {\bf Redis cluster tutorial:} \url{http://redis.io/topics/cluster-tutorial}
+\bibitem{redis-cluster}
+Redis cluster tutorial. \textit{Redis.io} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://redis.io/topics/cluster-tutorial}
 
-\bibitem{redis-benchmark}{\em Redis.io:} {\bf How fast is Redis} \url{http://redis.io/topics/benchmarks}
+\bibitem{redis-benchmark}
+How fast is Redis?. \textit{Redis.io} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://redis.io/topics/benchmarks}
 
-\bibitem{sails}{\bf Sails.js:} \url{http://sailsjs.org/}
+\bibitem{hal}
+\textit{Description of STM32F4xx HAL drivers: User manual} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00105879.pdf}
 
-\bibitem{ripe}{\em RIPE NCC} {\bf Understanding IP Addressing} \url{https://www.ripe.net/internet-coordination/press-centre/understanding-ip-addressing}
+\bibitem{manual}
+\textit{Reference manual - STM32F405xx/07xx, STM32F415xx/17xx, STM32F42xxx and STM32F43xxx advanced ARM\textregistered-based 32-bit MCUs} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf}
 
-\bibitem{openwrt}{\em OpenWrt} {\bf Linux distribution for embedded devices} \url{https://openwrt.org/}
+\bibitem{sails}
+\textit{Sails.js} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://sailsjs.org/}
 
-\bibitem{tessel}{\bf Tessel 2:} \url{https://tessel.io/}
+\bibitem{ripe}
+Understanding IP Addressing. \textit{RIPE NCC} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://bit.ly/1JvOvaO}
 
-\bibitem{cluster}{\bf Node.js - Cluster:} \url{https://nodejs.org/api/cluster.html}
+\bibitem{openwrt}
+Linux distribution for embedded devices. \textit{OpenWrt} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://openwrt.org/}
 
-\bibitem{v8}{V8 JavaScript Engine} \url{https://code.google.com/p/v8/}
+\bibitem{tessel}
+\textit{Tessel 2} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://tessel.io/}
 
-\bibitem{heroku}{Heroku:} \url{https://www.heroku.com/}
+\bibitem{cluster}
+Node.js v0.12.3 Manual \& Documentation. \textit{Cluster} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://nodejs.org/api/cluster.html}
 
-\bibitem{forever}{\em Forever:} {\bf A simple CLI tool for ensuring that a given script runs continuously:} \url{https://github.com/foreverjs/forever}
+\bibitem{v8}
+\textit{V8 JavaScript Engine} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://code.google.com/p/v8/}
 
-\bibitem{q}{\em Q:} {\bf A tool for creating and composing asynchronous promises in JavaScript} \url{http://documentup.com/kriskowal/q/}
+\bibitem{heroku}
+\textit{Heroku} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://www.heroku.com/}
 
-\bibitem{socket}{Socket.IO} \url{http://socket.io/}
+\bibitem{forever}
+A simple CLI tool for ensuring that a given script runs continuously. \textit{Forever} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://github.com/foreverjs/forever}
 
-%TODO nepoužito:
-\bibitem{hal}{\em STMicroelectronics:} {\bf Description of STM32F4xx HAL drivers} \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00105879.pdf}
+\bibitem{q}
+A tool for creating and composing asynchronous promises in JavaScript. \textit{Q} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://documentup.com/kriskowal/q/}
 
-%TODO nepoužito:
-\bibitem{manual}{\em STMicroelectronics:} {\bf Reference manual - STM32F405xx/07xx, STM32F415xx/17xx, STM32F42xxx and
-STM32F43xxx advanced ARM\textregistered-based 32-bit MCUs} \url{http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf}
+\bibitem{socket}
+\textit{Socket.IO} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://socket.io/}
+
+\bibitem{cordova}
+Platform for building native mobile applications using HTML, CSS and JavaScript. \textit{Apache Cordova} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://cordova.apache.org/}
+
+\bibitem{meteor}
+Running your app on Android or iOS. \textit{Meteor} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://www.meteor.com/try/7}
+
+\bibitem{lifi}
+\textit{pureLiFi} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://purelifi.com/}
+
+\bibitem{ternar}
+VRÁNA, Jakub. \textit{1001 tipů a triků pro PHP}. Vyd.~1. Brno: Computer Press, 2010, 136 Co je ternární operátor. ISBN 978-80-251-2940-1.
+
+\bibitem{ted}
+prof. HAAS, Harald. Wireless data from every light bulb. \textit{TED - Ideas worth spreading} [online]. 2011 [cit. 2015-05-20]. Dostupné z: \url{http://www.ted.com/talks/harald_haas_wireless_data_from_every_light_bulb}
+
 \end{thebibliography}
 
-
+\addcontentsline{toc}{chapter}{Rejstřík}
+\printindex
 
 \end{document}
