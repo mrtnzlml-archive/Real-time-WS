@@ -1,4 +1,4 @@
-\documentclass[oneside,12pt,a4paper,final]{book} %opt: draft/final (oneside/twoside, openany/openright)
+\documentclass[oneside,12pt,a4paper,draft]{book} %opt: draft/final
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
@@ -13,6 +13,8 @@
 \usepackage{makeidx} % rejstrik
 
 \makeindex
+
+\hoffset=0.5cm % posune stranku ->
 
 \hypersetup{
 	colorlinks,
@@ -43,11 +45,11 @@
 \pagestyle{empty}
 \begin{titlepage}
 \noindent
-\includegraphics[scale=1]{zcu.png} \\[0.3cm]
-Fakulta elektrotechnická \\
-Katedra elektroenergetiky a ekologie
-\vspace{5cm}
 \begin{center}
+	{\LARGE ZÁPADOČESKÁ UNIVERZITA V PLZNI} \\[0.1cm]
+	{\LARGE FAKULTA ELEKTROTECHNICKÁ} \\[0.4cm]
+	{\Large\sc Katedra aplikované elektroniky a~telekomunikací} \\
+	\vspace{5cm}
 	{\Huge\sc Bakalářská práce} \\
 	\vspace{1cm}
 	{\large Návrh a realizace real-time komunikace pro senzorickou síť\\s webovou řídicí aplikací\\}
@@ -91,6 +93,7 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \item[EJS]		Embedded JavaScript
 \item[HAL]		Hardware Abstraction Layer
 \item[HTTP]		Hypertext Transfer Protocol
+\item[ICMP]		Internet Control Message Protocol
 \item[I/O]		Input/Output
 \item[IoT]		Internet of Things
 \item[IP]		Internet Protocol
@@ -101,6 +104,7 @@ Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
 \item[MAC]		Media Access Control
 \item[MVC]		Model View Controller
 \item[NPM]		Node Package Manager
+\item[OS]		Operating System
 \item[PWM]		Pulse Width Modulation
 \item[RAM]		Random-Access Memory
 \item[RESP]		Redis Serialization Protocol
@@ -160,6 +164,9 @@ How fast is Redis?. \textit{Redis.io} [online]. [cit. 2015-05-20]. Dostupné z: 
 
 \bibitem{manual}
 \textit{Reference manual - STM32F405xx/07xx, STM32F415xx/17xx, STM32F42xxx and STM32F43xxx advanced ARM\textregistered-based 32-bit MCUs} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf}
+
+\bibitem{icmp}
+POSTEL, Jon. Internet Control Message Protocol. \textit{The Internet Engineering Task Force} [online]. 1981 [cit. 2015-05-27]. Dostupné z: \url{http://tools.ietf.org/html/rfc792}
 
 \bibitem{sails}
 \textit{Sails.js} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://sailsjs.org/}

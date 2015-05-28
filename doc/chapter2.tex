@@ -8,6 +8,7 @@ Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontrol
     \centering
 	\makebox[\textwidth]{\includegraphics[width=\textwidth]{img/eval_board.jpg}}
 	\caption{Použitá vývojová deska MB786 rev.B}
+	\small zdroj: \url{http://bit.ly/1Kor8OH}
 	\label{fig:eval-board}
 \end{figure}
 
@@ -42,7 +43,7 @@ Prvky senzorické sítě jsou testovány na vývojových deskách s mikrokontrol
 Veškeré vývojové desky s mikrokontroléry jsou připojeny pomocí klasických síťových prvků a UTP kabelů do serveru.
 
 \section{Real-time server}
-Jako real-time \index{Real-time} server, který obsluhuje celou síť i webovou aplikaci je zvolen Node.js \cite{nodejs}. \index{Node.js} Jedná se o platfomu postavenou nad V8 JavaScript Engine od společnosti Google. V8 \index{V8} je engine napsaný v C++, který využívá například prohlížeč Google Chrome jako jádro pro velmi rychlé zpracování javascriptu. Díky tomu je možné využívat téměř všech vlastností javascriptu, zejména pak single-thread asynchronní chování (non-blocking I/O model) a EDA architektury. Jedná se o velmi podobný engine jako je v prohlížeči Google Chrome s tím rozdílem, že Node.js neobsahuje možnost práce s oknem programu, nebo s dokumentem jako takovým, protože zde žádný není. Oproti tomu umožňuje přistupovat k process objektu, který zase není dostupný v prohlížečích. Následující ukázka ukazuje jednoduchý webový server napsaný právě s pomocí Node.js:
+Jako real-time \index{Real-time} server, který obsluhuje celou síť i webovou aplikaci je zvolen Node.js \cite{nodejs}. \index{Node.js} Jedná se o platfomu postavenou nad V8 JavaScript Engine od společnosti Google. V8 \index{V8} je engine napsaný v C++, který využívá například prohlížeč Google Chrome jako jádro pro velmi rychlé zpracování JavaScriptu. Díky tomu je možné využívat téměř všech vlastností JavaScriptu, zejména pak single-thread asynchronní chování (neblokující I/O model) a EDA architektury. Jedná se o velmi podobný engine jako je v prohlížeči Google Chrome s tím rozdílem, že Node.js neobsahuje možnost práce s oknem programu, nebo s dokumentem jako takovým, protože zde žádný není. Oproti tomu umožňuje přistupovat k \texttt{process} objektu, který zase není dostupný v prohlížečích. Následující ukázka ukazuje jednoduchý webový server napsaný právě s pomocí Node.js:
 
 \begin{minted}[linenos,breaklines]{javascript}
 var http = require('http');
@@ -61,7 +62,7 @@ server.listen(PORT, function() {
 });
 \end{minted}
 
-Tento server je zároveň vysoce škálovatelný a to hlavně do šíře. Je tak možné vytvořit velký počet vzájemně komunikujících uzlů (node), které spolu komunikují. Tyto uzly jsou však striktně odděleny (i na úrovni paměti) a nemohou se tak přímo ovlivňovat. Tento model je vhodný pro velmi vytížené aplikace, protože je možné potřebný výkon rozložit na velké množství méně výkonných strojů.
+Tento server je zároveň vysoce škálovatelný a to hlavně do šíře. Je tak možné vytvořit velký počet vzájemně komunikujících uzlů (node). Tyto uzly jsou však striktně odděleny (i na úrovni paměti) a nemohou se tak přímo ovlivňovat. Tento model je vhodný pro velmi vytížené aplikace, protože je možné potřebný výkon rozložit na velké množství méně výkonných strojů.
 
 \section{Databázový server}
 Na pozici databázového serveru byl zvolen Redis \cite{redis}. \index{Redis} Redis je key-value databáze, ukládá  si tedy hodnoty různých datových typů, ke kterým se přistupuje pomocí identifikátoru - klíče. Od nejrozšířenějších relačních databázích se liší například tím, že je násobně výkonnější a neobsahuje relace. Významným prvkem této databáze je právě vztah klíče a hodnoty, kdy hodnotu je možné ukládat do sedmi datových struktur (string, hash, list, set, sorted set, bitmap, hyperloglog). Velkou rychlost Redisu zajišťuje zejména to, že pracuje s RAM pamětí serveru. Přijaté hodnoty si nejdříve ukládá právě do paměti a následně je podle konfigurace ukládá na disk. Příklad výchozí konfigurace:
@@ -87,9 +88,9 @@ OK
 > INCR counter
 (integer) 2
 > INCRBY counter 50
-(integer) 102
+(integer) 52
 > INCRBYFLOAT counter 3.0e3
-"3102"
+"3052"
 \end{minted}
 
 Časová náročnost těchto operací je O(1)\footnote{Označení $O(f(x))$ značí asymptotickou složitost algoritmu. Složitosti algoritmů rozdělujeme do různých tříd ($1 < log(n) < n < n\cdot log(n) < n^k < k^n < k! < n^n$), které určují jak je daný algoritmus rychlý. Zápisy je pak možné číst tak, že algoritmus je stejně rychlý, nebo rychlejší, než $f(x)$.}.
@@ -190,7 +191,7 @@ Následuje samotný obsah, nebo dodatečné informace, například o délce a v�
 \item \texttt{*2\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nGET\textbackslash r\textbackslash n\$3\textbackslash r\textbackslash nkey\textbackslash r\textbackslash n} (první je délka pole, následuje kombinace předchozích)
 \end{itemize}
 
-Redis server potom přijímá podle řetězců obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory (koncové členy sítě se kterými server komunikuje) posílají data přes TCP i UDP v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a například zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
+Redis server potom přijímá podle řetězců obsahující jednotlivé instrukce. Tento protokol je velmi důležitý, protože i koncentrátory (koncové členy sítě se kterými server komunikuje) posílají data přes TCP i UDP v RESP formátu, je tak možné data posílat přímo do databáze. Tato vlastnost však není využívána, protože je vhodné, aby byl jako prostředník server a na\-pří\-klad zjišťoval aktivitu koncentrátorů. Každopádně tato možnost zde je a pokud by bylo zapotřebí ukládat data tou nejrychlejší cestou, přímý přístup do databáze je tímto možný a funkční.
 
 \section{Webová aplikace}
 Webový server je možné spustit na již běžícím Node.js serveru. Pro webovou aplikaci byl zvolen framework Sails.js \cite{sails}. Sails \index{Sails} je MVC webový framework, který staví právě nad Node.js, \index{Node.js} ale ulehčuje práci při stavbě webových aplikací. Výhodou tohoto přístupu je to, že je možné na jednom serveru zapnout jak server zpracující požadavky z koncentrátorů, tak server obsluhující požadavky klientů z webového prohlížeče. Sails má navíc vestavěnou podporu pro protokol websocket, který je potřebný pro rychlou komunikaci serveru právě s prohlížečem. \index{Websocket}
