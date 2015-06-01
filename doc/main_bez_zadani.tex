@@ -1,0 +1,229 @@
+\documentclass[oneside,12pt,a4paper,final]{book} %opt: draft/final
+\usepackage[czech]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage{hyperref} % links in \tableofcontents
+\usepackage{minted} % syntax highlighter
+\usepackage{pdfpages}
+\usepackage{textcomp}
+\usepackage{float} % figure [H]
+\usepackage{pgfplots} % tikzpicture
+\usepackage{amsmath} % linebreaks in math mode
+\usepackage{dirtree} % struktura slozek
+\usepackage{makeidx} % rejstrik
+
+\makeindex
+
+\hoffset=0.5cm % posune stranku ->
+
+\hypersetup{
+	colorlinks,
+	citecolor=black, %blue
+	filecolor=black,
+	linkcolor=black, %red
+	urlcolor=black %blue
+}
+\addto\captionsczech{\renewcommand{\chaptername}{}} %remove "chapter" word
+
+\pgfplotsset{major grid style={lightgray!50!white}}
+\pgfplotsset{soldot/.style={color=blue,only marks,mark=*}}
+\pgfplotsset{holdot/.style={color=blue,fill=white,only marks,mark=*}}
+
+\makeatletter
+\newcommand{\tocfill}{\cleaders\hbox{$\m@th \mkern\@dotsep mu . \mkern\@dotsep mu$}\hfill}
+\makeatother
+\newcommand{\abbrlabel}[1]{\makebox[6cm][l]{\textbf{#1}\ \tocfill}}
+\newenvironment{abbreviations}{\begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}%
+        \setlength{\labelwidth}{6cm}\setlength{\leftmargin}{\labelwidth+\labelsep}%
+                                              \setlength{\itemsep}{0pt}}}{\end{list}}
+
+\newcommand{\namesig}[2][5cm]{%
+  \begin{tabular}{@{}p{#1}@{}}
+    #2 \\[5\normalbaselineskip] \dotfill \\[0pt]
+    {\small \textit{Podpis}}
+  \end{tabular}
+}
+
+\interfootnotelinepenalty=10000 %BRUTAL!
+
+\begin{document}
+
+%%% TITLE
+\pagestyle{empty}
+\begin{titlepage}
+\noindent
+\begin{center}
+	{\LARGE ZÁPADOČESKÁ UNIVERZITA V~PLZNI} \\[0.1cm]
+	{\LARGE FAKULTA ELEKTROTECHNICKÁ} \\[0.4cm]
+	{\Large\sc Katedra elektroenergetiky a~ekologie} \\
+	\vspace{5cm}
+	{\Huge\sc Bakalářská práce} \\
+	\vspace{1cm}
+	{\large Návrh a realizace real-time komunikace pro senzorickou síť\\s webovou řídicí aplikací\\}
+	\vspace{1cm}
+	{\large Design and Implementation of Real-time Communication for Sensory Network with Website Based Control Application}
+\end{center}
+\vfill
+Autor práce: Martin Zlámal\\
+Vedoucí práce: Ing. Petr KRIST, Ph.D. \hfill Plzeň 2015
+\end{titlepage}
+
+\pagestyle{plain}
+%\includepdf[pages={1}]{img/zadani1.jpg}
+%\includepdf[pages={1}]{img/zadani2.jpg}
+\input{abstrakt.tex}
+\pagenumbering{roman}
+\input{abstract.tex}
+\input{prohlaseni.tex}
+\input{podekovani.tex}
+
+\tableofcontents
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+
+
+\chapter*{Seznam symbolů a zkratek}
+\addcontentsline{toc}{chapter}{Seznam symbolů a zkratek}
+\noindent
+\begin{abbreviations}
+\item[ADC]		Analog-to-Digital Converter
+\item[AJAX]		Asynchronous JavaScript and XML
+\item[AJAJ]		Asynchronous JavaScript and JSON
+\item[BGA]		Ball Grid Array
+\item[BSP]		Board Support Package
+\item[CAN]		Controller Area Network
+\item[CPU]		Central Processing Unit
+\item[CRLF]		Carriage Return Line Feed
+\item[DHCP]		Dynamic Host Configuration Protocol
+\item[EDA]		Event-Driven Architecture
+\item[EJS]		Embedded JavaScript
+\item[HAL]		Hardware Abstraction Layer
+\item[HTTP]		Hypertext Transfer Protocol
+\item[ICMP]		Internet Control Message Protocol
+\item[I/O]		Input/Output
+\item[IoT]		Internet of Things
+\item[IP]		Internet Protocol
+\item[JS]		JavaScript
+\item[JSON]		JavaScript Object Notation
+\item[JSONP]	JSON with padding
+\item[LED]		Light-Emitting Diode
+\item[MAC]		Media Access Control
+\item[MVC]		Model View Controller
+\item[NPM]		Node Package Manager
+\item[OS]		Operating System
+\item[PWM]		Pulse Width Modulation
+\item[RAM]		Random-Access Memory
+\item[RESP]		Redis Serialization Protocol
+\item[RFC]		Request for Comments
+\item[RTT]		Round Trip Time
+\item[SMA]		Simple Moving Average
+\item[TCP]		Transmission Control Protocol
+\item[TED]		Technology, Entertainment, Design
+\item[UDP]		User Datagram Protocol
+\item[UTP]		Unshielded Twisted Pair
+\item[UFBGA]	Ultra Fine BGA
+\item[XHR]		XMLHttpRequest
+\item[XML]		Extensible Markup Language
+\end{abbreviations}
+
+
+
+\input{uvod.tex}
+\input{chapter1.tex}
+\input{chapter2.tex}
+\input{chapter3.tex}
+\input{chapter4.tex}
+\input{zaver.tex}
+
+
+
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{Literatura}
+%http://www.citace.com/
+
+\bibitem{rfc6455}
+FETTE, Ian a Alexey MELNIKOV. The WebSocket Protocol. \textit{The Internet Engineering Task Force} [online]. 2011 [cit. 2015-05-20]. Dostupné z: \url{https://tools.ietf.org/html/rfc6455}
+
+\bibitem{real-time}
+LAMMERMANN, Sebastian. Ethernet as a Real-Time Technology. \textit{Lammermann.eu} [online]. 2008 [cit. 2015-05-20]. Dostupné z: \url{http://www.lammermann.eu/wb/media/documents/real-time_ethernet.pdf}
+
+\bibitem{mistrovstvi}
+SOSINSKY, Barrie A. \textit{Mistrovství – počítačové sítě}. Vyd.~1. Brno: Computer Press, 2011, 840~s. Mistrovství (Computer Press). ISBN 978-80-251-3363-7. 
+
+\bibitem{cube}
+\textit{Getting started with STM32CubeF2 firmware package for STM32F2xx series: User manual} [online]. 2014 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00111485.pdf}
+
+\bibitem{nodejs}
+\textit{Node.js} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://nodejs.org/}
+
+\bibitem{redis}
+\textit{Redis.io} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://redis.io/}
+
+\bibitem{redis-cluster}
+Redis cluster tutorial. \textit{Redis.io} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://redis.io/topics/cluster-tutorial}
+
+\bibitem{redis-benchmark}
+How fast is Redis?. \textit{Redis.io} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://redis.io/topics/benchmarks}
+
+\bibitem{hal}
+\textit{Description of STM32F4xx HAL drivers: User manual} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/st-web-ui/static/active/en/resource/technical/document/user_manual/DM00105879.pdf}
+
+\bibitem{manual}
+\textit{Reference manual - STM32F405xx/07xx, STM32F415xx/17xx, STM32F42xxx and STM32F43xxx advanced ARM\textregistered-based 32-bit MCUs} [online]. 2015 [cit. 2015-05-20]. Dostupné z: \url{http://www.st.com/web/en/resource/technical/document/reference_manual/DM00031020.pdf}
+
+\bibitem{icmp}
+POSTEL, Jon. Internet Control Message Protocol. \textit{The Internet Engineering Task Force} [online]. 1981 [cit. 2015-05-27]. Dostupné z: \url{http://tools.ietf.org/html/rfc792}
+
+\bibitem{sails}
+\textit{Sails.js} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://sailsjs.org/}
+
+\bibitem{ripe}
+Understanding IP Addressing. \textit{RIPE NCC} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://bit.ly/1JvOvaO}
+
+\bibitem{openwrt}
+Linux distribution for embedded devices. \textit{OpenWrt} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://openwrt.org/}
+
+\bibitem{tessel}
+\textit{Tessel 2} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://tessel.io/}
+
+\bibitem{cluster}
+Node.js v0.12.3 Manual \& Documentation. \textit{Cluster} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://nodejs.org/api/cluster.html}
+
+\bibitem{v8}
+\textit{V8 JavaScript Engine} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://code.google.com/p/v8/}
+
+\bibitem{heroku}
+\textit{Heroku} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://www.heroku.com/}
+
+\bibitem{forever}
+A~simple CLI tool for ensuring that a given script runs continuously. \textit{Forever} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://github.com/foreverjs/forever}
+
+\bibitem{q}
+A~tool for creating and composing asynchronous promises in JavaScript. \textit{Q} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://documentup.com/kriskowal/q/}
+
+\bibitem{socket}
+\textit{Socket.IO} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://socket.io/}
+
+\bibitem{cordova}
+Platform for building native mobile applications using HTML, CSS and JavaScript. \textit{Apache Cordova} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://cordova.apache.org/}
+
+\bibitem{meteor}
+Running your app on Android or iOS. \textit{Meteor} [online]. [cit. 2015-05-20]. Dostupné z: \url{https://www.meteor.com/try/7}
+
+\bibitem{lifi}
+\textit{pureLiFi} [online]. [cit. 2015-05-20]. Dostupné z: \url{http://purelifi.com/}
+
+\bibitem{ternar}
+VRÁNA, Jakub. \textit{1001 tipů a triků pro PHP}. Vyd.~1. Brno: Computer Press, 2010, 136 Co je ternární operátor. ISBN 978-80-251-2940-1.
+
+\bibitem{ted}
+prof. HAAS, Harald. Wireless data from every light bulb. \textit{TED - Ideas worth spreading} [online]. 2011 [cit. 2015-05-20]. Dostupné z: \url{http://www.ted.com/talks/harald_haas_wireless_data_from_every_light_bulb}
+
+\end{thebibliography}
+
+\addcontentsline{toc}{chapter}{Rejstřík}
+\printindex
+
+\end{document}
