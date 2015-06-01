@@ -1,4 +1,4 @@
-\documentclass[oneside,12pt,a4paper,draft]{book} %opt: draft/final
+\documentclass[oneside,12pt,a4paper,final]{book} %opt: draft/final
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx} % support the \includegraphics command and options
@@ -37,6 +37,13 @@
         \setlength{\labelwidth}{6cm}\setlength{\leftmargin}{\labelwidth+\labelsep}%
                                               \setlength{\itemsep}{0pt}}}{\end{list}}
 
+\newcommand{\namesig}[2][5cm]{%
+  \begin{tabular}{@{}p{#1}@{}}
+    #2 \\[5\normalbaselineskip] \dotfill \\[0pt]
+    {\small \textit{Podpis}}
+  \end{tabular}
+}
+
 \interfootnotelinepenalty=10000 %BRUTAL!
 
 \begin{document}
@@ -48,7 +55,7 @@
 \begin{center}
 	{\LARGE ZÁPADOČESKÁ UNIVERZITA V~PLZNI} \\[0.1cm]
 	{\LARGE FAKULTA ELEKTROTECHNICKÁ} \\[0.4cm]
-	{\Large\sc Katedra aplikované elektroniky a~telekomunikací} \\
+	{\Large\sc Katedra elektroenergetiky a~ekologie} \\
 	\vspace{5cm}
 	{\Huge\sc Bakalářská práce} \\
 	\vspace{1cm}
